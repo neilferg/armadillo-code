@@ -575,15 +575,15 @@ TEST_CASE("op_trans_sp_mat")
 
 TEST_CASE("op_trans_sp_cxmat")
   {
-  SpMat<std::complex<double> > a(10, 10);
+  SpMat<cx_double> a(10, 10);
   for (uword c = 0; c < 7; ++c)
   {
-    a(c, c) = std::complex<double>(1.3, 2.4);
-    a(c + 1, c) = std::complex<double>(0.0, -1.3);
-    a(c + 2, c) = std::complex<double>(2.1, 0.0);
+    a(c, c) = cx_double(1.3, 2.4);
+    a(c + 1, c) = cx_double(0.0, -1.3);
+    a(c + 2, c) = cx_double(2.1, 0.0);
   }
 
-  SpMat<std::complex<double> > b = trans(a);
+  SpMat<cx_double> b = trans(a);
 
   REQUIRE( b.n_nonzero == a.n_nonzero );
 
@@ -591,10 +591,10 @@ TEST_CASE("op_trans_sp_cxmat")
     {
     for (uword c = 0; c < 10; ++c)
       {
-      double lr = real(std::complex<double>(a(r, c)));
-      double rr = real(std::complex<double>(b(c, r)));
-      double li = imag(std::complex<double>(a(r, c)));
-      double ri = imag(std::complex<double>(b(c, r)));
+      double lr = real(cx_double(a(r, c)));
+      double rr = real(cx_double(b(c, r)));
+      double li = imag(cx_double(a(r, c)));
+      double ri = imag(cx_double(b(c, r)));
 
       REQUIRE( lr == Approx(rr) );
       REQUIRE( li == Approx(-ri) );
@@ -609,10 +609,10 @@ TEST_CASE("op_trans_sp_cxmat")
     {
     for (uword c = 0; c < 5; ++c)
       {
-      double lr = real(std::complex<double>(a(r + 3, c + 3)));
-      double rr = real(std::complex<double>(b(c, r)));
-      double li = imag(std::complex<double>(a(r + 3, c + 3)));
-      double ri = imag(std::complex<double>(b(c, r)));
+      double lr = real(cx_double(a(r + 3, c + 3)));
+      double rr = real(cx_double(b(c, r)));
+      double li = imag(cx_double(a(r + 3, c + 3)));
+      double ri = imag(cx_double(b(c, r)));
 
       REQUIRE( lr == Approx(rr) );
       REQUIRE( li == Approx(-ri) );

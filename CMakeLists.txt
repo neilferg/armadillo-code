@@ -37,6 +37,13 @@ if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
   endif()
 endif()
 
+if(NOT (CMAKE_VERSION VERSION_LESS "3.1"))
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+  message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
+endif()
+
 project(armadillo CXX C)
 include(CheckIncludeFileCXX)
 include(CheckLibraryExists)
@@ -45,13 +52,13 @@ set(ARMA_USE_WRAPPER true)
 
 # the settings below will be automatically configured by the rest of this script
 
-set(ARMA_USE_LAPACK           false)
-set(ARMA_USE_BLAS             false)
-set(ARMA_USE_ATLAS            false)
-set(ARMA_USE_HDF5_ALT         false)
-set(ARMA_USE_ARPACK           false)
-set(ARMA_USE_EXTERN_CXX11_RNG false)
-set(ARMA_USE_SUPERLU          false)  # Caveat: only SuperLU version 5.x can be used!
+set(ARMA_USE_LAPACK     false)
+set(ARMA_USE_BLAS       false)
+set(ARMA_USE_ATLAS      false)
+set(ARMA_USE_HDF5_ALT   false)
+set(ARMA_USE_ARPACK     false)
+set(ARMA_USE_EXTERN_RNG false)
+set(ARMA_USE_SUPERLU    false)  # Caveat: only SuperLU version 5.x can be used!
 
 ## NOTE: OpenBLAS appears to have its own LAPACK functions,
 ## NOTE: but on some systems the installed version of OpenBLAS
@@ -79,6 +86,59 @@ string(REGEX REPLACE ".*#define ARMA_VERSION_MINOR ([0-9]+).*" "\\1" ARMA_VERSIO
 string(REGEX REPLACE ".*#define ARMA_VERSION_PATCH ([0-9]+).*" "\\1" ARMA_VERSION_PATCH "${ARMA_VERSION_FILE_CONTENTS}")
 
 message(STATUS "Configuring Armadillo ${ARMA_VERSION_MAJOR}.${ARMA_VERSION_MINOR}.${ARMA_VERSION_PATCH}")
+
+
+# NOTE: ARMA_USE_EXTERN_RNG requires compiler support for thread_local and C++11
+# NOTE: for Linux, this is available with gcc 4.8.3 onwards
+# NOTE: for macOS, thread_local is supoported in Xcode 8 (mid 2016 onwards) in C++11 mode
+
+if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(NOT (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.8.3))
+      set(ARMA_USE_EXTERN_RNG true)
+      message(STATUS "Detected gcc 4.8.3 or later")
+      if(NOT DEFINED CMAKE_CXX_STANDARD)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+        message(STATUS "Added '-std=c++11' to compiler flags")
+      endif()
+    else()
+      message(FATAL_ERROR "Compiler too old")
+    endif()
+  else()
+    if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
+      if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        if(NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0)
+          set(ARMA_USE_EXTERN_RNG true)
+          message(STATUS "Detected Clang 6.0 or later")
+          if(NOT DEFINED CMAKE_CXX_STANDARD)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+            message(STATUS "Added '-std=c++14' to compiler flags")
+          endif()
+        else()
+          message(FATAL_ERROR "Compiler too old")
+        endif()
+      elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+        if(NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0)
+          set(ARMA_USE_EXTERN_RNG true)
+          message(STATUS "Detected AppleClang 8.0 or later")
+          if(NOT DEFINED CMAKE_CXX_STANDARD)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+            message(STATUS "Added '-std=c++14' to compiler flags")
+          endif()
+        else()
+          message(FATAL_ERROR "Compiler too old")
+        endif()
+      endif()
+    endif()
+  endif()
+endif()
+
+if(MINGW OR MSYS OR CYGWIN OR MSVC)
+  # MinGW doesn't correctly handle thread_local
+  set(ARMA_USE_EXTERN_RNG false)
+endif()
+
+message(STATUS "ARMA_USE_EXTERN_RNG = ${ARMA_USE_EXTERN_RNG}")
 
 
 # As Red Hat Enterprise Linux (and related systems such as Fedora)
@@ -261,8 +321,6 @@ else()
   set(ARMA_OS unix)
   
   include(ARMA_FindMKL)
-  include(ARMA_FindACMLMP)
-  include(ARMA_FindACML)
   include(ARMA_FindOpenBLAS)
   include(ARMA_FindATLAS)
   include(ARMA_FindBLAS)
@@ -273,8 +331,6 @@ else()
   endif()
   
   message(STATUS "      MKL_FOUND = ${MKL_FOUND}"       )
-  message(STATUS "   ACMLMP_FOUND = ${ACMLMP_FOUND}"    )
-  message(STATUS "     ACML_FOUND = ${ACML_FOUND}"      )
   message(STATUS " OpenBLAS_FOUND = ${OpenBLAS_FOUND}"  )
   message(STATUS "    ATLAS_FOUND = ${ATLAS_FOUND}"     )
   message(STATUS "     BLAS_FOUND = ${BLAS_FOUND}"      )
@@ -303,49 +359,23 @@ else()
     message(STATUS "*** cmake -D ALLOW_FLEXIBLAS_LINUX=false .")
     message(STATUS "")
     
-  elseif(MKL_FOUND OR ACMLMP_FOUND OR ACML_FOUND)
+  elseif(MKL_FOUND)
     
     set(ARMA_USE_LAPACK true)
     set(ARMA_USE_BLAS   true)
+    set(ARMA_LIBS ${ARMA_LIBS} ${MKL_LIBRARIES})
     
     message(STATUS "")
-    message(STATUS "*** If the MKL or ACML libraries are installed in non-standard locations such as")
+    message(STATUS "*** If the MKL libraries are installed in non-standard locations such as")
     message(STATUS "*** /opt/intel/mkl, /opt/intel/composerxe/, /usr/local/intel/mkl")
     message(STATUS "*** make sure the run-time linker can find them.")
     message(STATUS "*** On Linux systems this can be done by editing /etc/ld.so.conf")
     message(STATUS "*** or modifying the LD_LIBRARY_PATH environment variable.")
     message(STATUS "")
     message(STATUS "*** On systems with SELinux enabled (eg. Fedora, RHEL),")
-    message(STATUS "*** you may need to change the SELinux type of all MKL/ACML libraries")
+    message(STATUS "*** you may need to change the SELinux type of all MKL libraries")
     message(STATUS "*** to fix permission problems that may occur during run-time.")
     message(STATUS "")
-    
-    if(MKL_FOUND)
-      set(ARMA_LIBS ${ARMA_LIBS} ${MKL_LIBRARIES})
-      
-      if(ACMLMP_FOUND OR ACML_FOUND)
-        message(STATUS "*** Intel MKL as well as AMD ACML libraries were found.")
-        message(STATUS "*** Using only the MKL library to avoid linking conflicts.")
-        message(STATUS "*** If you wish to use ACML instead, please link manually with")
-        message(STATUS "*** acml or acml_mp instead of the armadillo wrapper library.")
-        message(STATUS "*** Alternatively, remove MKL from your system and rerun")
-        message(STATUS "*** Armadillo's configuration using ./configure") 
-      endif()
-      
-    else()
-      
-      if(ACMLMP_FOUND)
-        set(ARMA_LIBS ${ARMA_LIBS} ${ACMLMP_LIBRARIES})
-        
-        message(STATUS "*** Both single-core and multi-core ACML libraries were found.")
-        message(STATUS "*** Using only the multi-core library to avoid linking conflicts.")
-      else()
-        if(ACML_FOUND)
-          set(ARMA_LIBS ${ARMA_LIBS} ${ACML_LIBRARIES})
-        endif()
-      endif()
-      
-    endif()
     
   else()
     
@@ -468,41 +498,6 @@ message(STATUS "")
 message(STATUS "*** Armadillo wrapper library will use the following libraries:")
 message(STATUS "*** ARMA_LIBS = ${ARMA_LIBS}")
 message(STATUS "")
-
-
-# NOTE: ARMA_USE_EXTERN_CXX11_RNG requires compiler support for thread_local and C++11
-# NOTE: for Linux, this is available with gcc 4.8.3 onwards
-# NOTE: for macOS, thread_local is supoported in Xcode 8 (mid 2016 onwards) in C++11 mode
-
-if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
-  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.8.3)
-    set(ARMA_USE_EXTERN_CXX11_RNG true)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    message(STATUS "Detected gcc 4.8.3 or later. Added '-std=c++11' to compiler flags")
-  else()
-    if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
-      
-      if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0)
-        set(ARMA_USE_EXTERN_CXX11_RNG true)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-        message(STATUS "Detected Clang 6.0 or later. Added '-std=c++14' to compiler flags")
-      elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0)
-        set(ARMA_USE_EXTERN_CXX11_RNG true)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-        message(STATUS "Detected AppleClang 8.0 or later. Added '-std=c++14' to compiler flags")
-      endif()
-      
-    endif()
-  endif()
-endif()
-
-
-if(MINGW OR MSYS OR CYGWIN OR MSVC)
-  # MinGW doesn't correctly handle thread_local
-  set(ARMA_USE_EXTERN_CXX11_RNG false)
-endif()
-
-message(STATUS "ARMA_USE_EXTERN_CXX11_RNG = ${ARMA_USE_EXTERN_CXX11_RNG}")
 
 
 message(STATUS "Copying ${PROJECT_SOURCE_DIR}/include/ to ${PROJECT_BINARY_DIR}/tmp/include/")
@@ -651,5 +646,5 @@ install(FILES "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" DESTINATION ${CMAKE_
 if(BUILD_SMOKE_TEST)
   message(STATUS "*** configuring smoke_test")
   enable_testing()
-  add_subdirectory(smoke_test)
+  add_subdirectory(tests1)
 endif()

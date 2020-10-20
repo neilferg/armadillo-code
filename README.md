@@ -32,15 +32,14 @@ Copyright 2017-2020 Data61, CSIRO
 
 9.  [Support for OpenBLAS and Intel MKL](#9-support-for-openblas-and-intel-mkl)
 10. [Support for ATLAS](#10-support-for-atlas)
-11. [Support for C++11 / C++14 Features](#11-support-for-c11-c14-features)
-12. [Support for OpenMP](#12-support-for-openmp)
+11. [Support for OpenMP](#12-support-for-openmp)
 
-13. [Documentation](#13-documentation)
-14. [API Stability and Versioning](#14-api-stability-and-versioning)
-15. [Bug Reports and Frequently Asked Questions](#15-bug-reports-and-frequently-asked-questions)
+12. [Documentation](#13-documentation)
+13. [API Stability and Versioning](#14-api-stability-and-versioning)
+14. [Bug Reports and Frequently Asked Questions](#15-bug-reports-and-frequently-asked-questions)
 
-16. [MEX Interface to Octave/Matlab](#16-mex-interface-to-octavematlab)
-17. [Related Software Using Armadillo](#17-related-software-using-armadillo)
+15. [MEX Interface to Octave/Matlab](#16-mex-interface-to-octavematlab)
+16. [Related Software Using Armadillo](#17-related-software-using-armadillo)
 
 ---
 
@@ -106,8 +105,8 @@ informational purposes only and do not modify the License.
 
 ### 4: Compilers and External Dependencies
 
-A compiler that properly supports the C++98/C++03 standards is required,
-as Armadillo makes extensive use of template meta-programming.
+Armadillo 10.x requires a C++ compiler that supports at least the C++11 standard.
+Use Armadillo 9.900 if your compiler only supports the old C++98/C++03 standards.
 
 The functionality of Armadillo is partly dependent on other libraries:
 LAPACK, BLAS (preferably OpenBLAS), ARPACK and SuperLU.
@@ -156,9 +155,8 @@ For example, for GCC and Clang compilers use -O2 or -O3
 
   - On Linux-based systems, the following libraries are recommended
     to be present: OpenBLAS, LAPACK, SuperLU and ARPACK.
-    It is also necessary to install the corresponding development
-    files for each library. For example, when installing the "lapack"
-    package, also install the "lapack-devel" or "lapack-dev" package.
+    It is also necessary to install the corresponding development files for each library.
+    For example, when installing the "libopenblas" package, also install the "libopenblas-dev" package.
   
 * Step 4:
   Run the cmake installer.
@@ -233,12 +231,12 @@ For example, for GCC and Clang compilers use -O2 or -O3
 If you have installed Armadillo via the CMake installer,
 use the following command:
 
-    g++ prog.cpp -o prog -O2 -larmadillo
+    g++ prog.cpp -o prog -std=c++11 -O2 -larmadillo
 
 Otherwise, if you want to use Armadillo without installation
 (ie. without the Armadillo runtime library), use the following command:
   
-    g++ prog.cpp -o prog.cpp -O2 -I /home/blah/armadillo-7.200.3/include -DARMA_DONT_USE_WRAPPER -lopenblas
+    g++ prog.cpp -o prog.cpp -std=c++11 -O2 -I /home/blah/armadillo-7.200.3/include -DARMA_DONT_USE_WRAPPER -lopenblas
 
 The above command assumes that the armadillo archive was unpacked into /home/blah/  
 The command needs to be adjusted if the archive was unpacked into a different directory
@@ -290,22 +288,15 @@ Within the "examples" folder, there is an MSVC project named "example1_win64"
 which can be used to compile "example1.cpp". The project needs to be compiled as a
 64 bit program: the active solution platform must be set to x64, instead of win32.
 
-The MSVC project was tested on Windows 7 (64 bit) with Visual Studio C++ 2012.
+The MSVC project was tested on Windows 10 (64 bit) with Visual Studio C++ 2019.
 Adaptations may need to be made for 32 bit systems, later versions of Windows
 and/or the compiler. For example, options such as ARMA_BLAS_LONG and ARMA_BLAS_UNDERSCORE,
 defined in "armadillo_bits/config.hpp", may need to be either enabled or disabled.
 
-The folder "examples/lib_win64" contains baseline (unoptimised) LAPACK and BLAS
-libraries compiled for 64 bit Windows. The compilation was done by a third party.
-USE AT YOUR OWN RISK. The compiled versions of LAPACK and BLAS were obtained from:
-  http://ylzhao.blogspot.com.au/2013/10/blas-lapack-precompiled-binaries-for.html
-
-Faster and/or alternative implementations of BLAS and LAPACK are available:
-  * http://www.openblas.net/
-  * http://icl.cs.utk.edu/lapack-for-windows/lapack/
-  * http://software.intel.com/en-us/intel-mkl/
-
-OpenBLAS and Intel MKL are generally the fastest replacements for both BLAS and LAPACK.
+The folder "examples/lib_win64" contains a copy of lib and dll files
+obtained from a pre-compiled release of OpenBLAS 0.3.10:
+https://github.com/xianyi/OpenBLAS/releases/download/v0.3.10/OpenBLAS-0.3.10-x64.zip
+The compilation was done by a third party.  USE AT YOUR OWN RISK.
 
 **Caveat:** 
 for any high performance scientific/engineering workloads,
@@ -354,11 +345,9 @@ where Intel MKL is installed in /opt/intel
 If MKL is installed and it is persistently giving problems during linking,
 Support for MKL can be disabled by editing the CMakeLists.txt file,
 deleting CMakeCache.txt and re-running the CMake based installation.
-Comment out the lines containing:
+Comment out the line containing:
 
-    INCLUDE(ARMA_FindMKL)  
-    INCLUDE(ARMA_FindACMLMP)  
-    INCLUDE(ARMA_FindACML)  
+    INCLUDE(ARMA_FindMKL)
 
 ---
 
@@ -374,26 +363,7 @@ results and/or corrupt memory, leading to random crashes.
 
 ---
 
-### 11: Support for C++11 / C++14 Features
-
-Armadillo works with compilers supporting the older C++98 and C++03 standards,
-as well as the newer C++11 and C++14 standards.
-
-Armadillo will enable extra features (such as move constructors)
-when a C++11/C++14 compiler is detected. You can also force Armadillo
-to make use of C++11 features by defining ARMA_USE_CXX11 before
-`#include <armadillo>` in your code.
-
-You may need to explicitly enable C++11 mode in your compiler.
-For example, use the -std=c++11 or -std=c++14 options in gcc & clang.
-
-**Caveat:** use of the C++11 "auto" keyword is not recommended with Armadillo
-objects and expressions. Armadillo has a template meta-programming framework
-which creates lots of short lived temporaries that are not handled by auto.
-
----
-
-### 12: Support for OpenMP
+### 11: Support for OpenMP
 
 Armadillo can use OpenMP to automatically speed up computationally
 expensive element-wise functions such as exp(), log(), cos(), etc.
@@ -402,12 +372,9 @@ This requires a C++11/C++14 compiler with OpenMP 3.1+ support.
 When using gcc or clang, use the following options to enable both
 C++11 and OpenMP:  -std=c++11 -fopenmp
 
-Caveat: when using gcc, use of -march=native in conjunction with -fopenmp
-may lead to speed regressions on recent processors.
-
 ---
 
-### 13: Documentation
+### 12: Documentation
 
 The documentation for Armadillo functions and classes is available at:  
 http://arma.sourceforge.net/docs.html
@@ -417,7 +384,7 @@ which can be viewed with a web browser.
 
 ---
 
-### 14: API Stability and Versioning
+### 13: API Stability and Versioning
 
 Each release of Armadillo has its public API (functions, classes, constants)
 described in the accompanying API documentation (docs.html) specific
@@ -452,7 +419,7 @@ implementation details, and may change or be removed without notice.
 
 ---
 
-### 15: Bug Reports and Frequently Asked Questions
+### 14: Bug Reports and Frequently Asked Questions
 
 Armadillo has gone through extensive testing and has been successfully
 used in production environments. However, as with almost all software,
@@ -472,14 +439,14 @@ http://arma.sourceforge.net/faq.html
 
 ---
 
-### 16: MEX Interface to Octave/Matlab
+### 15: MEX Interface to Octave/Matlab
 
 The "mex_interface" folder contains examples of how to interface
 Octave/Matlab with C++ code that uses Armadillo matrices.
 
 ---
 
-### 17: Related Software Using Armadillo
+### 16: Related Software Using Armadillo
 
 * MLPACK: extensive library of machine learning algorithms  
   http://mlpack.org

@@ -834,7 +834,7 @@ TEST_CASE("shed_rows_test")
     }
   }
 
-TEST_CASE("sp_mat_reshape_columnwise_test")
+TEST_CASE("sp_mat_reshape_test")
   {
   // Input matrix:
   // [[0 2 0]
@@ -874,47 +874,6 @@ TEST_CASE("sp_mat_reshape_columnwise_test")
   REQUIRE( (unsigned int) ref(1, 3) == 5 );
   REQUIRE( (unsigned int) ref(2, 3) == 6 );
   }
-
-// TEST_CASE("sp_mat_reshape_rowwise_test")
-//   {
-//   // Input matrix:
-//   // [[0 2 0]
-//   //  [1 3 0]
-//   //  [0 0 5]
-//   //  [0 4 6]]
-//   //
-//   // Output matrix:
-//   // [[0 2 0 1]
-//   //  [3 0 0 0]
-//   //  [5 0 4 6]]
-//   SpMat<unsigned int> ref(4, 3);
-//   ref(1, 0) = 1;
-//   ref(0, 1) = 2;
-//   ref(1, 1) = 3;
-//   ref(3, 1) = 4;
-//   ref(2, 2) = 5;
-//   ref(3, 2) = 6;
-// 
-//   // Now reshape.
-//   ref.reshape(3, 4, 1 /* row-wise */);
-// 
-//   // Check everything.
-//   REQUIRE( ref.n_cols == 4 );
-//   REQUIRE( ref.n_rows == 3 );
-// 
-//   REQUIRE( (unsigned int) ref(0, 0) == 0 );
-//   REQUIRE( (unsigned int) ref(1, 0) == 3 );
-//   REQUIRE( (unsigned int) ref(2, 0) == 5 );
-//   REQUIRE( (unsigned int) ref(0, 1) == 2 );
-//   REQUIRE( (unsigned int) ref(1, 1) == 0 );
-//   REQUIRE( (unsigned int) ref(2, 1) == 0 );
-//   REQUIRE( (unsigned int) ref(0, 2) == 0 );
-//   REQUIRE( (unsigned int) ref(1, 2) == 0 );
-//   REQUIRE( (unsigned int) ref(2, 2) == 4 );
-//   REQUIRE( (unsigned int) ref(0, 3) == 1 );
-//   REQUIRE( (unsigned int) ref(1, 3) == 0 );
-//   REQUIRE( (unsigned int) ref(2, 3) == 6 );
-//   }
 
 TEST_CASE("sp_mat_zeros_tests")
   {
@@ -1418,175 +1377,175 @@ TEST_CASE("max_test")
 
 TEST_CASE("spmat_min_cx_test")
 {
-  SpCol<std::complex<double> > a(5);
+  SpCol<cx_double> a(5);
 
-  a(0) = std::complex<double>(3.0, -2.0);
-  a(2) = std::complex<double>(1.0, 1.0);
+  a(0) = cx_double(3.0, -2.0);
+  a(2) = cx_double(1.0, 1.0);
 
-  std::complex<double> res = min(a);
+  cx_double res = min(a);
   REQUIRE( res.real() == Approx(1e-5) );
   REQUIRE( res.imag() == Approx(1e-5) );
 
-  a(0) = std::complex<double>(-3.0, -2.0);
-  a(2) = std::complex<double>(-1.0, -1.0);
+  a(0) = cx_double(-3.0, -2.0);
+  a(2) = cx_double(-1.0, -1.0);
 
   res = min(a);
   REQUIRE( res.real() == Approx(1e-5) );
   REQUIRE( res.imag() == Approx(1e-5) );
 
-  a(0) = std::complex<double>(1.0, 0.5);
-  a(1) = std::complex<double>(2.4, 1.4);
-  a(2) = std::complex<double>(0.5, 0.5);
-  a(3) = std::complex<double>(2.0, 2.0);
-  a(4) = std::complex<double>(1.4, -1.4);
+  a(0) = cx_double(1.0, 0.5);
+  a(1) = cx_double(2.4, 1.4);
+  a(2) = cx_double(0.5, 0.5);
+  a(3) = cx_double(2.0, 2.0);
+  a(4) = cx_double(1.4, -1.4);
 
   res = min(a);
   REQUIRE( res.real() == Approx(0.5) );
   REQUIRE( res.imag() == Approx(0.5) );
 
-  SpRow<std::complex<double> > b(5);
+  SpRow<cx_double> b(5);
 
-  b(0) = std::complex<double>(3.0, -2.0);
-  b(2) = std::complex<double>(1.0, 1.0);
-
-  res = min(b);
-  REQUIRE( res.real() == Approx(1e-5) );
-  REQUIRE( res.imag() == Approx(1e-5) );
-
-  b(0) = std::complex<double>(-3.0, -2.0);
-  b(2) = std::complex<double>(-1.0, -1.0);
+  b(0) = cx_double(3.0, -2.0);
+  b(2) = cx_double(1.0, 1.0);
 
   res = min(b);
   REQUIRE( res.real() == Approx(1e-5) );
   REQUIRE( res.imag() == Approx(1e-5) );
 
-  b(0) = std::complex<double>(1.0, 0.5);
-  b(1) = std::complex<double>(2.4, 1.4);
-  b(2) = std::complex<double>(0.5, 0.5);
-  b(3) = std::complex<double>(2.0, 2.0);
-  b(4) = std::complex<double>(1.4, -1.4);
+  b(0) = cx_double(-3.0, -2.0);
+  b(2) = cx_double(-1.0, -1.0);
+
+  res = min(b);
+  REQUIRE( res.real() == Approx(1e-5) );
+  REQUIRE( res.imag() == Approx(1e-5) );
+
+  b(0) = cx_double(1.0, 0.5);
+  b(1) = cx_double(2.4, 1.4);
+  b(2) = cx_double(0.5, 0.5);
+  b(3) = cx_double(2.0, 2.0);
+  b(4) = cx_double(1.4, -1.4);
 
   res = min(b);
   REQUIRE( res.real() == Approx(0.5) );
   REQUIRE( res.imag() == Approx(0.5) );
 
-  SpMat<std::complex<double> > c(4, 3);
+  SpMat<cx_double> c(4, 3);
 
-  c(0, 0) = std::complex<double>(1.0, 2.0);
-  c(0, 1) = std::complex<double>(0.5, 0.5);
-  c(0, 2) = std::complex<double>(2.0, 4.0);
-  c(1, 1) = std::complex<double>(-1.0, -2.0);
-  c(2, 1) = std::complex<double>(-3.0, -3.0);
-  c(3, 1) = std::complex<double>(0.25, 0.25);
+  c(0, 0) = cx_double(1.0, 2.0);
+  c(0, 1) = cx_double(0.5, 0.5);
+  c(0, 2) = cx_double(2.0, 4.0);
+  c(1, 1) = cx_double(-1.0, -2.0);
+  c(2, 1) = cx_double(-3.0, -3.0);
+  c(3, 1) = cx_double(0.25, 0.25);
 
-  SpMat<std::complex<double> > r = min(c, 0);
+  SpMat<cx_double> r = min(c, 0);
   REQUIRE( r.n_rows == 1 );
   REQUIRE( r.n_cols == 3 );
-  REQUIRE( ((std::complex<double>) r(0, 0)).real() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(0, 0)).imag() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(0, 1)).real() == Approx(0.25) );
-  REQUIRE( ((std::complex<double>) r(0, 1)).imag() == Approx(0.25) );
-  REQUIRE( ((std::complex<double>) r(0, 2)).real() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(0, 2)).imag() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(0, 0)).real() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(0, 0)).imag() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(0, 1)).real() == Approx(0.25) );
+  REQUIRE( ((cx_double) r(0, 1)).imag() == Approx(0.25) );
+  REQUIRE( ((cx_double) r(0, 2)).real() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(0, 2)).imag() == Approx(1e-5) );
 
   r = min(c, 1);
   REQUIRE( r.n_rows == 4 );
   REQUIRE( r.n_cols == 1 );
-  REQUIRE( ((std::complex<double>) r(0, 0)).real() == Approx(0.5) );
-  REQUIRE( ((std::complex<double>) r(0, 0)).imag() == Approx(0.5) );
-  REQUIRE( ((std::complex<double>) r(1, 0)).real() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(1, 0)).imag() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(2, 0)).real() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(2, 0)).imag() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(3, 0)).real() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(3, 0)).imag() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(0, 0)).real() == Approx(0.5) );
+  REQUIRE( ((cx_double) r(0, 0)).imag() == Approx(0.5) );
+  REQUIRE( ((cx_double) r(1, 0)).real() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(1, 0)).imag() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(2, 0)).real() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(2, 0)).imag() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(3, 0)).real() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(3, 0)).imag() == Approx(1e-5) );
 }
 
 
 
 TEST_CASE("spmat_max_cx_test")
 {
-  SpCol<std::complex<double> > a(5);
+  SpCol<cx_double> a(5);
 
-  a(0) = std::complex<double>(3.0, -2.0);
-  a(2) = std::complex<double>(1.0, 1.0);
+  a(0) = cx_double(3.0, -2.0);
+  a(2) = cx_double(1.0, 1.0);
 
-  std::complex<double> res = max(a);
+  cx_double res = max(a);
   REQUIRE( res.real() == Approx(3.0) );
   REQUIRE( res.imag() == Approx(-2.0) );
 
-  a(0) = std::complex<double>(0);
-  a(2) = std::complex<double>(0);
+  a(0) = cx_double(0);
+  a(2) = cx_double(0);
 
   res = max(a);
   REQUIRE( res.real() == Approx(1e-5) );
   REQUIRE( res.imag() == Approx(1e-5) );
 
-  a(0) = std::complex<double>(1.0, 0.5);
-  a(1) = std::complex<double>(2.4, 1.4);
-  a(2) = std::complex<double>(0.5, 0.5);
-  a(3) = std::complex<double>(2.0, 2.0);
-  a(4) = std::complex<double>(1.4, -1.4);
+  a(0) = cx_double(1.0, 0.5);
+  a(1) = cx_double(2.4, 1.4);
+  a(2) = cx_double(0.5, 0.5);
+  a(3) = cx_double(2.0, 2.0);
+  a(4) = cx_double(1.4, -1.4);
 
   res = max(a);
   REQUIRE( res.real() == Approx(2.0) );
   REQUIRE( res.imag() == Approx(2.0) );
 
-  SpRow<std::complex<double> > b(5);
+  SpRow<cx_double> b(5);
 
-  b(0) = std::complex<double>(3.0, -2.0);
-  b(2) = std::complex<double>(1.0, 1.0);
+  b(0) = cx_double(3.0, -2.0);
+  b(2) = cx_double(1.0, 1.0);
 
   res = max(b);
   REQUIRE( res.real() == Approx(3.0) );
   REQUIRE( res.imag() == Approx(-2.0) );
 
-  b(0) = std::complex<double>(0);
-  b(2) = std::complex<double>(0);
+  b(0) = cx_double(0);
+  b(2) = cx_double(0);
 
   res = max(b);
   REQUIRE( res.real() == Approx(1e-5) );
   REQUIRE( res.imag() == Approx(1e-5) );
 
-  b(0) = std::complex<double>(1.0, 0.5);
-  b(1) = std::complex<double>(2.4, 1.4);
-  b(2) = std::complex<double>(0.5, 0.5);
-  b(3) = std::complex<double>(2.0, 2.0);
-  b(4) = std::complex<double>(1.4, -1.4);
+  b(0) = cx_double(1.0, 0.5);
+  b(1) = cx_double(2.4, 1.4);
+  b(2) = cx_double(0.5, 0.5);
+  b(3) = cx_double(2.0, 2.0);
+  b(4) = cx_double(1.4, -1.4);
 
   res = max(b);
   REQUIRE( res.real() == Approx(2.0) );
   REQUIRE( res.imag() == Approx(2.0) );
 
-  SpMat<std::complex<double> > c(4, 3);
+  SpMat<cx_double> c(4, 3);
 
-  c(0, 0) = std::complex<double>(1.0, 2.0);
-  c(0, 1) = std::complex<double>(0.5, 0.5);
-  c(1, 1) = std::complex<double>(-1.0, -2.0);
-  c(2, 1) = std::complex<double>(-3.0, -3.0);
-  c(3, 1) = std::complex<double>(0.25, 0.25);
+  c(0, 0) = cx_double(1.0, 2.0);
+  c(0, 1) = cx_double(0.5, 0.5);
+  c(1, 1) = cx_double(-1.0, -2.0);
+  c(2, 1) = cx_double(-3.0, -3.0);
+  c(3, 1) = cx_double(0.25, 0.25);
 
-  SpMat<std::complex<double> > r = max(c, 0);
+  SpMat<cx_double> r = max(c, 0);
   REQUIRE( r.n_rows == 1 );
   REQUIRE( r.n_cols == 3 );
-  REQUIRE( ((std::complex<double>) r(0, 0)).real() == Approx(1.0) );
-  REQUIRE( ((std::complex<double>) r(0, 0)).imag() == Approx(2.0) );
-  REQUIRE( ((std::complex<double>) r(0, 1)).real() == Approx(-3.0) );
-  REQUIRE( ((std::complex<double>) r(0, 1)).imag() == Approx(-3.0) );
-  REQUIRE( ((std::complex<double>) r(0, 2)).real() == Approx(1e-5) );
-  REQUIRE( ((std::complex<double>) r(0, 2)).imag() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(0, 0)).real() == Approx(1.0) );
+  REQUIRE( ((cx_double) r(0, 0)).imag() == Approx(2.0) );
+  REQUIRE( ((cx_double) r(0, 1)).real() == Approx(-3.0) );
+  REQUIRE( ((cx_double) r(0, 1)).imag() == Approx(-3.0) );
+  REQUIRE( ((cx_double) r(0, 2)).real() == Approx(1e-5) );
+  REQUIRE( ((cx_double) r(0, 2)).imag() == Approx(1e-5) );
 
   r = max(c, 1);
   REQUIRE( r.n_rows == 4 );
   REQUIRE( r.n_cols == 1 );
-  REQUIRE( ((std::complex<double>) r(0, 0)).real() == Approx(1.0) );
-  REQUIRE( ((std::complex<double>) r(0, 0)).imag() == Approx(2.0) );
-  REQUIRE( ((std::complex<double>) r(1, 0)).real() == Approx(-1.0) );
-  REQUIRE( ((std::complex<double>) r(1, 0)).imag() == Approx(-2.0) );
-  REQUIRE( ((std::complex<double>) r(2, 0)).real() == Approx(-3.0) );
-  REQUIRE( ((std::complex<double>) r(2, 0)).imag() == Approx(-3.0) );
-  REQUIRE( ((std::complex<double>) r(3, 0)).real() == Approx(0.25) );
-  REQUIRE( ((std::complex<double>) r(3, 0)).imag() == Approx(0.25) );
+  REQUIRE( ((cx_double) r(0, 0)).real() == Approx(1.0) );
+  REQUIRE( ((cx_double) r(0, 0)).imag() == Approx(2.0) );
+  REQUIRE( ((cx_double) r(1, 0)).real() == Approx(-1.0) );
+  REQUIRE( ((cx_double) r(1, 0)).imag() == Approx(-2.0) );
+  REQUIRE( ((cx_double) r(2, 0)).real() == Approx(-3.0) );
+  REQUIRE( ((cx_double) r(2, 0)).imag() == Approx(-3.0) );
+  REQUIRE( ((cx_double) r(3, 0)).real() == Approx(0.25) );
+  REQUIRE( ((cx_double) r(3, 0)).imag() == Approx(0.25) );
   }
 
 
@@ -1620,25 +1579,25 @@ TEST_CASE("spmat_complex_constructor_test")
   b(3, 7) = 4;
   b(6, 7) = 5;
 
-  SpMat<std::complex<double> > c(a, b);
+  SpMat<cx_double> c(a, b);
 
   REQUIRE( c.n_nonzero == 16 );
-  REQUIRE( (std::complex<double>) c(0, 0) == std::complex<double>(4, 4) );
-  REQUIRE( (std::complex<double>) c(4, 2) == std::complex<double>(5, 5) );
-  REQUIRE( (std::complex<double>) c(5, 3) == std::complex<double>(6, 0) );
-  REQUIRE( (std::complex<double>) c(6, 3) == std::complex<double>(7, 0) );
-  REQUIRE( (std::complex<double>) c(7, 3) == std::complex<double>(0, 4) );
-  REQUIRE( (std::complex<double>) c(1, 4) == std::complex<double>(1, 1) );
-  REQUIRE( (std::complex<double>) c(3, 4) == std::complex<double>(0, 6) );
-  REQUIRE( (std::complex<double>) c(5, 4) == std::complex<double>(6, -1) );
-  REQUIRE( (std::complex<double>) c(6, 4) == std::complex<double>(0, 2) );
-  REQUIRE( (std::complex<double>) c(7, 4) == std::complex<double>(0, 3) );
-  REQUIRE( (std::complex<double>) c(6, 5) == std::complex<double>(0, 2) );
-  REQUIRE( (std::complex<double>) c(6, 6) == std::complex<double>(0, 3) );
-  REQUIRE( (std::complex<double>) c(7, 6) == std::complex<double>(3, 0) );
-  REQUIRE( (std::complex<double>) c(0, 7) == std::complex<double>(2, 0) );
-  REQUIRE( (std::complex<double>) c(3, 7) == std::complex<double>(3, 4) );
-  REQUIRE( (std::complex<double>) c(6, 7) == std::complex<double>(0, 5) );
+  REQUIRE( (cx_double) c(0, 0) == cx_double(4, 4) );
+  REQUIRE( (cx_double) c(4, 2) == cx_double(5, 5) );
+  REQUIRE( (cx_double) c(5, 3) == cx_double(6, 0) );
+  REQUIRE( (cx_double) c(6, 3) == cx_double(7, 0) );
+  REQUIRE( (cx_double) c(7, 3) == cx_double(0, 4) );
+  REQUIRE( (cx_double) c(1, 4) == cx_double(1, 1) );
+  REQUIRE( (cx_double) c(3, 4) == cx_double(0, 6) );
+  REQUIRE( (cx_double) c(5, 4) == cx_double(6, -1) );
+  REQUIRE( (cx_double) c(6, 4) == cx_double(0, 2) );
+  REQUIRE( (cx_double) c(7, 4) == cx_double(0, 3) );
+  REQUIRE( (cx_double) c(6, 5) == cx_double(0, 2) );
+  REQUIRE( (cx_double) c(6, 6) == cx_double(0, 3) );
+  REQUIRE( (cx_double) c(7, 6) == cx_double(3, 0) );
+  REQUIRE( (cx_double) c(0, 7) == cx_double(2, 0) );
+  REQUIRE( (cx_double) c(3, 7) == cx_double(3, 4) );
+  REQUIRE( (cx_double) c(6, 7) == cx_double(0, 5) );
   }
 
 
@@ -2268,11 +2227,11 @@ TEST_CASE("spmat_batch_insert_test")
   locations(0, 4) = 0;
 
   Col<double> values(5);
-  values[0] = 1.5;
-  values[1] = -15.15;
-  values[2] = 2.2;
-  values[3] = 3.0;
-  values[4] = 5.0;
+  values(0) = 1.5;
+  values(1) = -15.15;
+  values(2) = 2.2;
+  values(3) = 3.0;
+  values(4) = 5.0;
 
   SpMat<double> m(locations, values, 10, 10, true);
 
@@ -2317,11 +2276,11 @@ TEST_CASE("spmat_batch_insert_unsorted_test")
   locations(0, 4) = 7;
 
   Col<double> values(5);
-  values[1] = 1.5;
-  values[4] = -15.15;
-  values[0] = 2.2;
-  values[2] = 3.0;
-  values[3] = 5.0;
+  values(1) = 1.5;
+  values(4) = -15.15;
+  values(0) = 2.2;
+  values(2) = 3.0;
+  values(3) = 5.0;
 
   SpMat<double> m(locations, values, 10, 10, true);
 
@@ -2391,7 +2350,7 @@ void CheckMatrices(const T1& a, const T2& b)
   REQUIRE( a.n_rows == b.n_rows );
   REQUIRE( a.n_cols == b.n_cols );
   for (uword i = 0; i < a.n_elem; ++i)
-    REQUIRE( (double) a[i] == Approx((double) b[i]) );
+    REQUIRE( (double) a(i) == Approx((double) b(i)) );
 }
 
 // Test the constructor written by Dirk.
@@ -2519,11 +2478,11 @@ TEST_CASE("spmat_batch_insert_zeroes_test")
   locations(0, 4) = 0;
 
   Col<double> values(5);
-  values[0] = 1.5;
-  values[1] = -15.15;
-  values[2] = 2.2;
-  values[3] = 0.0;
-  values[4] = 5.0;
+  values(0) = 1.5;
+  values(1) = -15.15;
+  values(2) = 2.2;
+  values(3) = 0.0;
+  values(4) = 5.0;
 
   SpMat<double> m(locations, values, 10, 10, false, true);
 
@@ -2566,11 +2525,11 @@ TEST_CASE("spmat_batch_insert_unsorted_case_zeroes")
   locations(0, 4) = 7;
 
   Col<double> values(5);
-  values[1] = 1.5;
-  values[4] = -15.15;
-  values[0] = 2.2;
-  values[2] = 0.0;
-  values[3] = 5.0;
+  values(1) = 1.5;
+  values(4) = -15.15;
+  values(0) = 2.2;
+  values(2) = 0.0;
+  values(3) = 5.0;
 
   SpMat<double> m(locations, values, 10, 10, true);
 
@@ -3063,10 +3022,10 @@ TEST_CASE("spmat_elementwise_max_cx")
     {
     for (uword r = 0; r < m.n_rows; ++r)
       {
-      if (std::abs(std::complex<double>(m(r, c))) > std::abs(std::complex<double>(n(r, c))))
-        REQUIRE(std::abs(std::complex<double>(out(r, c)) - std::complex<double>(m(r, c))) == Approx(0.0));
+      if (std::abs(cx_double(m(r, c))) > std::abs(cx_double(n(r, c))))
+        REQUIRE(std::abs(cx_double(out(r, c)) - cx_double(m(r, c))) == Approx(0.0));
       else
-        REQUIRE(std::abs(std::complex<double>(out(r, c)) - std::complex<double>(n(r, c))) == Approx(0.0));
+        REQUIRE(std::abs(cx_double(out(r, c)) - cx_double(n(r, c))) == Approx(0.0));
       }
     }
   }
@@ -3130,10 +3089,10 @@ TEST_CASE("spmat_elementwise_min_cx")
     {
     for (uword r = 0; r < m.n_rows; ++r)
       {
-      if (std::abs(std::complex<double>(m(r, c))) < std::abs(std::complex<double>(n(r, c))))
-        REQUIRE(std::abs(std::complex<double>(out(r, c)) - std::complex<double>(m(r, c))) == Approx(0.0));
+      if (std::abs(cx_double(m(r, c))) < std::abs(cx_double(n(r, c))))
+        REQUIRE(std::abs(cx_double(out(r, c)) - cx_double(m(r, c))) == Approx(0.0));
       else
-        REQUIRE(std::abs(std::complex<double>(out(r, c)) - std::complex<double>(n(r, c))) == Approx(0.0));
+        REQUIRE(std::abs(cx_double(out(r, c)) - cx_double(n(r, c))) == Approx(0.0));
       }
     }
   }
@@ -3151,9 +3110,9 @@ TEST_CASE("spmat_vectorise_matrix")
 
   for (uword i = 0; i < c.n_elem; ++i)
     {
-    REQUIRE(c[i] == Approx(m[i]));
-    REQUIRE(d[i] == Approx(m[i]));
-    REQUIRE(e[i] == Approx(m[i]));
+    REQUIRE(c(i) == Approx(m(i)));
+    REQUIRE(d(i) == Approx(m(i)));
+    REQUIRE(e(i) == Approx(m(i)));
     }
   }
 
@@ -3172,7 +3131,7 @@ TEST_CASE("spmat_vectorise_alias")
   REQUIRE(n.n_cols == 1);
   for (uword i = 0; i < n.n_elem; ++i)
     {
-    REQUIRE(n[i] == Approx(m[i]));
+    REQUIRE(n(i) == Approx(m(i)));
     }
   }
 
@@ -3192,10 +3151,10 @@ TEST_CASE("spmat_vectorise_dimension")
 
   for (uword i = 0; i < m.n_elem; ++i)
     {
-    REQUIRE(c[i] == Approx(m[i]));
-    REQUIRE(d[i] == Approx(n[i]));
-    REQUIRE(e[i] == Approx(m[i]));
-    REQUIRE(f[i] == Approx(n[i]));
+    REQUIRE(c(i) == Approx(m(i)));
+    REQUIRE(d(i) == Approx(n(i)));
+    REQUIRE(e(i) == Approx(m(i)));
+    REQUIRE(f(i) == Approx(n(i)));
     }
   }
 
@@ -3214,7 +3173,7 @@ TEST_CASE("spmat_vectorise_dimension_alias")
   REQUIRE(m.n_cols == 1);
   for (uword i = 0; i < m.n_elem; ++i)
     {
-    REQUIRE(m[i] == Approx(n[i]));
+    REQUIRE(m(i) == Approx(n(i)));
     }
 
   m.sprandu(10, 10, 0.1);
@@ -3226,6 +3185,6 @@ TEST_CASE("spmat_vectorise_dimension_alias")
   REQUIRE(m.n_cols == 100);
   for (uword i = 0; i < m.n_elem; ++i)
     {
-    REQUIRE(m[i] == Approx(n[i]));
+    REQUIRE(m(i) == Approx(n(i)));
     }
   }

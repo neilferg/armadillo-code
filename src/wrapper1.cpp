@@ -18,11 +18,6 @@
 #include <limits>
 #include <complex>
 
-#if (__cplusplus >= 201103L)
-  #undef  ARMA_USE_CXX11
-  #define ARMA_USE_CXX11
-#endif
-
 #include "armadillo_bits/config.hpp"
 
 #undef ARMA_USE_WRAPPER
@@ -34,13 +29,8 @@
 #include "armadillo_bits/include_superlu.hpp"
 
 
-#if defined(ARMA_USE_EXTERN_CXX11_RNG)
+#if defined(ARMA_USE_EXTERN_RNG)
   #include <random>
-  #include <ctime>
-  
-  #if defined(ARMA_HAVE_GETTIMEOFDAY)
-    #include <sys/time.h>
-  #endif
   
   namespace arma
     {
@@ -1593,6 +1583,52 @@ extern "C"
     
     
     
+    void wrapper_sgstrf(superlu::superlu_options_t* a, superlu::SuperMatrix* b,  float c, int d, int e, int* f, void* g, int h, int* i, int* j, superlu::SuperMatrix* k, superlu::SuperMatrix* l, superlu::GlobalLU_t* m, superlu::SuperLUStat_t* n, int* o)
+      {
+      sgstrf(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
+      }
+    
+    void wrapper_dgstrf(superlu::superlu_options_t* a, superlu::SuperMatrix* b, double c, int d, int e, int* f, void* g, int h, int* i, int* j, superlu::SuperMatrix* k, superlu::SuperMatrix* l, superlu::GlobalLU_t* m, superlu::SuperLUStat_t* n, int* o)
+      {
+      dgstrf(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
+      }
+    
+    void wrapper_cgstrf(superlu::superlu_options_t* a, superlu::SuperMatrix* b,  float c, int d, int e, int* f, void* g, int h, int* i, int* j, superlu::SuperMatrix* k, superlu::SuperMatrix* l, superlu::GlobalLU_t* m, superlu::SuperLUStat_t* n, int* o)
+      {
+      cgstrf(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
+      }
+    
+    void wrapper_zgstrf(superlu::superlu_options_t* a, superlu::SuperMatrix* b, double c, int d, int e, int* f, void* g, int h, int* i, int* j, superlu::SuperMatrix* k, superlu::SuperMatrix* l, superlu::GlobalLU_t* m, superlu::SuperLUStat_t* n, int* o)
+      {
+      zgstrf(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
+      }
+
+
+
+
+    void wrapper_sgstrs(superlu::trans_t a, superlu::SuperMatrix* b, superlu::SuperMatrix* c, int* d, int* e, superlu::SuperMatrix* f, superlu::SuperLUStat_t* g, int* h)
+      {
+      sgstrs(a, b, c, d, e, f, g, h);
+      }
+    
+    void wrapper_dgstrs(superlu::trans_t a, superlu::SuperMatrix* b, superlu::SuperMatrix* c, int* d, int* e, superlu::SuperMatrix* f, superlu::SuperLUStat_t* g, int* h)
+      {
+      dgstrs(a, b, c, d, e, f, g, h);
+      }
+    
+    void wrapper_cgstrs(superlu::trans_t a, superlu::SuperMatrix* b, superlu::SuperMatrix* c, int* d, int* e, superlu::SuperMatrix* f, superlu::SuperLUStat_t* g, int* h)
+      {
+      cgstrs(a, b, c, d, e, f, g, h);
+      }
+    
+    void wrapper_zgstrs(superlu::trans_t a, superlu::SuperMatrix* b, superlu::SuperMatrix* c, int* d, int* e, superlu::SuperMatrix* f, superlu::SuperLUStat_t* g, int* h)
+      {
+      zgstrs(a, b, c, d, e, f, g, h);
+      }
+
+
+
+
     void wrapper_StatInit(superlu::SuperLUStat_t* a)
       {
       StatInit(a);
@@ -1607,6 +1643,21 @@ extern "C"
       {
       set_default_options(a);
       }
+
+    void wrapper_get_perm_c(int a, superlu::SuperMatrix* b, int* c)
+      {
+      get_perm_c(a, b, c);
+      }
+    
+    int wrapper_sp_ienv(int a)
+      {
+      return sp_ienv(a);
+      }
+    
+    void wrapper_sp_preorder(superlu::superlu_options_t* a, superlu::SuperMatrix* b, int* c, int* d, superlu::SuperMatrix* e)
+      {
+      sp_preorder(a, b, c, d, e);
+      }
     
     void wrapper_Destroy_SuperNode_Matrix(superlu::SuperMatrix* a)
       {
@@ -1616,6 +1667,11 @@ extern "C"
     void wrapper_Destroy_CompCol_Matrix(superlu::SuperMatrix* a)
       {
       Destroy_CompCol_Matrix(a);
+      }
+
+    void wrapper_Destroy_CompCol_Permuted(superlu::SuperMatrix* a)
+      {
+      Destroy_CompCol_Permuted(a);
       }
 
     void wrapper_Destroy_SuperMatrix_Store(superlu::SuperMatrix* a)

@@ -183,12 +183,12 @@ TEST_CASE("spcol_shed_row_test")
   REQUIRE( e.n_cols == 1 );
   REQUIRE( e.n_rows == 6 );
   REQUIRE( e.n_nonzero == 3 );
-  REQUIRE( (int) e[0] == 0 );
-  REQUIRE( (int) e[1] == 5 );
-  REQUIRE( (int) e[2] == 0 );
-  REQUIRE( (int) e[3] == 0 );
-  REQUIRE( (int) e[4] == 2 );
-  REQUIRE( (int) e[5] == -1 );
+  REQUIRE( (int) e(0) == 0 );
+  REQUIRE( (int) e(1) == 5 );
+  REQUIRE( (int) e(2) == 0 );
+  REQUIRE( (int) e(3) == 0 );
+  REQUIRE( (int) e(4) == 2 );
+  REQUIRE( (int) e(5) == -1 );
   }
 
 

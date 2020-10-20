@@ -1217,8 +1217,8 @@ TEST_CASE("sp_subview_subviews_test")
   REQUIRE( t.aux_col1 == 1 );
   for (uword i = 0; i < 10; ++i)
     {
-    REQUIRE( (double) t[i] == (double) m(2, i + 1) );
-    REQUIRE( d[i] == (double) m(2, i + 1) );
+    REQUIRE( (double) t(i) == (double) m(2, i + 1) );
+    REQUIRE( d(i) == (double) m(2, i + 1) );
     }
 
   SpSubview<double> t1 = s.col(2);
@@ -1230,8 +1230,8 @@ TEST_CASE("sp_subview_subviews_test")
   REQUIRE( d1.n_cols == 1 );
   for (uword i = 0; i < 10; ++i)
     {
-    REQUIRE( (double) t1[i] == (double) m(i + 1, 3) );
-    REQUIRE( d1[i] == (double) m(i + 1, 3) );
+    REQUIRE( (double) t1(i) == (double) m(i + 1, 3) );
+    REQUIRE( d1(i) == (double) m(i + 1, 3) );
     }
 
   SpSubview<double> t2 = s.rows(3, 5);
@@ -1358,7 +1358,7 @@ TEST_CASE("sp_subview_assignment_sp_base")
 
   for (uword i = 0; i < d.n_elem; ++i)
     {
-    REQUIRE( d[i] == Approx(dd[i]) );
+    REQUIRE( d(i) == Approx(dd(i)) );
     }
   }
 
@@ -1379,7 +1379,7 @@ TEST_CASE("sp_subview_addition_sp_base")
 
   for (uword i = 0; i < d.n_elem; ++i)
     {
-    REQUIRE( d[i] == Approx(dd[i]) );
+    REQUIRE( d(i) == Approx(dd(i)) );
     }
   }
 
@@ -1399,7 +1399,7 @@ TEST_CASE("sp_subview_subtraction_sp_base")
 
   for (uword i = 0; i < d.n_elem; ++i)
     {
-    REQUIRE( d[i] == Approx(dd[i]) );
+    REQUIRE( d(i) == Approx(dd(i)) );
     }
   }
 
@@ -1420,7 +1420,7 @@ TEST_CASE("sp_subview_schur_sp_base")
 
   for (uword i = 0; i < d.n_elem; ++i)
     {
-    REQUIRE( d[i] == Approx(dd[i]) );
+    REQUIRE( d(i) == Approx(dd(i)) );
     }
   }
 
@@ -1441,10 +1441,10 @@ TEST_CASE("sp_subview_division_sp_base")
 
   for (uword i = 0; i < d.n_elem; ++i)
     {
-    if (std::isinf(d[i]))
-      REQUIRE( std::isinf(dd[i]) );
+    if (std::isinf(d(i)))
+      REQUIRE( std::isinf(dd(i)) );
     else
-      REQUIRE( d[i] == Approx(dd[i]) );
+      REQUIRE( d(i) == Approx(dd(i)) );
     }
   }
 

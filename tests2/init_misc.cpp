@@ -112,6 +112,7 @@ TEST_CASE("init_misc_2")
      0.73573  0.52104 -0.22263  0.40163;\
     ";
   
+  // NOTE: use of << for initialisation is deprecated
   mat D;
   D << -0.78838 <<  0.69298 <<  0.41084 << 0.90142 << endr
     <<  0.49345 << -0.12020 <<  0.78987 << 0.53124 << endr

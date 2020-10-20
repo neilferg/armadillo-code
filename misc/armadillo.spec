@@ -1,5 +1,5 @@
 Name:           armadillo
-Version:        9.900.x
+Version:        10.1.x
 Release:        1%{?dist}
 Summary:        Fast C++ matrix library with syntax similar to MATLAB and Octave
 

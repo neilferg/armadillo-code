@@ -71,6 +71,9 @@ class field
   inline void  set_size(const SizeMat&  s);
   inline void  set_size(const SizeCube& s);
   
+  inline            field(const std::vector<oT>& x);
+  inline field& operator=(const std::vector<oT>& x);
+  
   inline            field(const std::initializer_list<oT>& list);
   inline field& operator=(const std::initializer_list<oT>& list);
   

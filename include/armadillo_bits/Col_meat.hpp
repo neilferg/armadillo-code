@@ -504,6 +504,7 @@ Col<eT>::operator=(const subview_cube<eT>& X)
 
 template<typename eT>
 inline
+arma_deprecated
 mat_injector< Col<eT> >
 Col<eT>::operator<<(const eT val)
   {

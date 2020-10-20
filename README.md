@@ -32,14 +32,14 @@ Copyright 2017-2020 Data61, CSIRO
 
 9.  [Support for OpenBLAS and Intel MKL](#9-support-for-openblas-and-intel-mkl)
 10. [Support for ATLAS](#10-support-for-atlas)
-11. [Support for OpenMP](#12-support-for-openmp)
+11. [Support for OpenMP](#11-support-for-openmp)
 
-12. [Documentation](#13-documentation)
-13. [API Stability and Versioning](#14-api-stability-and-versioning)
-14. [Bug Reports and Frequently Asked Questions](#15-bug-reports-and-frequently-asked-questions)
+12. [Documentation](#12-documentation)
+13. [API Stability and Versioning](#13-api-stability-and-versioning)
+14. [Bug Reports and Frequently Asked Questions](#14-bug-reports-and-frequently-asked-questions)
 
-15. [MEX Interface to Octave/Matlab](#16-mex-interface-to-octavematlab)
-16. [Related Software Using Armadillo](#17-related-software-using-armadillo)
+15. [MEX Interface to Octave/Matlab](#15-mex-interface-to-octavematlab)
+16. [Related Software Using Armadillo](#16-related-software-using-armadillo)
 
 ---
 

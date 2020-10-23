@@ -4,7 +4,7 @@ http://arma.sourceforge.net
 Copyright 2008-2020 Conrad Sanderson (http://conradsanderson.id.au)  
 Copyright 2008-2016 National ICT Australia (NICTA)  
 Copyright 2017-2020 Arroyo Consortium  
-Copyright 2017-2020 Data61, CSIRO  
+Copyright 2017-2020 Data61 / CSIRO  
 
 ---
 

@@ -56,8 +56,8 @@ The library provides efficient classes for vectors, matrices and cubes,
 as well as 200+ associated functions covering essential and advanced functionality
 for data processing and manipulation of matrices.
 
-Various matrix decompositions are provided through integration with LAPACK,
-or one of its high performance drop-in replacements
+Various matrix decompositions (eigen, SVD, QR, etc) are provided through
+integration with LAPACK, or one of its high performance drop-in replacements
 (eg. OpenBLAS, Intel MKL, Apple Accelerate framework, etc).
 
 A sophisticated expression evaluator (via C++ template meta-programming)

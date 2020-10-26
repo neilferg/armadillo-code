@@ -42,9 +42,7 @@ eigs_gen
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  std::complex<T> sigma = T(0);
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {
@@ -169,9 +167,7 @@ eigs_gen
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  std::complex<T> sigma = T(0);
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {
@@ -286,15 +282,11 @@ eigs_gen
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
-  
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  std::complex<T> sigma = T(0);
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {

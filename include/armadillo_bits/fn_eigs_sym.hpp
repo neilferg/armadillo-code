@@ -40,9 +40,7 @@ eigs_sym
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  typename T1::pod_type sigma = 0.0;
-  
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {
@@ -131,9 +129,7 @@ eigs_sym
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  typename T1::pod_type sigma = 0.0;
-  
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {
@@ -223,9 +219,7 @@ eigs_sym
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  typename T1::pod_type sigma = 0.0;
-  
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {

@@ -80,70 +80,6 @@ eigs_gen
 
 
 
-template<typename T1>
-arma_warn_unused
-inline
-Col< std::complex<typename T1::pod_type> >
-eigs_gen
-  (
-  const SpBase<typename T1::elem_type, T1>& X,
-  const uword                               n_eigvals,
-  const std::complex<typename T1::pod_type> sigma,
-  const eigs_opts                           opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  typedef typename T1::pod_type T;
-  
-  arma_ignore(X);
-  arma_ignore(n_eigvals);
-  arma_ignore(sigma);
-  arma_ignore(opts);
-  
-  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
-  
-  Col< std::complex<T> > eigval;
-  
-  return eigval;
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-Col< std::complex<typename T1::pod_type> >
-eigs_gen
-  (
-  const SpBase<typename T1::elem_type, T1>& X,
-  const uword                               n_eigvals,
-  const typename T1::pod_type               sigma,
-  const eigs_opts                           opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  typedef typename T1::pod_type T;
-  
-  arma_ignore(X);
-  arma_ignore(n_eigvals);
-  arma_ignore(sigma);
-  arma_ignore(opts);
-  
-  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
-  
-  Col< std::complex<T> > eigval;
-  
-  return eigval;
-  }
-
-
-
 //! eigenvalues of general sparse matrix X
 template<typename T1>
 inline
@@ -202,64 +138,6 @@ eigs_gen
   opts.tol = tol;
   
   return eigs_gen(eigval, X, n_eigvals, form, opts);
-  }
-
-
-
-template<typename T1>
-inline
-bool
-eigs_gen
-  (
-           Col< std::complex<typename T1::pod_type> >& eigval,
-  const SpBase<typename T1::elem_type, T1>&            X,
-  const uword                                          n_eigvals,
-  const std::complex<typename T1::pod_type>            sigma,
-  const eigs_opts                                      opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  arma_ignore(eigval);
-  arma_ignore(X);
-  arma_ignore(n_eigvals);
-  arma_ignore(sigma);
-  arma_ignore(opts);
-  
-  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
-  
-  return false;
-  }
-
-
-
-template<typename T1>
-inline
-bool
-eigs_gen
-  (
-           Col< std::complex<typename T1::pod_type> >& eigval,
-  const SpBase<typename T1::elem_type, T1>&            X,
-  const uword                                          n_eigvals,
-  const typename T1::pod_type                          sigma,
-  const eigs_opts                                      opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  arma_ignore(eigval);
-  arma_ignore(X);
-  arma_ignore(n_eigvals);
-  arma_ignore(sigma);
-  arma_ignore(opts);
-  
-  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
-  
-  return false;
   }
 
 
@@ -323,68 +201,6 @@ eigs_gen
   opts.tol = tol;
   
   return eigs_gen(eigval, eigvec, X, n_eigvals, form, opts);
-  }
-
-
-
-template<typename T1>
-inline
-bool
-eigs_gen
-  (
-         Col< std::complex<typename T1::pod_type> >& eigval,
-         Mat< std::complex<typename T1::pod_type> >& eigvec,
-  const SpBase<typename T1::elem_type, T1>&          X,
-  const uword                                        n_eigvals,
-  const std::complex<typename T1::pod_type>          sigma,
-  const eigs_opts                                    opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  arma_ignore(eigval);
-  arma_ignore(eigvec);
-  arma_ignore(X);
-  arma_ignore(n_eigvals);
-  arma_ignore(sigma);
-  arma_ignore(opts);
-  
-  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
-  
-  return false;
-  }
-
-
-
-template<typename T1>
-inline
-bool
-eigs_gen
-  (
-         Col< std::complex<typename T1::pod_type> >& eigval,
-         Mat< std::complex<typename T1::pod_type> >& eigvec,
-  const SpBase<typename T1::elem_type, T1>&          X,
-  const uword                                        n_eigvals,
-  const typename T1::pod_type                        sigma,
-  const eigs_opts                                    opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  arma_ignore(eigval);
-  arma_ignore(eigvec);
-  arma_ignore(X);
-  arma_ignore(n_eigvals);
-  arma_ignore(sigma);
-  arma_ignore(opts);
-  
-  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
-  
-  return false;
   }
 
 

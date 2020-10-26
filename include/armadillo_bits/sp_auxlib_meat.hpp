@@ -68,14 +68,17 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
     }
-
-  // Redirect "sm" to ARPACK, if we can, because it's capable of shift-invert.
-  // This part can be removed after NEWARP is equipped with shift-invert as well.
-  #if defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU)
-    {
-    if(form_val == form_sm)  { return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts); }
-    }
-  #endif
+  
+  // NOTE: code disabled due to crash in superlu::gstrs()
+  // NOTE: see https://gitlab.com/conradsnicta/armadillo-code/-/issues/166
+  // 
+  // // Redirect "sm" to ARPACK, if we can, because it's capable of shift-invert.
+  // // This part can be removed after NEWARP is equipped with shift-invert as well.
+  // #if defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU)
+  //   {
+  //   if(form_val == form_sm)  { return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts); }
+  //   }
+  // #endif
   
   #if   defined(ARMA_USE_NEWARP)
     {
@@ -269,27 +272,32 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
 
       default:       which = which_lm;  break;
       }
-
-    // Decide whether to use shift-invert or not
-    bool shiftinvert = false;
     
-    if(form_val == form_sm)
-      {
-      #if defined(ARMA_USE_SUPERLU)
-        {
-        which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
-        shiftinvert = true;
-        }
-      #else
-        {
-        // Make sure we have sigma == 0 if we are not doing shift-invert
-        if(std::abs(sigma) > std::abs(std::numeric_limits<eT>::epsilon()))
-          {
-          arma_debug_warn("eigs_sym(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
-          }
-        }
-      #endif
-      }
+    const bool shiftinvert = false;
+    
+    // NOTE: code disabled due to crash in superlu::gstrs()
+    // NOTE: see https://gitlab.com/conradsnicta/armadillo-code/-/issues/166
+    // 
+    // // Decide whether to use shift-invert or not
+    // bool shiftinvert = false;
+    // 
+    // if(form_val == form_sm)
+    //   {
+    //   #if defined(ARMA_USE_SUPERLU)
+    //     {
+    //     which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
+    //     shiftinvert = true;
+    //     }
+    //   #else
+    //     {
+    //     // Make sure we have sigma == 0 if we are not doing shift-invert
+    //     if(std::abs(sigma) > std::abs(std::numeric_limits<eT>::epsilon()))
+    //       {
+    //       arma_debug_warn("eigs_sym(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
+    //       }
+    //     }
+    //   #endif
+    //   }
     
     // Make sure it's square.
     arma_debug_check( (X.n_rows != X.n_cols), "eigs_sym(): given matrix must be square sized" );
@@ -397,14 +405,17 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   arma_extra_debug_sigprint();
 
   const unwrap_spmat<T1> U(X.get_ref());
-
-  // Redirect "sm" to ARPACK, if we can, because it's capable of shift-invert.
-  // This part can be removed after NEWARP is equipped with shift-invert as well.
-  #if defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU)
-    {
-    if(form_val == form_sm)  { return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts); }
-    }
-  #endif
+  
+  // NOTE: code disabled due to crash in superlu::gstrs()
+  // NOTE: see https://gitlab.com/conradsnicta/armadillo-code/-/issues/166
+  // 
+  // // Redirect "sm" to ARPACK, if we can, because it's capable of shift-invert.
+  // // This part can be removed after NEWARP is equipped with shift-invert as well.
+  // #if defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU)
+  //   {
+  //   if(form_val == form_sm)  { return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts); }
+  //   }
+  // #endif
   
   #if defined(ARMA_USE_NEWARP)
     {
@@ -626,26 +637,31 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       default:       which = which_lm;
       }
     
-    // Decide whether to use shift-invert or not
-    bool shiftinvert = false;
+    const bool shiftinvert = false;
     
-    if(form_val == form_sm)
-      {
-      #if defined(ARMA_USE_SUPERLU)
-        {
-        which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
-        shiftinvert = true;
-        }
-      #else
-        {
-        // Make sure we have sigma == 0 if we are not doing shift-invert
-        if(std::abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
-          {
-          arma_debug_warn("eigs_gen(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
-          }
-        }
-      #endif
-      }
+    // NOTE: code disabled due to crash in superlu::gstrs()
+    // NOTE: see https://gitlab.com/conradsnicta/armadillo-code/-/issues/166
+    // 
+    // // Decide whether to use shift-invert or not
+    // bool shiftinvert = false;
+    // 
+    // if(form_val == form_sm)
+    //   {
+    //   #if defined(ARMA_USE_SUPERLU)
+    //     {
+    //     which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
+    //     shiftinvert = true;
+    //     }
+    //   #else
+    //     {
+    //     // Make sure we have sigma == 0 if we are not doing shift-invert
+    //     if(std::abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
+    //       {
+    //       arma_debug_warn("eigs_gen(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
+    //       }
+    //     }
+    //   #endif
+    //   }
     
     // Make sure it's square.
     arma_debug_check( (X.n_rows != X.n_cols), "eigs_gen(): given matrix must be square sized" );
@@ -848,26 +864,31 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       default:       which = which_lm;
       }
 
-    // Decide whether to use shift-invert or not
-    bool shiftinvert = false;
+    const bool shiftinvert = false;
     
-    if(form_val == form_sm)
-      {
-      #if defined(ARMA_USE_SUPERLU)
-        {
-        which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
-        shiftinvert = true;
-        }
-      #else
-        {
-        // Make sure we have sigma == 0 if we are not doing shift-invert
-        if(abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
-          {
-          arma_debug_warn("eigs_gen(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
-          }
-        }
-      #endif
-      }
+    // NOTE: code disabled due to crash in superlu::gstrs()
+    // NOTE: see https://gitlab.com/conradsnicta/armadillo-code/-/issues/166
+    // 
+    // // Decide whether to use shift-invert or not
+    // bool shiftinvert = false;
+    // 
+    // if(form_val == form_sm)
+    //   {
+    //   #if defined(ARMA_USE_SUPERLU)
+    //     {
+    //     which       = which_lm;  // In shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix
+    //     shiftinvert = true;
+    //     }
+    //   #else
+    //     {
+    //     // Make sure we have sigma == 0 if we are not doing shift-invert
+    //     if(abs(sigma) > std::abs(std::numeric_limits<T>::epsilon()))
+    //       {
+    //       arma_debug_warn("eigs_gen(): getting eigenvalues around 0 instead of ", sigma, " because SuperLU is not enabled. Please enable SuperLU to use non-zero shifts.");
+    //       }
+    //     }
+    //   #endif
+    //   }
     
     const unwrap_spmat<T1> U(X_expr.get_ref());
     

@@ -21,8 +21,8 @@
 
 #define ARMA_VERSION_MAJOR 10
 #define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Orchid Ambush"
+#define ARMA_VERSION_PATCH 90
+#define ARMA_VERSION_NAME  "unstable"
 
 
 

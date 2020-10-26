@@ -13133,20 +13133,14 @@ See also:
 <b>vec eigval = eigs_sym( X, k )</b>
 <br><b>vec eigval = eigs_sym( X, k, form )</b>
 <br><b>vec eigval = eigs_sym( X, k, form, opts )</b>
-<br><b>vec eigval = eigs_sym( X, k, sigma )</b>
-<br><b>vec eigval = eigs_sym( X, k, sigma, opts )</b>
 <br>
 <br><b>eigs_sym( eigval, X, k )</b>
 <br><b>eigs_sym( eigval, X, k, form )</b>
 <br><b>eigs_sym( eigval, X, k, form, opts )</b>
-<br><b>eigs_sym( eigval, X, k, sigma )</b>
-<br><b>eigs_sym( eigval, X, k, sigma, opts )</b>
 <br>
 <br><b>eigs_sym( eigval, eigvec, X, k )</b>
 <br><b>eigs_sym( eigval, eigvec, X, k, form )</b>
 <br><b>eigs_sym( eigval, eigvec, X, k, form, opts )</b>
-<br><b>eigs_sym( eigval, eigvec, X, k, sigma )</b>
-<br><b>eigs_sym( eigval, eigvec, X, k, sigma, opts )</b>
 <ul>
 <li>Obtain a limited number of eigenvalues and eigenvectors of <b>sparse</b> symmetric real matrix <i>X</i></li>
 <br>
@@ -13165,10 +13159,6 @@ See also:
 </tbody>
 </table>
 </ul>
-</li>
-<br>
-<li>The argument <i>sigma</i> is optional; specify a scalar <i>sigma</i> to obtain eigenvalues closest to <i>sigma</i>
-<br><b>NOTE:</b> to use a non-zero <i>sigma</i>, <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a>
 </li>
 <br>
 <li>
@@ -13205,11 +13195,6 @@ struct eigs_opts
 <li><b>Caveats:</b>
 <ul>
 <li>the number of obtained eigenvalues/eigenvectors may be lower than requested, depending on the given data</li>
-<li>
-enabling <i>ARMA_USE_SUPERLU</i> in <a href="#config_hpp">config.hpp</a> is recommended;
-<br>SuperLU is used to provide faster and more stable convergence when requesting eigenvalues with smallest magnitude
-<br>and to calculate eigenvalues closest to a given <i>sigma</i>
-</li>
 <li>
 if the decomposition fails, try first increasing <i>opts.subdim</i> (Krylov subspace dimension)
 <br>and, as secondary options, try increasing <i>opts.subdim</i> (maximum number of iterations)
@@ -13258,20 +13243,14 @@ See also:
 <b>cx_vec eigval = eigs_gen( X, k )</b>
 <br><b>cx_vec eigval = eigs_gen( X, k, form )</b>
 <br><b>cx_vec eigval = eigs_gen( X, k, form, opts )</b>
-<br><b>cx_vec eigval = eigs_gen( X, k, sigma )</b>
-<br><b>cx_vec eigval = eigs_gen( X, k, sigma, opts )</b>
 <br>
 <br><b>eigs_gen( eigval, X, k )</b>
 <br><b>eigs_gen( eigval, X, k, form )</b>
 <br><b>eigs_gen( eigval, X, k, form, opts )</b>
-<br><b>eigs_gen( eigval, X, k, sigma )</b>
-<br><b>eigs_gen( eigval, X, k, sigma, opts )</b>
 <br>
 <br><b>eigs_gen( eigval, eigvec, X, k )</b>
 <br><b>eigs_gen( eigval, eigvec, X, k, form )</b>
 <br><b>eigs_gen( eigval, eigvec, X, k, form, opts )</b>
-<br><b>eigs_gen( eigval, eigvec, X, k, sigma )</b>
-<br><b>eigs_gen( eigval, eigvec, X, k, sigma, opts )</b>
 <ul>
 <li>
 Obtain a limited number of eigenvalues and eigenvectors of <b>sparse</b> general (non-symmetric/non-hermitian) square matrix <i>X</i>
@@ -13294,10 +13273,6 @@ Obtain a limited number of eigenvalues and eigenvectors of <b>sparse</b> general
 </tbody>
 </table>
 </ul>
-</li>
-<br>
-<li>The argument <i>sigma</i> is optional; specify a scalar <i>sigma</i> to obtain eigenvalues closest to <i>sigma</i>
-<br><b>NOTE:</b> to use a non-zero <i>sigma</i>, <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a>
 </li>
 <br>
 <li>
@@ -13338,11 +13313,6 @@ If <i>X</i> is not square sized, a <i>std::logic_error</i> exception is thrown
 <li><b>Caveats:</b>
 <ul>
 <li>the number of obtained eigenvalues/eigenvectors may be lower than requested, depending on the given data</li>
-<li>
-enabling <i>ARMA_USE_SUPERLU</i> in <a href="#config_hpp">config.hpp</a> is recommended;
-<br>SuperLU is used to provide faster and more stable convergence when requesting eigenvalues with smallest magnitude
-<br>and to calculate eigenvalues closest to a given <i>sigma</i>
-</li>
 <li>
 if the decomposition fails, try first increasing <i>opts.subdim</i> (Krylov subspace dimension)
 <br>and, as secondary options, try increasing <i>opts.subdim</i> (maximum number of iterations)
@@ -18941,7 +18911,7 @@ List of additions and changes for each version:
 <li>faster handling of compound expressions by <a href="#trimat">trimatu()</a> and <a href="#trimat">trimatl()</a></li>
 <li>faster sparse matrix addition, subtraction and element-wise multiplication</li>
 <li>expanded sparse <a href="#submat">submatrix views</a> to handle the non-contiguous form of <i>X.cols(vector_of_column_indices)</i></li>
-<li>expanded <a href="#eigs_sym">eigs_sym()</a> and <a href="#eigs_gen">eigs_gen()</a> with optional fine-grained parameters (subspace dimension, number of iterations, eigenvalues closest to specified value)</li>
+<li>expanded <a href="#eigs_sym">eigs_sym()</a> and <a href="#eigs_gen">eigs_gen()</a> with optional fine-grained parameters</li>
 </ul>
 </li>
 <br>

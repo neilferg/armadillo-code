@@ -100,29 +100,14 @@ eigs_gen
   
   typedef typename T1::pod_type T;
   
-  Mat< std::complex<T> > eigvec;
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
+  
+  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
+  
   Col< std::complex<T> > eigval;
-  
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
-  
-  bool status = false;
-  
-  // If X is real and sigma is truly complex, treat X as complex.
-  // The reason is that we are still not able to apply truly complex shifts to real matrices
-  if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
-    {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, form_val, sigma, opts);
-    }
-  else
-    {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
-    }
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    arma_stop_runtime_error("eigs_gen(): decomposition failed");
-    }
   
   return eigval;
   }
@@ -147,18 +132,14 @@ eigs_gen
   
   typedef typename T1::pod_type T;
   
-  Mat< std::complex<T> > eigvec;
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
+  
+  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
+  
   Col< std::complex<T> > eigval;
-  
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    arma_stop_runtime_error("eigs_gen(): decomposition failed");
-    }
   
   return eigval;
   }
@@ -245,32 +226,15 @@ eigs_gen
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  arma_ignore(eigval);
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
   
-  Mat< std::complex<T> > eigvec;
+  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
-  
-  bool status = false;
-  
-  // If X is real and sigma is truly complex, treat X as complex.
-  // The reason is that we are still not able to apply truly complex shifts to real matrices
-  if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
-    {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, form_val, sigma, opts);
-    }
-  else
-    {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
-    }
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
-    }
-  
-  return status;
+  return false;
   }
 
 
@@ -291,21 +255,15 @@ eigs_gen
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  arma_ignore(eigval);
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
   
-  Mat< std::complex<T> > eigvec;
+  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
-    }
-  
-  return status;
+  return false;
   }
 
 
@@ -394,33 +352,16 @@ eigs_gen
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  arma_ignore(eigval);
+  arma_ignore(eigvec);
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
-  
-  bool status = false;
-  
-  // If X is real and sigma is truly complex, treat X as complex.
-  // The reason is that we are still not able to apply truly complex shifts to real matrices
-  if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
-    {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, form_val, sigma, opts);
-    }
-  else
-    {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
-    }
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    eigvec.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
-    }
-  
-  return status;
+  return false;
   }
 
 
@@ -442,22 +383,16 @@ eigs_gen
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  arma_ignore(eigval);
+  arma_ignore(eigvec);
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_stop_runtime_error("eigs_gen(): use of 'sigma' is not supported in this version");
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    eigvec.soft_reset();
-    arma_debug_warn("eigs_gen(): decomposition failed");
-    }
-  
-  return status;
+  return false;
   }
 
 

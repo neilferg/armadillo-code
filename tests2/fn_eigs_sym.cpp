@@ -139,38 +139,3 @@ TEST_CASE("fn_eigs_sm_test")
 
 
 
-TEST_CASE("fn_eigs_sigma_test")
-  {
-  for (size_t trial = 0; trial < 10; ++trial)
-    {
-    // Test ARPACK decomposition of sparse matrices.
-    sp_mat m(100, 100);
-    for (uword i = 0; i < 100; ++i)
-      {
-      m(i, i) = i + 10;
-      }
-    mat d(m);
-
-    // Eigendecompose, getting first 5 eigenvectors around 12.1.
-    vec sp_eigval;
-    mat sp_eigvec;
-    eigs_sym(sp_eigval, sp_eigvec, m, 5, 12.1);
-
-    // Do the same for the dense case.
-    vec eigval;
-    mat eigvec;
-    eig_sym(eigval, eigvec, d);
-
-    for (size_t i = 0; i < 5; ++i)
-      {
-      // It may be pointed the wrong direction.
-      REQUIRE( sp_eigval(i) == Approx(eigval(i)).epsilon(0.01) );
-
-      for (size_t j = 0; j < 100; ++j)
-        {
-        REQUIRE( std::abs(sp_eigvec(j, i)) ==
-                 Approx(std::abs(eigvec(j, i))).epsilon(0.01) );
-        }
-      }
-    }
-  }

@@ -96,18 +96,14 @@ eigs_sym
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  Mat<typename T1::elem_type> eigvec;
-  Col<typename T1::pod_type > eigval;
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
-  
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    arma_stop_runtime_error("eigs_sym(): decomposition failed");
-    }
+  arma_stop_runtime_error("eigs_sym(): use of 'sigma' is not supported in this version");
+    
+  Col<typename T1::pod_type> eigval;
   
   return eigval;
   }
@@ -192,19 +188,15 @@ eigs_sym
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  Mat<typename T1::elem_type> eigvec;
+  arma_ignore(eigval);
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  arma_stop_runtime_error("eigs_sym(): use of 'sigma' is not supported in this version");
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    arma_debug_warn("eigs_sym(): decomposition failed");
-    }
-  
-  return status;
+  return false;
   }
 
 
@@ -291,20 +283,16 @@ eigs_sym
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_sym(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_ignore(eigval);
+  arma_ignore(eigvec);
+  arma_ignore(X);
+  arma_ignore(n_eigvals);
+  arma_ignore(sigma);
+  arma_ignore(opts);
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  arma_stop_runtime_error("eigs_sym(): use of 'sigma' is not supported in this version");
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
-  
-  if(status == false)
-    {
-    eigval.soft_reset();
-    eigvec.soft_reset();
-    arma_debug_warn("eigs_sym(): decomposition failed");
-    }
-  
-  return status;
+  return false;
   }
 
 

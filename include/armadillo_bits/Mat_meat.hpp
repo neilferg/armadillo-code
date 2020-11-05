@@ -26,7 +26,6 @@ Mat<eT>::~Mat()
   
   if( (mem_state == 0) && (n_elem > arma_config::mat_prealloc) )
     {
-    arma_extra_debug_print("Mat::destructor: releasing memory");
     memory::release( access::rw(mem) );
     }
   
@@ -187,10 +186,10 @@ Mat<eT>::init_cold()
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
-  #if defined(ARMA_64BIT_WORD)
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
     const char* error_message = "Mat::init(): requested size is too large";
   #else
-    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode and/or enable ARMA_64BIT_WORD";
+    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
   #endif
   
   arma_debug_check
@@ -257,10 +256,10 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
-  #if defined(ARMA_64BIT_WORD)
+  #if (defined(ARMA_USE_CXX11) || defined(ARMA_64BIT_WORD))
     const char* error_message = "Mat::init(): requested size is too large";
   #else
-    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode and/or enable ARMA_64BIT_WORD";
+    const char* error_message = "Mat::init(): requested size is too large; suggest to compile in C++11 mode or enable ARMA_64BIT_WORD";
   #endif
   
   arma_debug_set_error
@@ -2526,28 +2525,46 @@ Mat<eT>::operator=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap_spmat<T1> U(m.get_ref());
-  const SpMat<eT>&   x = U.M;
-  
-  const uword x_n_cols = x.n_cols;
-  
-  (*this).zeros(x.n_rows, x_n_cols);
-  
-  const    eT* x_values      = x.values;
-  const uword* x_row_indices = x.row_indices;
-  const uword* x_col_ptrs    = x.col_ptrs;
-  
-  for(uword x_col = 0; x_col < x_n_cols; ++x_col)
+  if( (is_SpMat<T1>::value) || (is_SpMat<typename SpProxy<T1>::stored_type>::value) )
     {
-    const uword start = x_col_ptrs[x_col    ];
-    const uword end   = x_col_ptrs[x_col + 1];
+    const unwrap_spmat<T1> U(m.get_ref());
+    const SpMat<eT>&   x = U.M;
     
-    for(uword i = start; i < end; ++i)
+    const uword x_n_cols = x.n_cols;
+    
+    (*this).zeros(x.n_rows, x_n_cols);
+    
+    const    eT* x_values      = x.values;
+    const uword* x_row_indices = x.row_indices;
+    const uword* x_col_ptrs    = x.col_ptrs;
+    
+    for(uword x_col = 0; x_col < x_n_cols; ++x_col)
       {
-      const uword x_row = x_row_indices[i];
-      const eT    x_val = x_values[i];
+      const uword start = x_col_ptrs[x_col    ];
+      const uword end   = x_col_ptrs[x_col + 1];
       
-      at(x_row, x_col) = x_val;
+      for(uword i = start; i < end; ++i)
+        {
+        const uword x_row = x_row_indices[i];
+        const eT    x_val = x_values[i];
+        
+        at(x_row, x_col) = x_val;
+        }
+      }
+    }
+  else
+    {
+    const SpProxy<T1> p(m.get_ref());
+    
+    (*this).zeros(p.get_n_rows(), p.get_n_cols());
+    
+    typename SpProxy<T1>::const_iterator_type it     = p.begin();
+    typename SpProxy<T1>::const_iterator_type it_end = p.end();
+    
+    while(it != it_end)
+      {
+      at(it.row(), it.col()) = (*it);
+      ++it;
       }
     }
   
@@ -2681,74 +2698,6 @@ Mat<eT>::operator/=(const SpBase<eT, T1>& m)
   for(uword r = 0; r < n_rows; ++r)
     {
     at(r, c) /= p.at(r, c);
-    }
-  
-  return *this;
-  }
-
-
-
-template<typename eT>
-inline
-Mat<eT>::Mat(const SpSubview<eT>& X)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , vec_state(0)
-  , mem_state(0)
-  , mem()
-  {
-  arma_extra_debug_sigprint_this(this);
-  
-  (*this).operator=(X);
-  }
-
-
-
-template<typename eT>
-inline
-Mat<eT>&
-Mat<eT>::operator=(const SpSubview<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  (*this).zeros(X.n_rows, X.n_cols);
-  
-  if(X.n_rows == X.m.n_rows)
-    {
-    const uword sv_col_start = X.aux_col1;
-    const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
-    
-    const    eT* m_values      = X.m.values;
-    const uword* m_row_indices = X.m.row_indices;
-    const uword* m_col_ptrs    = X.m.col_ptrs;
-    
-    for(uword m_col = sv_col_start; m_col <= sv_col_end; ++m_col)
-      {
-      const uword m_col_adjusted = m_col - sv_col_start;
-      
-      const uword start = m_col_ptrs[m_col    ];
-      const uword end   = m_col_ptrs[m_col + 1];
-      
-      for(uword ii = start; ii < end; ++ii)
-        {
-        const uword m_row = m_row_indices[ii];
-        const eT    m_val = m_values[ii];
-        
-        at(m_row, m_col_adjusted) = m_val;
-        }
-      }
-    }
-  else
-    {
-    typename SpSubview<eT>::const_iterator it     = X.begin();
-    typename SpSubview<eT>::const_iterator it_end = X.end();
-    
-    while(it != it_end)
-      {
-      at(it.row(), it.col()) = (*it);
-      ++it;
-      }
     }
   
   return *this;
@@ -6576,7 +6525,6 @@ Mat<eT>::set_size(const uword in_elem)
   switch(vec_state)
     {
     case 0:
-      // fallthrough
     case 1:
       init_warm(in_elem, 1);
       break;
@@ -6628,7 +6576,6 @@ Mat<eT>::resize(const uword in_elem)
   switch(vec_state)
     {
     case 0:
-      // fallthrough
     case 1:
       (*this).resize(in_elem, 1);
       break;
@@ -7418,7 +7365,7 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       break;
     
     case csv_ascii:
-      return (*this).save(csv_name(name), type, print_status);
+      save_okay = diskio::save_csv_ascii(*this, name);
       break;
     
     case raw_binary:
@@ -7512,83 +7459,6 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_stat
 
 
 
-template<typename eT>
-inline
-arma_cold
-bool
-Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_status) const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(type != csv_ascii)
-    {
-    arma_debug_check(true, "Mat::save(): unsupported file type for csv_name()");
-    return false;
-    }
-  
-  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
-  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
-  
-  arma_extra_debug_print("Mat::save(csv_name): enabled flags:");
-  
-  if(do_trans   )  { arma_extra_debug_print("trans");       }
-  if(no_header  )  { arma_extra_debug_print("no_header");   }
-  if(with_header)  { arma_extra_debug_print("with_header"); }
-  
-  if(no_header)  { with_header = false; }
-  
-  if(with_header)
-    {
-    if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
-      {
-      if(print_status)  { arma_debug_warn("Mat::save(): given header must have a vector layout"); }
-      return false;
-      }
-    
-    for(uword i=0; i < spec.header_ro.n_elem; ++i)
-      {
-      const std::string& token = spec.header_ro.at(i);
-      
-      if(token.find(',') != std::string::npos)
-        {
-        if(print_status)  { arma_debug_warn("Mat::save(): token within the header contains a comma: '", token, "'"); }
-        return false;
-        }
-      }
-    
-    const uword save_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
-    
-    if(spec.header_ro.n_elem != save_n_cols)
-      {
-      if(print_status)  { arma_debug_warn("Mat::save(): size mistmach between header and matrix"); }
-      return false;
-      }
-    }
-  
-  bool save_okay = false;
-  
-  if(do_trans)
-    {
-    const Mat<eT> tmp = (*this).st();
-    
-    save_okay = diskio::save_csv_ascii(tmp, spec.filename, spec.header_ro, with_header);
-    }
-  else
-    {
-    save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
-    }
-  
-  if((print_status == true) && (save_okay == false))
-    {
-    arma_debug_warn("Mat::save(): couldn't write to ", spec.filename);
-    }
-  
-  return save_okay;
-  }
-
-
-
 //! save the matrix to a stream
 template<typename eT>
 inline
@@ -7665,7 +7535,7 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       break;
     
     case csv_ascii:
-      return (*this).load(csv_name(name), type, print_status);
+      load_okay = diskio::load_csv_ascii(*this, name, err_msg);
       break;
     
     case raw_binary:
@@ -7771,93 +7641,6 @@ Mat<eT>::load(const hdf5_name& spec, const file_type type, const bool print_stat
 
 
 
-template<typename eT>
-inline
-arma_cold
-bool
-Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_status)
-  {
-  arma_extra_debug_sigprint();
-  
-  if(type != csv_ascii)
-    {
-    arma_debug_check(true, "Mat::load(): unsupported file type for csv_name()");
-    return false;
-    }
-  
-  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
-  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
-  
-  arma_extra_debug_print("Mat::load(csv_name): enabled flags:");
-  
-  if(do_trans   )  { arma_extra_debug_print("trans");       }
-  if(no_header  )  { arma_extra_debug_print("no_header");   }
-  if(with_header)  { arma_extra_debug_print("with_header"); }
-  
-  if(no_header)  { with_header = false; }
-  
-  bool load_okay = false;
-  std::string err_msg;
-  
-  if(do_trans)
-    {
-    Mat<eT> tmp_mat;
-    
-    load_okay = diskio::load_csv_ascii(tmp_mat, spec.filename, err_msg, spec.header_rw, with_header);
-    
-    if(load_okay)
-      {
-      (*this) = tmp_mat.st();
-      
-      if(with_header)
-        {
-        // field::set_size() preserves data if the number of elements hasn't changed
-        spec.header_rw.set_size(spec.header_rw.n_elem, 1);
-        }
-      }
-    }
-  else
-    {
-    load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
-    }
-  
-  if(print_status)
-    {
-    if(load_okay == false)
-      {
-      if(err_msg.length() > 0)
-        {
-        arma_debug_warn("Mat::load(): ", err_msg, spec.filename);
-        }
-      else
-        {
-        arma_debug_warn("Mat::load(): couldn't read ", spec.filename);
-        }
-      }
-    else
-      {
-      const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
-      
-      if(with_header && (spec.header_rw.n_elem != load_n_cols))
-        {
-        arma_debug_warn("Mat::load(): size mistmach between header and matrix");
-        }
-      }
-    }
-  
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    
-    if(with_header)  { spec.header_rw.reset(); }
-    }
-  
-  return load_okay;
-  }
-
-
-
 //! load a matrix from a stream
 template<typename eT>
 inline
@@ -7954,19 +7737,6 @@ Mat<eT>::quiet_save(const hdf5_name& spec, const file_type type) const
 
 
 
-template<typename eT>
-inline
-arma_cold
-bool
-Mat<eT>::quiet_save(const csv_name& spec, const file_type type) const
-  {
-  arma_extra_debug_sigprint();
-  
-  return (*this).save(spec, type, false);
-  }
-
-
-
 //! save the matrix to a stream, without printing any error messages
 template<typename eT>
 inline
@@ -8000,19 +7770,6 @@ inline
 arma_cold
 bool
 Mat<eT>::quiet_load(const hdf5_name& spec, const file_type type)
-  {
-  arma_extra_debug_sigprint();
-  
-  return (*this).load(spec, type, false);
-  }
-
-
-
-template<typename eT>
-inline
-arma_cold
-bool
-Mat<eT>::quiet_load(const csv_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   

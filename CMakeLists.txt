@@ -133,14 +133,6 @@ else()
 endif()
 
 option(DETECT_HDF5 "Detect HDF5 and include HDF5 support, if found" ON)
-# set(DETECT_HDF5 false)
-## uncomment the above line to disable the detection of the HDF5 library;
-## you can also disable HDF5 detection directly on the command line:
-## cmake -D DETECT_HDF5=false .
-
-option(ALLOW_FLEXIBLAS_LINUX "Allow detection of FlexiBLAS on Linux (EXPERIMENTAL)" OFF)
-## Example use on the command line:
-## cmake -D ALLOW_FLEXIBLAS_LINUX=true .
 
 option(ALLOW_OPENBLAS_MACOS "Allow detection of OpenBLAS on macOS" OFF)
 ## Example use on the command line:
@@ -149,12 +141,6 @@ option(ALLOW_OPENBLAS_MACOS "Allow detection of OpenBLAS on macOS" OFF)
 option(ALLOW_BLAS_LAPACK_MACOS "Allow detection of BLAS and LAPACK on macOS" OFF)
 ## Example use on the command line:
 ## cmake -D ALLOW_BLAS_LAPACK_MACOS=true .
-
-option(BUILD_SMOKE_TEST "Build a smoke test" OFF)
-## Example use on the command line:
-## cmake -D BUILD_SMOKE_TEST=true .
-## make
-## ctest
 
 
 if(WIN32)
@@ -179,13 +165,9 @@ message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "CMAKE_COMPILER_IS_GNUCXX   = ${CMAKE_COMPILER_IS_GNUCXX}"  )
 message(STATUS "BUILD_SHARED_LIBS          = ${BUILD_SHARED_LIBS}"         )
 message(STATUS "DETECT_HDF5                = ${DETECT_HDF5}"               )
-message(STATUS "ALLOW_FLEXIBLAS_LINUX      = ${ALLOW_FLEXIBLAS_LINUX}"     )
 message(STATUS "ALLOW_OPENBLAS_MACOS       = ${ALLOW_OPENBLAS_MACOS}"      )
 message(STATUS "ALLOW_BLAS_LAPACK_MACOS    = ${ALLOW_BLAS_LAPACK_MACOS}"   )
-message(STATUS "BUILD_SMOKE_TEST           = ${BUILD_SMOKE_TEST}"          )
 
-message(STATUS "")
-message(STATUS "*** Looking for external libraries")
 
 ##
 ## Find LAPACK and BLAS libraries, or their optimised versions
@@ -268,42 +250,15 @@ else()
   include(ARMA_FindBLAS)
   include(ARMA_FindLAPACK)
   
-  if(ALLOW_FLEXIBLAS_LINUX AND (${CMAKE_SYSTEM_NAME} MATCHES "Linux"))
-    include(ARMA_FindFlexiBLAS)
-  endif()
+  message(STATUS "     MKL_FOUND = ${MKL_FOUND}"     )
+  message(STATUS "  ACMLMP_FOUND = ${ACMLMP_FOUND}"  )
+  message(STATUS "    ACML_FOUND = ${ACML_FOUND}"    )
+  message(STATUS "OpenBLAS_FOUND = ${OpenBLAS_FOUND}")
+  message(STATUS "   ATLAS_FOUND = ${ATLAS_FOUND}"   )
+  message(STATUS "    BLAS_FOUND = ${BLAS_FOUND}"    )
+  message(STATUS "  LAPACK_FOUND = ${LAPACK_FOUND}"  )
   
-  message(STATUS "      MKL_FOUND = ${MKL_FOUND}"       )
-  message(STATUS "   ACMLMP_FOUND = ${ACMLMP_FOUND}"    )
-  message(STATUS "     ACML_FOUND = ${ACML_FOUND}"      )
-  message(STATUS " OpenBLAS_FOUND = ${OpenBLAS_FOUND}"  )
-  message(STATUS "    ATLAS_FOUND = ${ATLAS_FOUND}"     )
-  message(STATUS "     BLAS_FOUND = ${BLAS_FOUND}"      )
-  message(STATUS "   LAPACK_FOUND = ${LAPACK_FOUND}"    )
-  
-  if(FlexiBLAS_FOUND)
-    
-    message(STATUS "FlexiBLAS_FOUND = ${FlexiBLAS_FOUND}" )
-    
-    set(ARMA_USE_LAPACK true)
-    set(ARMA_USE_BLAS   true)
-    
-    set(ARMA_LIBS ${ARMA_LIBS} ${FlexiBLAS_LIBRARIES})
-    
-    message(STATUS "")
-    message(STATUS "*** Using FlexiBLAS to access BLAS and LAPACK functions.")
-    message(STATUS "*** WARNING:")
-    message(STATUS "*** if SuperLU and/or ARPACK are used, they must also be linked with FlexiBLAS.")
-    message(STATUS "")
-    message(STATUS "*** If using FlexiBLAS causes problems, please file a bug")
-    message(STATUS "*** report with the FlexiBLAS developers:")
-    message(STATUS "*** https://www.mpi-magdeburg.mpg.de/projects/flexiblas")
-    message(STATUS "")
-    message(STATUS "*** To disable detection of FlexiBLAS,")
-    message(STATUS "*** rerun cmake with FlexiBLAS detection disabled:")
-    message(STATUS "*** cmake -D ALLOW_FLEXIBLAS_LINUX=false .")
-    message(STATUS "")
-    
-  elseif(MKL_FOUND OR ACMLMP_FOUND OR ACML_FOUND)
+  if(MKL_FOUND OR ACMLMP_FOUND OR ACML_FOUND)
     
     set(ARMA_USE_LAPACK true)
     set(ARMA_USE_BLAS   true)
@@ -402,6 +357,12 @@ endif()
 find_package(PkgConfig)
 
 
+# set(DETECT_HDF5 false)
+
+## uncomment the above line to disable the detection of the HDF5 library;
+## you can also disable HDF5 detection directly on the command line:
+## cmake -D DETECT_HDF5=false .
+
 if(DETECT_HDF5)
   find_package(HDF5 QUIET COMPONENTS C)
 
@@ -496,12 +457,6 @@ if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
   endif()
 endif()
 
-
-if(MINGW OR MSYS OR CYGWIN OR MSVC)
-  # MinGW doesn't correctly handle thread_local
-  set(ARMA_USE_EXTERN_CXX11_RNG false)
-endif()
-
 message(STATUS "ARMA_USE_EXTERN_CXX11_RNG = ${ARMA_USE_EXTERN_CXX11_RNG}")
 
 
@@ -510,6 +465,9 @@ file(COPY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${PROJECT_BINARY_DIR}/tmp/i
 
 message(STATUS "Generating ${PROJECT_BINARY_DIR}/tmp/include/config.hpp")
 configure_file(${PROJECT_BINARY_DIR}/tmp/include/armadillo_bits/config.hpp.cmake ${PROJECT_BINARY_DIR}/tmp/include/armadillo_bits/config.hpp)
+
+message(STATUS "Generating ${PROJECT_SOURCE_DIR}/examples/Makefile")
+configure_file(${PROJECT_SOURCE_DIR}/examples/Makefile.cmake ${PROJECT_SOURCE_DIR}/examples/Makefile)
 
 
 include_directories(${PROJECT_BINARY_DIR}/tmp/include/ ${CMAKE_REQUIRED_INCLUDES})
@@ -644,12 +602,3 @@ message(STATUS "Generating '${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc'")
 configure_file(${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc.in "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" @ONLY)
 
 install(FILES "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-
-
-# smoke test
-
-if(BUILD_SMOKE_TEST)
-  message(STATUS "*** configuring smoke_test")
-  enable_testing()
-  add_subdirectory(smoke_test)
-endif()

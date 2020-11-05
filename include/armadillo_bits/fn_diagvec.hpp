@@ -18,30 +18,16 @@
 //! @{
 
 
-//! extract main diagonal from matrix
+//! extract a diagonal from a matrix
 template<typename T1>
 arma_warn_unused
 arma_inline
 const Op<T1, op_diagvec>
-diagvec(const Base<typename T1::elem_type,T1>& X)
+diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id = 0)
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_diagvec>(X.get_ref());
-  }
-
-
-
-//! extract arbitrary diagonal from matrix
-template<typename T1>
-arma_warn_unused
-arma_inline
-const Op<T1, op_diagvec2>
-diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id)
-  {
-  arma_extra_debug_sigprint();
-  
-  return Op<T1, op_diagvec2>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
+  return Op<T1, op_diagvec>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
   }
 
 

@@ -1216,60 +1216,6 @@ subview<eT>::at(const uword in_row, const uword in_col) const
 
 
 template<typename eT>
-inline
-eT&
-subview<eT>::front()
-  {
-  const uword index = aux_col1*m.n_rows + aux_row1;
-  
-  return access::rw( (const_cast< Mat<eT>& >(m)).mem[index] );
-  }
-
-
-
-template<typename eT>
-inline
-eT
-subview<eT>::front() const
-  {
-  const uword index = aux_col1*m.n_rows + aux_row1;
-  
-  return m.mem[index];
-  }
-
-
-
-template<typename eT>
-inline
-eT&
-subview<eT>::back()
-  {
-  const uword in_row = n_rows - 1;
-  const uword in_col = n_cols - 1;
-  
-  const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  
-  return access::rw( (const_cast< Mat<eT>& >(m)).mem[index] );
-  }
-
-
-
-template<typename eT>
-inline
-eT
-subview<eT>::back() const
-  {
-  const uword in_row = n_rows - 1;
-  const uword in_col = n_cols - 1;
-  
-  const uword index = (in_col + aux_col1)*m.n_rows + aux_row1 + in_row;
-  
-  return m.mem[index];
-  }
-
-
-
-template<typename eT>
 arma_inline
 eT*
 subview<eT>::colptr(const uword in_col)
@@ -1350,27 +1296,6 @@ subview<eT>::is_finite() const
   for(uword ii=0; ii<local_n_cols; ++ii)
     {
     if(arrayops::is_finite(colptr(ii), local_n_rows) == false)  { return false; }
-    }
-  
-  return true;
-  }
-
-
-
-template<typename eT>
-inline
-arma_warn_unused
-bool
-subview<eT>::is_zero(const typename get_pod_type<eT>::result tol) const
-  {
-  arma_extra_debug_sigprint();
-  
-  const uword local_n_rows = n_rows;
-  const uword local_n_cols = n_cols;
-  
-  for(uword ii=0; ii<local_n_cols; ++ii)
-    {
-    if(arrayops::is_zero(colptr(ii), local_n_rows, tol) == false)  { return false; }
     }
   
   return true;

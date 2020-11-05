@@ -40,7 +40,7 @@ op_reshape::apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const uword in_n_rows, 
         out.set_size(in_n_rows, in_n_cols);
         arrayops::copy( out.memptr(), A.memptr(), out.n_elem );
         }
-      else  // &out == &A, i.e. inplace reshape
+      else  // &out == &A, i.e. inplace resize
         {
         out.set_size(in_n_rows, in_n_cols);
         // set_size() doesn't destroy data as long as the number of elements in the matrix remains the same
@@ -225,20 +225,21 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
   
   typedef typename T1::elem_type eT;
   
+  const Proxy<T1> P(in.m);
+  
   const uword in_n_rows = in.aux_uword_a;
   const uword in_n_cols = in.aux_uword_b;
   
-  // allow detection of in-place reshape
-  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
     {
-    const unwrap<T1> U(in.m);
+    // not checking for aliasing here, as this might be an inplace reshape
     
-    op_reshape::apply_unwrap(out, U.M, in_n_rows, in_n_cols, uword(0));
+    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+    
+    op_reshape::apply_unwrap(out, tmp.M, in_n_rows, in_n_cols, uword(0));
     }
   else
     {
-    const Proxy<T1> P(in.m);
-    
     if(P.is_alias(out))
       {
       Mat<eT> tmp;

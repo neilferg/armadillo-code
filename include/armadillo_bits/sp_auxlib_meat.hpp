@@ -1152,8 +1152,6 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     if(nc == NULL)  { return false; }
     
-    A.sync();
-    
     nc->nnz    = A.n_nonzero;
     nc->nzval  = (void*)          superlu::malloc(sizeof(eT)             * A.n_nonzero   );
     nc->colptr = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * (A.n_cols + 1));
@@ -1280,7 +1278,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       if(out.Stype == superlu::SLU_NR_loc)  { tmp << "SLU_NR_loc"; }
       
       arma_debug_warn(tmp.str());
-      arma_stop_runtime_error("internal error: sp_auxlib::destroy_supermatrix()");
+      arma_stop_runtime_error("sp_auxlib::destroy_supermatrix(): internal error");
       }
     }
   

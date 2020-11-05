@@ -4,8 +4,6 @@
 - C++11 compiler is required to compile the tests
 - To compile the tests, use "make"
 - Run the tests by running the "main" executable
-- NOTE: the tests are currently not suitable for compiling and running directly from CMake
-
 
 Example:
 

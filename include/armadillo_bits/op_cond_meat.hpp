@@ -81,11 +81,7 @@ op_cond::rcond(const Base<typename T1::elem_type, T1>& X)
     return auxlib::rcond_trimat(A, layout);
     }
   
-  #if defined(ARMA_OPTIMISE_SYMPD)
-    const bool try_sympd = auxlib::crippled_lapack(A) ? false : sympd_helper::guess_sympd_anysize(A);
-  #else
-    const bool try_sympd = false;
-  #endif
+  const bool try_sympd = auxlib::crippled_lapack(A) ? false : sympd_helper::guess_sympd(A);
   
   if(try_sympd)
     {

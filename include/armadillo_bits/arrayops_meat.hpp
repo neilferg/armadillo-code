@@ -77,20 +77,12 @@ arrayops::copy_small(eT* dest, const eT* src, const uword n_elem)
 
 
 template<typename eT>
+arma_hot
 inline
 void
 arrayops::fill_zeros(eT* dest, const uword n_elem)
   {
-  typedef typename get_pod_type<eT>::result pod_type;
-  
-  if(std::numeric_limits<eT>::is_integer || std::numeric_limits<pod_type>::is_iec559)
-    {
-    if(n_elem > 0)  { std::memset((void*)dest, 0, sizeof(eT)*n_elem); }
-    }
-  else
-    {
-    arrayops::inplace_set_simple(dest, eT(0), n_elem);
-    }
+  arrayops::inplace_set(dest, eT(0), n_elem);
   }
 
 
@@ -603,40 +595,31 @@ inline
 void
 arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
   {
-  if(val == eT(0))
+  typedef typename get_pod_type<eT>::result pod_type;
+  
+  if( (n_elem <= 9) && (is_cx<eT>::no) )
     {
-    arrayops::fill_zeros(dest, n_elem);
+    arrayops::inplace_set_small(dest, val, n_elem);
     }
   else
     {
-    if( (n_elem <= 9) && (is_cx<eT>::no) )
+    if( (val == eT(0)) && (std::numeric_limits<eT>::is_integer || (std::numeric_limits<pod_type>::is_iec559 && is_real<pod_type>::value)) )
       {
-      arrayops::inplace_set_small(dest, val, n_elem);
+      if(n_elem > 0)  { std::memset((void*)dest, 0, sizeof(eT)*n_elem); }
       }
     else
       {
-      arrayops::inplace_set_simple(dest, val, n_elem);
+      if(memory::is_aligned(dest))
+        {
+        memory::mark_as_aligned(dest);
+        
+        arrayops::inplace_set_base(dest, val, n_elem);
+        }
+      else
+        {
+        arrayops::inplace_set_base(dest, val, n_elem);
+        }
       }
-    }
-  }
-
-
-
-template<typename eT>
-arma_hot
-inline
-void
-arrayops::inplace_set_simple(eT* dest, const eT val, const uword n_elem)
-  {
-  if(memory::is_aligned(dest))
-    {
-    memory::mark_as_aligned(dest);
-    
-    arrayops::inplace_set_base(dest, val, n_elem);
-    }
-  else
-    {
-    arrayops::inplace_set_base(dest, val, n_elem);
     }
   }
 
@@ -1003,72 +986,6 @@ arrayops::product(const eT* src, const uword n_elem)
     }
   
   return val1 * val2;
-  }
-
-
-
-template<typename eT>
-arma_hot
-inline
-bool
-arrayops::is_zero(const eT* mem, const uword n_elem, const eT abs_limit, const typename arma_not_cx<eT>::result* junk)
-  {
-  arma_ignore(junk);
-  
-  if(n_elem == 0)  { return false; }
-  
-  if(abs_limit == eT(0))
-    {
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if(mem[i] != eT(0))  { return false; }
-      }
-    }
-  else
-    {
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if(std::abs(mem[i]) > abs_limit)  { return false; }
-      }
-    }
-  
-  return true;
-  }
-
-
-
-template<typename T>
-arma_hot
-inline
-bool
-arrayops::is_zero(const std::complex<T>* mem, const uword n_elem, const T abs_limit)
-  {
-  typedef typename std::complex<T> eT;
-  
-  if(n_elem == 0)  { return false; }
-  
-  if(abs_limit == T(0))
-    {
-    for(uword i=0; i<n_elem; ++i)
-      {
-      const eT& val = mem[i];
-      
-      if(std::real(val) != T(0))  { return false; }
-      if(std::imag(val) != T(0))  { return false; }
-      }
-    }
-  else
-    {
-    for(uword i=0; i<n_elem; ++i)
-      {
-      const eT& val = mem[i];
-      
-      if(std::abs(std::real(val)) > abs_limit)  { return false; }
-      if(std::abs(std::imag(val)) > abs_limit)  { return false; }
-      }
-    }
-  
-  return true;
   }
 
 

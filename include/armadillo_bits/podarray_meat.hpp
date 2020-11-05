@@ -364,6 +364,7 @@ podarray<eT>::copy_row(const Mat<eT>& A, const uword row)
 
 
 template<typename eT>
+arma_hot
 inline
 void
 podarray<eT>::init_cold(const uword new_n_elem)

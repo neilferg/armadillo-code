@@ -10,7 +10,7 @@ Copyright 2017-2019 Data61, CSIRO
 
 ### NOTE  
 
-* This is an old an unsupported branch
+* This is an **old** and **unsupported** branch
 * No new code should be using this branch
 * If you encounter any bugs, please use a more recent branch
 

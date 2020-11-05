@@ -7,8 +7,6 @@ using namespace arma;
 // Armadillo documentation is available at:
 // http://arma.sourceforge.net/docs.html
 
-// NOTE: the C++11 "auto" keyword is not recommended for use with Armadillo objects and functions
-
 int
 main(int argc, char** argv)
   {

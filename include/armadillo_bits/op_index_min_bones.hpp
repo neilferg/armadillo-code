@@ -19,7 +19,6 @@
 
 
 class op_index_min
-  : public traits_op_xvec
   {
   public:
   

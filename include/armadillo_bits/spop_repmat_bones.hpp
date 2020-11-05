@@ -20,7 +20,6 @@
 
 
 class spop_repmat
-  : public traits_op_default
   {
   public:
   

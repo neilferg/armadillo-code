@@ -118,10 +118,8 @@ op_clamp::apply_direct(Mat<eT>& out, const Mat<eT>& X, const eT min_val, const e
     
     op_clamp::apply_proxy_noalias(out, P, min_val, max_val);
     }
-  else
+  else  // inplace operation
     {
-    arma_extra_debug_print("inplace operation");
-    
     const uword N = out.n_elem;
     
     eT* out_mem = out.memptr();
@@ -130,7 +128,8 @@ op_clamp::apply_direct(Mat<eT>& out, const Mat<eT>& X, const eT min_val, const e
       {
       eT& out_val = out_mem[i];
       
-      out_val = (out_val < min_val) ? min_val : ( (out_val > max_val) ? max_val : out_val );
+           if(out_val < min_val)  { out_val = min_val; }
+      else if(out_val > max_val)  { out_val = max_val; }
       }
     }
   }
@@ -241,10 +240,8 @@ op_clamp::apply_direct(Cube<eT>& out, const Cube<eT>& X, const eT min_val, const
     
     op_clamp::apply_proxy_noalias(out, P, min_val, max_val);
     }
-  else
+  else  // inplace operation
     {
-    arma_extra_debug_print("inplace operation");
-    
     const uword N = out.n_elem;
     
     eT* out_mem = out.memptr();
@@ -253,7 +250,8 @@ op_clamp::apply_direct(Cube<eT>& out, const Cube<eT>& X, const eT min_val, const
       {
       eT& out_val = out_mem[i];
       
-      out_val = (out_val < min_val) ? min_val : ( (out_val > max_val) ? max_val : out_val );
+           if(out_val < min_val)  { out_val = min_val; }
+      else if(out_val > max_val)  { out_val = max_val; }
       }
     }
   }

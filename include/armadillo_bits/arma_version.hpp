@@ -19,10 +19,10 @@
 
 
 
-#define ARMA_VERSION_MAJOR 9
-#define ARMA_VERSION_MINOR 800
-#define ARMA_VERSION_PATCH 6
-#define ARMA_VERSION_NAME  "Horizon Scraper"
+#define ARMA_VERSION_MAJOR 8
+#define ARMA_VERSION_MINOR 600
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "Sabretooth Rugrat"
 
 
 
@@ -39,8 +39,7 @@ struct arma_version
     {
     const char* nickname = ARMA_VERSION_NAME;
     
-    std::ostringstream ss;
-    
+    std::stringstream ss;
     ss << arma_version::major
        << '.'
        << arma_version::minor

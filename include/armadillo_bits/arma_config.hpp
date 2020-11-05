@@ -29,9 +29,9 @@ struct arma_config
   
   
   #if defined(ARMA_OPENMP_THRESHOLD)
-    static const uword mp_threshold = (sword(ARMA_OPENMP_THRESHOLD) > 0) ? uword(ARMA_OPENMP_THRESHOLD) : 240;
+    static const uword mp_threshold = (sword(ARMA_OPENMP_THRESHOLD) > 0) ? uword(ARMA_OPENMP_THRESHOLD) : 320;
   #else
-    static const uword mp_threshold = 240;
+    static const uword mp_threshold = 320;
   #endif
   
   
@@ -39,6 +39,13 @@ struct arma_config
     static const uword mp_threads = (sword(ARMA_OPENMP_THREADS) > 0) ? uword(ARMA_OPENMP_THREADS) : 10;
   #else
     static const uword mp_threads = 10;
+  #endif
+  
+  
+  #if defined(ARMA_SPMAT_CHUNKSIZE)
+    static const uword spmat_chunksize = (sword(ARMA_SPMAT_CHUNKSIZE) > 0) ? uword(ARMA_SPMAT_CHUNKSIZE) : 256;
+  #else
+    static const uword spmat_chunksize = 256;
   #endif
   
   
@@ -153,13 +160,6 @@ struct arma_config
     static const bool openmp = true;
   #else
     static const bool openmp = false;
-  #endif
-  
-  
-  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-    static const bool hidden_args = true;
-  #else
-    static const bool hidden_args = false;
   #endif
   };
 

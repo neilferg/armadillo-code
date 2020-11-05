@@ -142,16 +142,17 @@ op_wishrnd::apply_noalias_mode2(Mat<eT>& out, const Mat<eT>& D, const eT df)
         A.at(i,i) = std::sqrt( chi2rnd_generator(df - eT(i)) );
         }
       
-      for(uword i=1; i < N; ++i)
+      const uword Nm1 = N-1;
+      for(uword i=0; i < Nm1; ++i)
         {
-        arma_rng::randn<eT>::fill( A.colptr(i), i );
+        arma_rng::randn<eT>::fill( &(A.at(i+1,i)), Nm1-i );
         }
       
-      const Mat<eT> tmp = A * D;
+      const Mat<eT> B = D * A;
       
       A.reset();
       
-      out = tmp.t() * tmp;
+      out = B * B.t();
       }
     
     return true;

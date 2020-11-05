@@ -20,7 +20,6 @@
 
 
 class op_roots
-  : public traits_op_col
   {
   public:
   

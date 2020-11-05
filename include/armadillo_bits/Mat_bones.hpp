@@ -50,9 +50,8 @@ class Mat : public Base< eT, Mat<eT> >
   
   public:
   
-  static const bool is_col  = false;
-  static const bool is_row  = false;
-  static const bool is_xvec = false;
+  static const bool is_col = false;
+  static const bool is_row = false;
   
   inline ~Mat();
   inline  Mat();
@@ -63,11 +62,11 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename fill_type> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Mat(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
   
-  inline arma_cold            Mat(const char*        text);
-  inline arma_cold Mat& operator=(const char*        text);
+  inline            Mat(const char*        text);
+  inline Mat& operator=(const char*        text);
   
-  inline arma_cold            Mat(const std::string& text);
-  inline arma_cold Mat& operator=(const std::string& text);
+  inline            Mat(const std::string& text);
+  inline Mat& operator=(const std::string& text);
   
   inline            Mat(const std::vector<eT>& x);
   inline Mat& operator=(const std::vector<eT>& x);
@@ -159,7 +158,7 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2> inline Mat& operator*=(const subview_elem2<eT,T1,T2>& X);
   template<typename T1, typename T2> inline Mat& operator%=(const subview_elem2<eT,T1,T2>& X);
   template<typename T1, typename T2> inline Mat& operator/=(const subview_elem2<eT,T1,T2>& X);
-
+  
   // Operators on sparse matrices (and subviews)
   template<typename T1> inline explicit    Mat(const SpBase<eT, T1>& m);
   template<typename T1> inline Mat&  operator=(const SpBase<eT, T1>& m);
@@ -297,9 +296,6 @@ class Mat : public Base< eT, Mat<eT> >
   inline void shed_rows(const uword in_row1, const uword in_row2);
   inline void shed_cols(const uword in_col1, const uword in_col2);
   
-  template<typename T1> inline void shed_rows(const Base<uword, T1>& indices);
-  template<typename T1> inline void shed_cols(const Base<uword, T1>& indices);
-  
   inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero = true);
   inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero = true);
   
@@ -338,22 +334,6 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename op_type> inline Mat& operator*=(const mtOp<eT, T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator%=(const mtOp<eT, T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator/=(const mtOp<eT, T1, op_type>& X);
-
-  template<typename T1, typename op_type> inline             Mat(const CubeToMatOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat&  operator=(const CubeToMatOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator+=(const CubeToMatOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator-=(const CubeToMatOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator*=(const CubeToMatOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator%=(const CubeToMatOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator/=(const CubeToMatOp<T1, op_type>& X);
-  
-  template<typename T1, typename op_type> inline             Mat(const SpToDOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat&  operator=(const SpToDOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator+=(const SpToDOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator-=(const SpToDOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator*=(const SpToDOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator%=(const SpToDOp<T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator/=(const SpToDOp<T1, op_type>& X);
   
   template<typename T1, typename T2, typename glue_type> inline             Mat(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline Mat&  operator=(const Glue<T1, T2, glue_type>& X);
@@ -416,9 +396,6 @@ class Mat : public Base< eT, Mat<eT> >
   inline arma_warn_unused bool is_sorted(const char* direction = "ascend")       const;
   inline arma_warn_unused bool is_sorted(const char* direction, const uword dim) const;
   
-  template<typename comparator>
-  inline arma_warn_unused bool is_sorted_helper(const comparator& comp, const uword dim) const;
-  
   arma_inline arma_warn_unused bool in_range(const uword ii) const;
   arma_inline arma_warn_unused bool in_range(const span& x ) const;
   
@@ -469,8 +446,6 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline const Mat& replace(const eT old_val, const eT new_val);
   
-  inline const Mat& clean(const pod_type threshold);
-  
   inline const Mat& fill(const eT val);
   
   template<typename fill_type>
@@ -500,8 +475,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& eye(const uword in_rows, const uword in_cols);
   inline const Mat& eye(const SizeMat& s);
   
-  inline arma_cold void      reset();
-  inline arma_cold void soft_reset();
+  inline void      reset();
+  inline void soft_reset();
   
   
   template<typename T1> inline void set_real(const Base<pod_type,T1>& X);
@@ -554,7 +529,7 @@ class Mat : public Base< eT, Mat<eT> >
     
     inline row_iterator();
     inline row_iterator(const row_iterator& X);
-    inline row_iterator(Mat<eT>& in_M, const uword in_row, const uword in_col);
+    inline row_iterator(Mat<eT>& in_M, const uword in_row);
     
     inline arma_warn_unused eT& operator* ();
     
@@ -576,6 +551,7 @@ class Mat : public Base< eT, Mat<eT> >
     typedef eT&                             reference;
     
     arma_aligned Mat<eT>* M;
+    arma_aligned eT*      current_ptr;
     arma_aligned uword    current_row;
     arma_aligned uword    current_col;
     };
@@ -588,7 +564,7 @@ class Mat : public Base< eT, Mat<eT> >
     inline const_row_iterator();
     inline const_row_iterator(const       row_iterator& X);
     inline const_row_iterator(const const_row_iterator& X);
-    inline const_row_iterator(const Mat<eT>& in_M, const uword in_row, const uword in_col);
+    inline const_row_iterator(const Mat<eT>& in_M, const uword in_row);
     
     inline arma_warn_unused const eT& operator*() const;
     
@@ -610,6 +586,7 @@ class Mat : public Base< eT, Mat<eT> >
     typedef const eT&                       reference;
     
     arma_aligned const Mat<eT>* M;
+    arma_aligned const eT*      current_ptr;
     arma_aligned       uword    current_row;
     arma_aligned       uword    current_col;
     };
@@ -724,12 +701,6 @@ class Mat : public Base< eT, Mat<eT> >
   inline bool  empty() const;
   inline uword size()  const;
   
-  inline       eT& front();
-  inline const eT& front() const;
-  
-  inline       eT& back();
-  inline const eT& back() const;
-  
   inline void swap(Mat& B);
   
   inline void steal_mem(Mat& X);  //!< don't use this unless you're writing code internal to Armadillo
@@ -802,13 +773,12 @@ class Mat<eT>::fixed : public Mat<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_col  = (fixed_n_cols == 1);
-  static const bool is_row  = (fixed_n_rows == 1);
-  static const bool is_xvec = false;
+  static const bool is_col = (fixed_n_cols == 1) ? true : false;
+  static const bool is_row = (fixed_n_rows == 1) ? true : false;
   
-  static const uword n_rows;  // value provided below the class definition
-  static const uword n_cols;  // value provided below the class definition
-  static const uword n_elem;  // value provided below the class definition
+  static const uword n_rows = fixed_n_rows;
+  static const uword n_cols = fixed_n_cols;
+  static const uword n_elem = fixed_n_elem;
   
   arma_inline fixed();
   arma_inline fixed(const fixed<fixed_n_rows, fixed_n_cols>& X);
@@ -870,23 +840,6 @@ class Mat<eT>::fixed : public Mat<eT>
   inline const Mat<eT>& zeros();
   inline const Mat<eT>& ones();
   };
-
-
-
-// these definitions are outside of the class due to bizarre C++ rules;
-// C++17 has inline variables to address this shortcoming
-
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols>
-const uword Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::n_rows = fixed_n_rows;
-
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols>
-const uword Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::n_cols = fixed_n_cols;
-
-template<typename eT>
-template<uword fixed_n_rows, uword fixed_n_cols>
-const uword Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::n_elem = fixed_n_rows * fixed_n_cols;
 
 
 

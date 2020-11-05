@@ -20,7 +20,6 @@
 
 
 class op_trimat
-  : public traits_op_default
   {
   public:
   
@@ -47,7 +46,6 @@ class op_trimat
 
 
 class op_trimatu_ext
-  : public traits_op_default
   {
   public:
   
@@ -61,7 +59,6 @@ class op_trimatu_ext
 
 
 class op_trimatl_ext
-  : public traits_op_default
   {
   public:
   

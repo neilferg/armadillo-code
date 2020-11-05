@@ -441,15 +441,8 @@ struct arma_rng::randn< std::complex<T> >
   inline
   operator std::complex<T> () const
     {
-    #if defined(_MSC_VER)
-      // attempt at workaround for MSVC bug
-      // does MS even test their so-called compilers before release?
-      T a;
-      T b;
-    #else
-      T a(0);
-      T b(0);
-    #endif
+    T a = T(0);
+    T b = T(0);
     
     arma_rng::randn<T>::dual_val(a, b);
     

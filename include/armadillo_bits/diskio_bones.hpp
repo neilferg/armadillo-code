@@ -23,17 +23,15 @@ class diskio
   {
   public:
   
-  template<typename eT> inline arma_cold static std::string gen_txt_header(const Mat<eT>&);
-  template<typename eT> inline arma_cold static std::string gen_bin_header(const Mat<eT>&);
+  template<typename eT> inline static std::string gen_txt_header(const Mat<eT>& x);
+  template<typename eT> inline static std::string gen_bin_header(const Mat<eT>& x);
   
-  template<typename eT> inline arma_cold static std::string gen_bin_header(const SpMat<eT>&);
+  template<typename eT> inline static std::string gen_bin_header(const SpMat<eT>& x);
 
-  template<typename eT> inline arma_cold static std::string gen_txt_header(const Cube<eT>&);
-  template<typename eT> inline arma_cold static std::string gen_bin_header(const Cube<eT>&);
+  template<typename eT> inline static std::string gen_txt_header(const Cube<eT>& x);
+  template<typename eT> inline static std::string gen_bin_header(const Cube<eT>& x);
   
-  inline arma_deprecated static file_type guess_file_type(std::istream& f);
-  
-  inline arma_cold static file_type guess_file_type_internal(std::istream& f);
+  inline arma_cold static file_type guess_file_type(std::istream& f);
   
   inline arma_cold static std::string gen_tmp_name(const std::string& x);
   
@@ -96,12 +94,9 @@ class diskio
   //
   // sparse matrix saving
   
-  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, const std::string& final_name);
   template<typename eT> inline static bool save_coord_ascii(const SpMat<eT>& x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_binary(const SpMat<eT>& x, const std::string& final_name);
   
-  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x,                std::ostream& f);
-  template<typename  T> inline static bool save_csv_ascii  (const SpMat< std::complex<T> >& x, std::ostream& f);
   template<typename eT> inline static bool save_coord_ascii(const SpMat<eT>& x,                std::ostream& f);
   template<typename  T> inline static bool save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f);
   template<typename eT> inline static bool save_arma_binary(const SpMat<eT>& x,                std::ostream& f);
@@ -110,12 +105,9 @@ class diskio
   //
   // sparse matrix loading
   
-  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_coord_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg);
   
-  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x,                std::istream& f, std::string& err_msg);
-  template<typename  T> inline static bool load_csv_ascii  (SpMat< std::complex<T> >& x, std::istream& f, std::string& err_msg);
   template<typename eT> inline static bool load_coord_ascii(SpMat<eT>& x,                std::istream& f, std::string& err_msg);
   template<typename  T> inline static bool load_coord_ascii(SpMat< std::complex<T> >& x, std::istream& f, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(SpMat<eT>& x,                std::istream& f, std::string& err_msg);

@@ -28,9 +28,8 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   typedef eT elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = false;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static const bool is_row = false;
+  static const bool is_col = false;
   
   const uword aux_row1;
   const uword aux_col1;
@@ -88,9 +87,7 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   template<typename functor> inline void transform(functor F);
   
   inline void replace(const eT old_val, const eT new_val);
-  
-  inline void clean(const pod_type threshold);
-  
+
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();
@@ -311,9 +308,6 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
 
   inline       row_iterator end_row(const uword row_num);
   inline const_row_iterator end_row(const uword row_num) const;
-  
-  //! don't use this unless you're writing internal Armadillo code
-  arma_inline bool is_alias(const SpMat<eT>& X) const;
 
 
   private:

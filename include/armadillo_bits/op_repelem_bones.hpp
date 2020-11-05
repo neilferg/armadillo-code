@@ -21,7 +21,6 @@
 
 
 class op_repelem
-  : public traits_op_default
   {
   public:
   

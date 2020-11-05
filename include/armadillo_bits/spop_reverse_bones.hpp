@@ -19,7 +19,6 @@
 
 
 class spop_reverse
-  : public traits_op_passthru
   {
   public:
   

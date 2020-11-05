@@ -15,33 +15,20 @@
 # ------------------------------------------------------------------------
 
 
-## NOTE: If you prefer to link your programs directly with BLAS and LAPACK,
-## NOTE: do not use this installer.
-## NOTE: To use Armadillo without installation, compile your programs along these lines:
-## NOTE: g++ prog.cpp -o prog -O2 -I /home/blah/armadillo-7.200.3/include -DARMA_DONT_USE_WRAPPER -lblas -llapack
-## NOTE: The above command line assumes that you have unpacked the armadillo archive into /home/blah/  
-## NOTE: You will need to adjust this for later versions of Armadillo (ie. change the 7.200.3 part)
-## NOTE: and/or if you have unpacked the armadillo archive into a different directory.
-## NOTE: Replace -lblas with -lopenblas if you have OpenBLAS (recommended).
-## NOTE: On macOS, replace -lblas -llapack with -framework Accelerate
-## NOTE: More details: http://arma.sourceforge.net/faq.html
-
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
-
-if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
-  if(POLICY CMP0025)
-    # enable differentiation between vanilla Clang and AppleClang
-    cmake_policy(SET CMP0025 NEW)
-    message(STATUS "*** set cmake policy CMP0025 to NEW")
-  endif()
-endif()
 
 project(armadillo CXX C)
 include(CheckIncludeFileCXX)
 include(CheckLibraryExists)
 
+## Set ARMA_USE_WRAPPER to false if you're getting linking errors when compiling your programs,
+## or if you prefer to directly link with BLAS and/or LAPACK.
+## You will then need to link your programs with -lblas -llapack instead of -larmadillo
+## If you're using OpenBLAS, link your programs with -lopenblas -llapack instead of -larmadillo
+
 set(ARMA_USE_WRAPPER true)
+
 
 # the settings below will be automatically configured by the rest of this script
 
@@ -134,20 +121,12 @@ endif()
 
 option(DETECT_HDF5 "Detect HDF5 and include HDF5 support, if found" ON)
 
-option(ALLOW_OPENBLAS_MACOS "Allow detection of OpenBLAS on macOS" OFF)
-## Example use on the command line:
-## cmake -D ALLOW_OPENBLAS_MACOS=true .
-
-option(ALLOW_BLAS_LAPACK_MACOS "Allow detection of BLAS and LAPACK on macOS" OFF)
-## Example use on the command line:
-## cmake -D ALLOW_BLAS_LAPACK_MACOS=true .
-
 
 if(WIN32)
   message(STATUS "")
   message(STATUS "*** WARNING: automatic installation is experimental for this platform.")
   message(STATUS "*** WARNING: if anything breaks, you get to keep all the pieces.")
-  message(STATUS "*** WARNING: manual installation is described in the README file.")
+  message(STATUS "*** WARNING: manual installation is described in README.txt")
   message(STATUS "")
 endif()
 
@@ -165,8 +144,6 @@ message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "CMAKE_COMPILER_IS_GNUCXX   = ${CMAKE_COMPILER_IS_GNUCXX}"  )
 message(STATUS "BUILD_SHARED_LIBS          = ${BUILD_SHARED_LIBS}"         )
 message(STATUS "DETECT_HDF5                = ${DETECT_HDF5}"               )
-message(STATUS "ALLOW_OPENBLAS_MACOS       = ${ALLOW_OPENBLAS_MACOS}"      )
-message(STATUS "ALLOW_BLAS_LAPACK_MACOS    = ${ALLOW_BLAS_LAPACK_MACOS}"   )
 
 
 ##
@@ -176,64 +153,18 @@ message(STATUS "ALLOW_BLAS_LAPACK_MACOS    = ${ALLOW_BLAS_LAPACK_MACOS}"   )
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake_aux/Modules/")
 
 if(APPLE)
-  message(STATUS "Detected macOS")
   
   set(ARMA_OS macos)
   
-  set(ARMA_USE_LAPACK     true)
-  set(ARMA_USE_BLAS       true)
-  set(ARMA_USE_ACCELERATE true)
+  set(ARMA_USE_LAPACK true)
+  set(ARMA_USE_BLAS   true)
   
-  if(ALLOW_OPENBLAS_MACOS)
-    include(ARMA_FindOpenBLAS)
-    message(STATUS "OpenBLAS_FOUND = ${OpenBLAS_FOUND}")
-    message(STATUS "")
-    message(STATUS "*** If use of OpenBLAS is causing problems,")
-    message(STATUS "*** rerun cmake with detection of OpenBLAS disabled:")
-    message(STATUS "*** cmake -D ALLOW_OPENBLAS_MACOS=false .")
-    message(STATUS "")
-    
-    if(OpenBLAS_FOUND)
-      set(ARMA_LIBS ${ARMA_LIBS} ${OpenBLAS_LIBRARIES})
-      set(ARMA_USE_ACCELERATE false)
-    endif()
-  endif()
+  set(ARMA_LIBS ${ARMA_LIBS} "-framework Accelerate")  # or "-framework accelerate" ?
+  message(STATUS "MacOS X detected. Added '-framework Accelerate' to compiler flags")
   
-  if(ALLOW_BLAS_LAPACK_MACOS)
-    include(ARMA_FindBLAS)
-    include(ARMA_FindLAPACK)
-    message(STATUS "  BLAS_FOUND = ${BLAS_FOUND}"  )
-    message(STATUS "LAPACK_FOUND = ${LAPACK_FOUND}")
-    message(STATUS "")
-    message(STATUS "*** If use of BLAS and LAPACK is causing problems,")
-    message(STATUS "*** rerun cmake with detection of BLAS and LAPACK disabled:")
-    message(STATUS "*** cmake -D ALLOW_BLAS_LAPACK_MACOS=false .")
-    message(STATUS "")
-    
-    if(BLAS_FOUND AND LAPACK_FOUND)
-      set(ARMA_LIBS ${ARMA_LIBS} ${BLAS_LIBRARIES})
-      set(ARMA_LIBS ${ARMA_LIBS} ${LAPACK_LIBRARIES})
-      set(ARMA_USE_ACCELERATE false)
-    endif()
-  endif()
-  
-  if(ARMA_USE_ACCELERATE)
-    set(ARMA_LIBS ${ARMA_LIBS} "-framework Accelerate")  # or "-framework accelerate" ?
-    message(STATUS "Added '-framework Accelerate' to compiler flags")
-  endif()
-  
-  if(DEFINED CMAKE_CXX_COMPILER_ID)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-      message(STATUS "Detected Clang compiler on macOS. Added '-stdlib=libc++' to compiler flags")
-    endif()
-    
-    if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
-      if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-        message(STATUS "Detected AppleClang compiler on macOS. Added '-stdlib=libc++' to compiler flags")
-      endif()
-    endif()
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    message(STATUS "Clang compiler on MacOS X detected. Added '-stdlib=libc++' to compiler flags")
   endif()
   
   set(CMAKE_MACOSX_RPATH 1)
@@ -273,6 +204,7 @@ else()
     message(STATUS "*** On systems with SELinux enabled (eg. Fedora, RHEL),")
     message(STATUS "*** you may need to change the SELinux type of all MKL/ACML libraries")
     message(STATUS "*** to fix permission problems that may occur during run-time.")
+    message(STATUS "*** See README.txt for more information")
     message(STATUS "")
     
     if(MKL_FOUND)
@@ -431,33 +363,13 @@ message(STATUS "*** ARMA_LIBS = ${ARMA_LIBS}")
 message(STATUS "")
 
 
-# NOTE: ARMA_USE_EXTERN_CXX11_RNG requires compiler support for thread_local and C++11
-# NOTE: for Linux, this is available with gcc 4.8.3 onwards
-# NOTE: for macOS, thread_local is supoported in Xcode 8 (mid 2016 onwards) in C++11 mode
-
 if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.8.3)
     set(ARMA_USE_EXTERN_CXX11_RNG true)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     message(STATUS "Detected gcc 4.8.3 or later. Added '-std=c++11' to compiler flags")
-  else()
-    if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
-      
-      if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0)
-        set(ARMA_USE_EXTERN_CXX11_RNG true)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-        message(STATUS "Detected Clang 6.0 or later. Added '-std=c++14' to compiler flags")
-      elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0)
-        set(ARMA_USE_EXTERN_CXX11_RNG true)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-        message(STATUS "Detected AppleClang 8.0 or later. Added '-std=c++14' to compiler flags")
-      endif()
-      
-    endif()
   endif()
 endif()
-
-message(STATUS "ARMA_USE_EXTERN_CXX11_RNG = ${ARMA_USE_EXTERN_CXX11_RNG}")
 
 
 message(STATUS "Copying ${PROJECT_SOURCE_DIR}/include/ to ${PROJECT_BINARY_DIR}/tmp/include/")
@@ -473,7 +385,7 @@ configure_file(${PROJECT_SOURCE_DIR}/examples/Makefile.cmake ${PROJECT_SOURCE_DI
 include_directories(${PROJECT_BINARY_DIR}/tmp/include/ ${CMAKE_REQUIRED_INCLUDES})
 
 
-## work around a silly limitation in macOS
+## work around a silly limitation in Mac OS X
 if(APPLE)
   if(${ARMA_VERSION_MINOR} GREATER 99)
     math(EXPR ARMA_VERSION_MINOR_ALT "${ARMA_VERSION_MINOR} / 10")
@@ -493,25 +405,14 @@ endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-else()
-  if(DEFINED CMAKE_CXX_COMPILER_ID)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-    endif()
-  endif()
 endif()
-
 
 message(STATUS "CMAKE_CXX_FLAGS           = ${CMAKE_CXX_FLAGS}"          )
 message(STATUS "CMAKE_SHARED_LINKER_FLAGS = ${CMAKE_SHARED_LINKER_FLAGS}")
 message(STATUS "CMAKE_REQUIRED_INCLUDES   = ${CMAKE_REQUIRED_INCLUDES}"  )
 
 
-add_library( armadillo ${PROJECT_SOURCE_DIR}/src/wrapper1.cpp ${PROJECT_SOURCE_DIR}/src/wrapper2.cpp )
+add_library( armadillo ${PROJECT_SOURCE_DIR}/src/wrapper.cpp )
 target_link_libraries( armadillo ${ARMA_LIBS} )
 target_include_directories(armadillo INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 set_target_properties(armadillo PROPERTIES VERSION ${ARMA_VERSION_MAJOR}.${ARMA_VERSION_MINOR_ALT}.${ARMA_VERSION_PATCH} SOVERSION ${ARMA_VERSION_MAJOR})

@@ -704,7 +704,7 @@ accu(const eGlueCube<T1,T2,eglue_schur>& expr)
 template<typename T>
 arma_warn_unused
 inline
-typename arma_scalar_only<T>::result
+const typename arma_scalar_only<T>::result &
 accu(const T& x)
   {
   return x;
@@ -742,126 +742,6 @@ accu(const SpBase<typename T1::elem_type,T1>& expr)
     
     return val;
     }
-  }
-
-
-
-//! explicit handling of accu(A + B), where A and B are sparse matrices
-template<typename T1, typename T2>
-arma_warn_unused
-inline
-typename T1::elem_type
-accu(const SpGlue<T1,T2,spglue_plus>& expr)
-  {
-  arma_extra_debug_sigprint();
-  
-  const unwrap_spmat<T1> UA(expr.A);
-  const unwrap_spmat<T2> UB(expr.B);
-  
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
-  
-  return (accu(UA.M) + accu(UB.M));
-  }
-
-
-
-//! explicit handling of accu(A - B), where A and B are sparse matrices
-template<typename T1, typename T2>
-arma_warn_unused
-inline
-typename T1::elem_type
-accu(const SpGlue<T1,T2,spglue_minus>& expr)
-  {
-  arma_extra_debug_sigprint();
-  
-  const unwrap_spmat<T1> UA(expr.A);
-  const unwrap_spmat<T2> UB(expr.B);
-  
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
-  
-  return (accu(UA.M) - accu(UB.M));
-  }
-
-
-
-//! explicit handling of accu(A % B), where A and B are sparse matrices
-template<typename T1, typename T2>
-arma_warn_unused
-inline
-typename T1::elem_type
-accu(const SpGlue<T1,T2,spglue_schur>& expr)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const SpProxy<T1> px(expr.A);
-  const SpProxy<T2> py(expr.B);
-  
-  typename SpProxy<T1>::const_iterator_type x_it     = px.begin();
-  typename SpProxy<T1>::const_iterator_type x_it_end = px.end();
-  
-  typename SpProxy<T2>::const_iterator_type y_it     = py.begin();
-  typename SpProxy<T2>::const_iterator_type y_it_end = py.end();
-  
-  eT acc = eT(0);
-  
-  while( (x_it != x_it_end) || (y_it != y_it_end) )
-    {
-    if(x_it == y_it)
-      {
-      acc += ((*x_it) * (*y_it));
-      
-      ++x_it;
-      ++y_it;
-      }
-    else
-      {
-      const uword x_it_col = x_it.col();
-      const uword x_it_row = x_it.row();
-      
-      const uword y_it_col = y_it.col();
-      const uword y_it_row = y_it.row();
-      
-      if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
-        {
-        ++x_it;
-        }
-      else // x is closer to the end
-        {
-        ++y_it;
-        }
-      }
-    }
-  
-  return acc;
-  }
-
-
-
-template<typename T1, typename spop_type>
-arma_warn_unused
-inline
-typename T1::elem_type
-accu(const SpOp<T1, spop_type>& expr)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const bool is_vectorise = \
-       (is_same_type<spop_type, spop_vectorise_row>::yes)
-    || (is_same_type<spop_type, spop_vectorise_col>::yes)
-    || (is_same_type<spop_type, spop_vectorise_all>::yes);
-  
-  if(is_vectorise)
-    {
-    return accu(expr.m);
-    }
-  
-  const SpMat<eT> tmp = expr;
-  
-  return accu(tmp);
   }
 
 

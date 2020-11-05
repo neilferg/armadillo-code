@@ -19,7 +19,6 @@
 
 
 class op_sum
-  : public traits_op_xvec
   {
   public:
   

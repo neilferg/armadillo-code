@@ -181,8 +181,8 @@ gmm_diag<eT>::set_means(const Base<eT,T1>& in_means_expr)
   
   const Mat<eT>& in_means = tmp.M;
   
-  arma_debug_check( (arma::size(in_means) != arma::size(means)), "gmm_diag::set_means(): given means have incompatible size" );
-  arma_debug_check( (in_means.is_finite() == false),             "gmm_diag::set_means(): given means have non-finite values" );
+  arma_debug_check( (size(in_means) != size(means)), "gmm_diag::set_means(): given means have incompatible size" );
+  arma_debug_check( (in_means.is_finite() == false), "gmm_diag::set_means(): given means have non-finite values" );
   
   access::rw(means) = in_means;
   }
@@ -201,9 +201,9 @@ gmm_diag<eT>::set_dcovs(const Base<eT,T1>& in_dcovs_expr)
   
   const Mat<eT>& in_dcovs = tmp.M;
   
-  arma_debug_check( (arma::size(in_dcovs) != arma::size(dcovs)), "gmm_diag::set_dcovs(): given dcovs have incompatible size"       );
-  arma_debug_check( (in_dcovs.is_finite() == false),             "gmm_diag::set_dcovs(): given dcovs have non-finite values"       );
-  arma_debug_check( (any(vectorise(in_dcovs) <= eT(0))),         "gmm_diag::set_dcovs(): given dcovs have negative or zero values" );
+  arma_debug_check( (size(in_dcovs) != size(dcovs)),     "gmm_diag::set_dcovs(): given dcovs have incompatible size"       );
+  arma_debug_check( (in_dcovs.is_finite() == false),     "gmm_diag::set_dcovs(): given dcovs have non-finite values"       );
+  arma_debug_check( (any(vectorise(in_dcovs) <= eT(0))), "gmm_diag::set_dcovs(): given dcovs have negative or zero values" );
   
   access::rw(dcovs) = in_dcovs;
   
@@ -224,9 +224,9 @@ gmm_diag<eT>::set_hefts(const Base<eT,T1>& in_hefts_expr)
   
   const Mat<eT>& in_hefts = tmp.M;
   
-  arma_debug_check( (arma::size(in_hefts) != arma::size(hefts)), "gmm_diag::set_hefts(): given hefts have incompatible size" );
-  arma_debug_check( (in_hefts.is_finite() == false),             "gmm_diag::set_hefts(): given hefts have non-finite values" );
-  arma_debug_check( (any(vectorise(in_hefts) <  eT(0))),         "gmm_diag::set_hefts(): given hefts have negative values"   );
+  arma_debug_check( (size(in_hefts) != size(hefts)),     "gmm_diag::set_hefts(): given hefts have incompatible size" );
+  arma_debug_check( (in_hefts.is_finite() == false),     "gmm_diag::set_hefts(): given hefts have non-finite values" );
+  arma_debug_check( (any(vectorise(in_hefts) <  eT(0))), "gmm_diag::set_hefts(): given hefts have negative values"   );
   
   const eT s = accu(in_hefts);
   
@@ -457,11 +457,19 @@ gmm_diag<eT>::log_p(const T1& expr, const gmm_empty_arg& junk1, typename enable_
   arma_ignore(junk1);
   arma_ignore(junk2);
   
-  const quasi_unwrap<T1> tmp(expr);
-  
-  const Mat<eT>& X = tmp.M;
-  
-  return internal_vec_log_p(X);
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& X = reinterpret_cast< const subview<eT>& >(expr);
+    
+    return internal_vec_log_p(X);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr);
+    const Mat<eT>& X = tmp.M;
+    
+    return internal_vec_log_p(X);
+    }
   }
 
 
@@ -475,11 +483,19 @@ gmm_diag<eT>::log_p(const T1& expr, const uword gaus_id, typename enable_if<((is
   arma_extra_debug_sigprint();
   arma_ignore(junk2);
   
-  const quasi_unwrap<T1> tmp(expr);
-  
-  const Mat<eT>& X = tmp.M;
-  
-  return internal_vec_log_p(X, gaus_id);
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& X = reinterpret_cast< const subview<eT>& >(expr);
+    
+    return internal_vec_log_p(X, gaus_id);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr);
+    const Mat<eT>& X = tmp.M;
+    
+    return internal_vec_log_p(X, gaus_id);
+    }
   }
 
 
@@ -492,11 +508,19 @@ gmm_diag<eT>::sum_log_p(const Base<eT,T1>& expr) const
   {
   arma_extra_debug_sigprint();
   
-  const quasi_unwrap<T1> tmp(expr.get_ref());
-  
-  const Mat<eT>& X = tmp.M;
-  
-  return internal_sum_log_p(X);
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
+    
+    return internal_sum_log_p(X);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr.get_ref());
+    const Mat<eT>& X = tmp.M;
+    
+    return internal_sum_log_p(X);
+    }
   }
 
 
@@ -509,11 +533,19 @@ gmm_diag<eT>::sum_log_p(const Base<eT,T1>& expr, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
-  const quasi_unwrap<T1> tmp(expr.get_ref());
-  
-  const Mat<eT>& X = tmp.M;
-  
-  return internal_sum_log_p(X, gaus_id);
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
+    
+    return internal_sum_log_p(X, gaus_id);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr.get_ref());
+    const Mat<eT>& X = tmp.M;
+    
+    return internal_sum_log_p(X, gaus_id);
+    }
   }
 
 
@@ -526,11 +558,19 @@ gmm_diag<eT>::avg_log_p(const Base<eT,T1>& expr) const
   {
   arma_extra_debug_sigprint();
   
-  const quasi_unwrap<T1> tmp(expr.get_ref());
-  
-  const Mat<eT>& X = tmp.M;
-  
-  return internal_avg_log_p(X);
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
+    
+    return internal_avg_log_p(X);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr.get_ref());
+    const Mat<eT>& X = tmp.M;
+    
+    return internal_avg_log_p(X);
+    }
   }
 
 
@@ -543,11 +583,19 @@ gmm_diag<eT>::avg_log_p(const Base<eT,T1>& expr, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
-  const quasi_unwrap<T1> tmp(expr.get_ref());
-  
-  const Mat<eT>& X = tmp.M;
-  
-  return internal_avg_log_p(X, gaus_id);
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& X = reinterpret_cast< const subview<eT>& >( expr.get_ref() );
+    
+    return internal_avg_log_p(X, gaus_id);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr.get_ref());
+    const Mat<eT>& X = tmp.M;
+    
+    return internal_avg_log_p(X, gaus_id);
+    }
   }
 
 
@@ -561,11 +609,19 @@ gmm_diag<eT>::assign(const T1& expr, const gmm_dist_mode& dist, typename enable_
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  const quasi_unwrap<T1> tmp(expr);
-  
-  const Mat<eT>& X = tmp.M;
-  
-  return internal_scalar_assign(X, dist);
+  if(is_subview_col<T1>::value)
+    {
+    const subview_col<eT>& X = reinterpret_cast< const subview_col<eT>& >(expr);
+    
+    return internal_scalar_assign(X, dist);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr);
+    const Mat<eT>& X = tmp.M;
+    
+    return internal_scalar_assign(X, dist);
+    }
   }
 
 
@@ -581,11 +637,19 @@ gmm_diag<eT>::assign(const T1& expr, const gmm_dist_mode& dist, typename enable_
   
   urowvec out;
   
-  const quasi_unwrap<T1> tmp(expr);
-  
-  const Mat<eT>& X = tmp.M;
-  
-  internal_vec_assign(out, X, dist);
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& X = reinterpret_cast< const subview<eT>& >(expr);
+    
+    internal_vec_assign(out, X, dist);
+    }
+  else
+    {
+    const unwrap<T1>   tmp(expr);
+    const Mat<eT>& X = tmp.M;
+    
+    internal_vec_assign(out, X, dist);
+    }
   
   return out;
   }
@@ -1125,9 +1189,10 @@ gmm_diag<eT>::internal_scalar_log_p(const eT* x, const uword g) const
 
 
 template<typename eT>
+template<typename T1>
 inline
 Row<eT>
-gmm_diag<eT>::internal_vec_log_p(const Mat<eT>& X) const
+gmm_diag<eT>::internal_vec_log_p(const T1& X) const
   {
   arma_extra_debug_sigprint();
   
@@ -1177,9 +1242,10 @@ gmm_diag<eT>::internal_vec_log_p(const Mat<eT>& X) const
 
 
 template<typename eT>
+template<typename T1>
 inline
 Row<eT>
-gmm_diag<eT>::internal_vec_log_p(const Mat<eT>& X, const uword gaus_id) const
+gmm_diag<eT>::internal_vec_log_p(const T1& X, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
@@ -1230,9 +1296,10 @@ gmm_diag<eT>::internal_vec_log_p(const Mat<eT>& X, const uword gaus_id) const
 
 
 template<typename eT>
+template<typename T1>
 inline
 eT
-gmm_diag<eT>::internal_sum_log_p(const Mat<eT>& X) const
+gmm_diag<eT>::internal_sum_log_p(const T1& X) const
   {
   arma_extra_debug_sigprint();
   
@@ -1286,9 +1353,10 @@ gmm_diag<eT>::internal_sum_log_p(const Mat<eT>& X) const
 
 
 template<typename eT>
+template<typename T1>
 inline
 eT
-gmm_diag<eT>::internal_sum_log_p(const Mat<eT>& X, const uword gaus_id) const
+gmm_diag<eT>::internal_sum_log_p(const T1& X, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
@@ -1343,9 +1411,10 @@ gmm_diag<eT>::internal_sum_log_p(const Mat<eT>& X, const uword gaus_id) const
 
 
 template<typename eT>
+template<typename T1>
 inline
 eT
-gmm_diag<eT>::internal_avg_log_p(const Mat<eT>& X) const
+gmm_diag<eT>::internal_avg_log_p(const T1& X) const
   {
   arma_extra_debug_sigprint();
   
@@ -1410,9 +1479,10 @@ gmm_diag<eT>::internal_avg_log_p(const Mat<eT>& X) const
 
 
 template<typename eT>
+template<typename T1>
 inline
 eT
-gmm_diag<eT>::internal_avg_log_p(const Mat<eT>& X, const uword gaus_id) const
+gmm_diag<eT>::internal_avg_log_p(const T1& X, const uword gaus_id) const
   {
   arma_extra_debug_sigprint();
   
@@ -1478,9 +1548,10 @@ gmm_diag<eT>::internal_avg_log_p(const Mat<eT>& X, const uword gaus_id) const
 
 
 template<typename eT>
+template<typename T1>
 inline
 uword
-gmm_diag<eT>::internal_scalar_assign(const Mat<eT>& X, const gmm_dist_mode& dist_mode) const
+gmm_diag<eT>::internal_scalar_assign(const T1& X, const gmm_dist_mode& dist_mode) const
   {
   arma_extra_debug_sigprint();
   
@@ -1534,9 +1605,10 @@ gmm_diag<eT>::internal_scalar_assign(const Mat<eT>& X, const gmm_dist_mode& dist
 
 
 template<typename eT>
+template<typename T1>
 inline
 void
-gmm_diag<eT>::internal_vec_assign(urowvec& out, const Mat<eT>& X, const gmm_dist_mode& dist_mode) const
+gmm_diag<eT>::internal_vec_assign(urowvec& out, const T1& X, const gmm_dist_mode& dist_mode) const
   {
   arma_extra_debug_sigprint();
   
@@ -1812,8 +1884,10 @@ gmm_diag<eT>::generate_initial_means(const Mat<eT>& X, const gmm_seed_mode& seed
     {
     uvec initial_indices;
     
-         if(seed_mode == static_subset)  { initial_indices = linspace<uvec>(0, X.n_cols-1, N_gaus); }
-    else if(seed_mode == random_subset)  { initial_indices = randperm<uvec>(X.n_cols, N_gaus);      }
+         if(seed_mode == static_subset)  { initial_indices = linspace<uvec>(0, X.n_cols-1, N_gaus);                   }
+    else if(seed_mode == random_subset)  { initial_indices = uvec(sort_index(randu<vec>(X.n_cols))).rows(0,N_gaus-1); }
+    
+    // not using randi() here as on some primitive systems it produces vectors with non-unique values
     
     // initial_indices.print("initial_indices:");
     

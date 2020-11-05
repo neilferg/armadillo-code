@@ -27,9 +27,8 @@ class SpRow : public SpMat<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_row  = true;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static const bool is_row = true;
+  static const bool is_col = false;
   
   
   inline          SpRow();

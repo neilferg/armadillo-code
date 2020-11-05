@@ -30,9 +30,8 @@ class subview : public Base<eT, subview<eT> >
   
   arma_aligned const Mat<eT>& m;
   
-  static const bool is_row  = false;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static const bool is_row = false;
+  static const bool is_col = false;
   
   const uword aux_row1;
   const uword aux_col1;
@@ -98,8 +97,6 @@ class subview : public Base<eT, subview<eT> >
   template<typename functor> inline void     imbue(functor F);
   
   inline void replace(const eT old_val, const eT new_val);
-  
-  inline void clean(const pod_type threshold);
   
   inline void fill(const eT val);
   inline void zeros();
@@ -284,6 +281,7 @@ class subview : public Base<eT, subview<eT> >
     typedef eT&                       reference;
     
     arma_aligned Mat<eT>* M;
+    arma_aligned eT*      current_ptr;
     arma_aligned uword    current_row;
     arma_aligned uword    current_col;
     
@@ -318,6 +316,7 @@ class subview : public Base<eT, subview<eT> >
     typedef const eT&                 reference;
     
     arma_aligned const Mat<eT>* M;
+    arma_aligned const eT*      current_ptr;
     arma_aligned       uword    current_row;
     arma_aligned       uword    current_col;
     
@@ -352,9 +351,8 @@ class subview_col : public subview<eT>
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = false;
-  static const bool is_col  = true;
-  static const bool is_xvec = false;
+  static const bool is_row = false;
+  static const bool is_col = true;
   
   const eT* colmem;
   
@@ -371,8 +369,6 @@ class subview_col : public subview<eT>
   arma_inline const Op<subview_col<eT>,op_htrans>  t() const;
   arma_inline const Op<subview_col<eT>,op_htrans> ht() const;
   arma_inline const Op<subview_col<eT>,op_strans> st() const;
-  
-  arma_inline const Op<subview_col<eT>,op_strans> as_row() const;
   
   inline void fill(const eT val);
   inline void zeros();
@@ -445,9 +441,8 @@ class subview_row : public subview<eT>
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = true;
-  static const bool is_col  = false;
-  static const bool is_xvec = false;
+  static const bool is_row = true;
+  static const bool is_col = false;
   
   inline void operator= (const subview<eT>& x);
   inline void operator= (const subview_row& x);
@@ -462,8 +457,6 @@ class subview_row : public subview<eT>
   arma_inline const Op<subview_row<eT>,op_htrans>  t() const;
   arma_inline const Op<subview_row<eT>,op_htrans> ht() const;
   arma_inline const Op<subview_row<eT>,op_strans> st() const;
-  
-  arma_inline const Op<subview_row<eT>,op_strans> as_col() const;
   
   inline eT  at_alt    (const uword i) const;
   
@@ -530,9 +523,8 @@ class subview_row_strans : public Base<eT, subview_row_strans<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = false;
-  static const bool is_col  = true;
-  static const bool is_xvec = false;
+  static const bool is_row = false;
+  static const bool is_col = true;
   
   arma_aligned const subview_row<eT>& sv_row;
   
@@ -564,9 +556,8 @@ class subview_row_htrans : public Base<eT, subview_row_htrans<eT> >
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static const bool is_row  = false;
-  static const bool is_col  = true;
-  static const bool is_xvec = false;
+  static const bool is_row = false;
+  static const bool is_col = true;
   
   arma_aligned const subview_row<eT>& sv_row;
   

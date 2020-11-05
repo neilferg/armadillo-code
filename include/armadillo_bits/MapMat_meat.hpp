@@ -232,7 +232,7 @@ MapMat<eT>::reset()
   access::rw(n_cols) = 0;
   access::rw(n_elem) = 0;
   
-  if((*map_ptr).empty() == false)  { (*map_ptr).clear(); }
+  (*map_ptr).clear();
   }
 
 
@@ -426,7 +426,7 @@ MapMat<eT>::operator[](const uword index)
 
 
 template<typename eT>
-inline
+arma_inline
 arma_warn_unused
 eT
 MapMat<eT>::operator[](const uword index) const
@@ -455,7 +455,7 @@ MapMat<eT>::operator()(const uword index)
 
 
 template<typename eT>
-inline
+arma_inline
 arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword index) const
@@ -486,7 +486,7 @@ MapMat<eT>::at(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-inline
+arma_inline
 arma_warn_unused
 eT
 MapMat<eT>::at(const uword in_row, const uword in_col) const
@@ -519,7 +519,7 @@ MapMat<eT>::operator()(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-inline
+arma_inline
 arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword in_row, const uword in_col) const
@@ -891,38 +891,6 @@ MapMat_val<eT>::operator eT() const
 
 template<typename eT>
 arma_inline
-typename get_pod_type<eT>::result
-MapMat_val<eT>::real() const
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename get_pod_type<eT>::result T;
-  
-  const MapMat<eT>& const_parent = parent;
-  
-  return T( access::tmp_real( const_parent.operator[](index) ) );
-  }
-
-
-
-template<typename eT>
-arma_inline
-typename get_pod_type<eT>::result
-MapMat_val<eT>::imag() const
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename get_pod_type<eT>::result T;
-  
-  const MapMat<eT>& const_parent = parent;
-  
-  return T( access::tmp_imag( const_parent.operator[](index) ) );
-  }
-
-
-
-template<typename eT>
-arma_inline
 void
 MapMat_val<eT>::operator=(const MapMat_val<eT>& x)
   {
@@ -1137,41 +1105,12 @@ SpMat_MapMat_val<eT>::operator eT() const
   {
   arma_extra_debug_sigprint();
   
-  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
+  const  SpMat<eT>& const_s_parent = s_parent;
+  const MapMat<eT>& const_m_parent = m_parent;
   
-  return const_s_parent.get_value(row,col);
-  }
-
-
-
-template<typename eT>
-inline
-typename get_pod_type<eT>::result
-SpMat_MapMat_val<eT>::real() const
-  {
-  arma_extra_debug_sigprint();
+  // get the element from the cache if it has more recent data than CSC
   
-  typedef typename get_pod_type<eT>::result T;
-  
-  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
-  
-  return T( access::tmp_real( const_s_parent.get_value(row,col) ) );
-  }
-
-
-
-template<typename eT>
-inline
-typename get_pod_type<eT>::result
-SpMat_MapMat_val<eT>::imag() const
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename get_pod_type<eT>::result T;
-  
-  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
-  
-  return T( access::tmp_imag( const_s_parent.get_value(row,col) ) );
+  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
   }
 
 
@@ -1183,9 +1122,17 @@ SpMat_MapMat_val<eT>::operator=(const SpMat_MapMat_val<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  const eT in_val = eT(x);
+  s_parent.sync_cache();
   
-  return (*this).operator=(in_val);
+  const eT    in_val = eT(x);
+  const uword index  = (m_parent.n_rows * col) + row;
+  
+  m_parent.set_val(index, in_val);
+  
+  s_parent.sync_state = 1;
+  access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+  
+  return *this;
   }
 
 
@@ -1197,27 +1144,15 @@ SpMat_MapMat_val<eT>::operator=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_OPENMP)
-    {
-    #pragma omp critical (arma_SpMat_cache)
-      {
-      (*this).set(in_val);
-      }
-    }
-  #elif defined(ARMA_USE_CXX11)
-    {
-    s_parent.cache_mutex.lock();
-    
-    (*this).set(in_val);
-    
-    s_parent.cache_mutex.unlock();
-    }
-  #else
-    {
-    (*this).set(in_val);
-    }
-  #endif
+  s_parent.sync_cache();
   
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  m_parent.set_val(index, in_val);
+  
+  s_parent.sync_state = 1;
+  access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+ 
   return *this;
   }
 
@@ -1230,28 +1165,23 @@ SpMat_MapMat_val<eT>::operator+=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  if(in_val == eT(0))  { return *this; }
+  s_parent.sync_cache();
   
-  #if defined(ARMA_USE_OPENMP)
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  if(in_val != eT(0))
     {
-    #pragma omp critical (arma_SpMat_cache)
-      {
-      (*this).add(in_val);
-      }
-    }
-  #elif defined(ARMA_USE_CXX11)
-    {
-    s_parent.cache_mutex.lock();
+    eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
     
-    (*this).add(in_val);
+    val += in_val;
     
-    s_parent.cache_mutex.unlock();
+    if(val == eT(0))  { map_ref.erase(index); }
+    
+    s_parent.sync_state = 1;
+    access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
     }
-  #else
-    {
-    (*this).add(in_val);
-    }
-  #endif
   
   return *this;
   }
@@ -1265,28 +1195,23 @@ SpMat_MapMat_val<eT>::operator-=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  if(in_val == eT(0))  { return *this; }
+  s_parent.sync_cache();
   
-  #if defined(ARMA_USE_OPENMP)
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  if(in_val != eT(0))
     {
-    #pragma omp critical (arma_SpMat_cache)
-      {
-      (*this).sub(in_val);
-      }
-    }
-  #elif defined(ARMA_USE_CXX11)
-    {
-    s_parent.cache_mutex.lock();
+    eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
     
-    (*this).sub(in_val);
+    val -= in_val;
     
-    s_parent.cache_mutex.unlock();
+    if(val == eT(0))  { map_ref.erase(index); }
+    
+    s_parent.sync_state = 1;
+    access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
     }
-  #else
-    {
-    (*this).sub(in_val);
-    }
-  #endif
   
   return *this;
   }
@@ -1300,26 +1225,33 @@ SpMat_MapMat_val<eT>::operator*=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_OPENMP)
+  s_parent.sync_cache();
+  
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  typename MapMat<eT>::map_type::iterator it     = map_ref.find(index);
+  typename MapMat<eT>::map_type::iterator it_end = map_ref.end();
+  
+  if(it != it_end)
     {
-    #pragma omp critical (arma_SpMat_cache)
+    if(in_val != eT(0))
       {
-      (*this).mul(in_val);
+      eT& val = (*it).second;
+      
+      val *= in_val;
+      
+      if(val == eT(0))  { map_ref.erase(it); }
       }
-    }
-  #elif defined(ARMA_USE_CXX11)
-    {
-    s_parent.cache_mutex.lock();
+    else
+      {
+      map_ref.erase(it);
+      }
     
-    (*this).mul(in_val);
-    
-    s_parent.cache_mutex.unlock();
+    s_parent.sync_state = 1;
+    access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
     }
-  #else
-    {
-    (*this).mul(in_val);
-    }
-  #endif
   
   return *this;
   }
@@ -1333,26 +1265,40 @@ SpMat_MapMat_val<eT>::operator/=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_USE_OPENMP)
+  s_parent.sync_cache();
+  
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  typename MapMat<eT>::map_type::iterator it     = map_ref.find(index);
+  typename MapMat<eT>::map_type::iterator it_end = map_ref.end();
+  
+  if(it != it_end)
     {
-    #pragma omp critical (arma_SpMat_cache)
+    eT& val = (*it).second;
+    
+    val /= in_val;
+    
+    if(val == eT(0))  { map_ref.erase(it); }
+    
+    s_parent.sync_state = 1;
+    access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+    }
+  else
+    {
+    // silly operation, but included for completness
+    
+    const eT val = eT(0) / in_val;
+    
+    if(val != eT(0))
       {
-      (*this).div(in_val);
+      m_parent.set_val(index, val);
+      
+      s_parent.sync_state = 1;
+      access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
       }
     }
-  #elif defined(ARMA_USE_CXX11)
-    {
-    s_parent.cache_mutex.lock();
-    
-    (*this).div(in_val);
-    
-    s_parent.cache_mutex.unlock();
-    }
-  #else
-    {
-    (*this).div(in_val);
-    }
-  #endif
   
   return *this;
   }
@@ -1366,22 +1312,49 @@ SpMat_MapMat_val<eT>::operator++()
   {
   arma_extra_debug_sigprint();
   
-  return (*this).operator+=( eT(1) );
+  s_parent.sync_cache();
+  
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  val += eT(1);  // can't use ++,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  s_parent.sync_state = 1;
+  access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-arma_warn_unused
 eT
 SpMat_MapMat_val<eT>::operator++(int)
   {
   arma_extra_debug_sigprint();
   
-  const eT old_val = eT(*this);
+  s_parent.sync_cache();
   
-  (*this).operator+=( eT(1) );
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  const eT old_val = val;
+  
+  val += eT(1);  // can't use ++,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  s_parent.sync_state = 1;
+  access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
   
   return old_val;
   }
@@ -1395,227 +1368,53 @@ SpMat_MapMat_val<eT>::operator--()
   {
   arma_extra_debug_sigprint();
   
-  return (*this).operator-=( eT(1) );
+  s_parent.sync_cache();
+  
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  val -= eT(1);  // can't use --,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  s_parent.sync_state = 1;
+  access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-arma_warn_unused
 eT
 SpMat_MapMat_val<eT>::operator--(int)
   {
   arma_extra_debug_sigprint();
   
-  const eT old_val = eT(*this);
+  s_parent.sync_cache();
   
-  (*this).operator-=( eT(1) );
+  const uword index = (m_parent.n_rows * col) + row;
+  
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  const eT old_val = val;
+  
+  val -= eT(1);  // can't use --,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  s_parent.sync_state = 1;
+  access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
   
   return old_val;
   }
 
-
-
-template<typename eT>
-inline
-void
-SpMat_MapMat_val<eT>::set(const eT in_val)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool done = (s_parent.sync_state == 0) ? s_parent.try_set_value_csc(row, col, in_val) : false;
-  
-  if(done == false)
-    {
-    s_parent.sync_cache_simple();
-    
-    const uword index = (m_parent.n_rows * col) + row;
-    
-    m_parent.set_val(index, in_val);
-    
-    s_parent.sync_state = 1;
-    
-    access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-SpMat_MapMat_val<eT>::add(const eT in_val)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool done = (s_parent.sync_state == 0) ? s_parent.try_add_value_csc(row, col, in_val) : false;
-    
-  if(done == false)
-    {
-    s_parent.sync_cache_simple();
-    
-    const uword index = (m_parent.n_rows * col) + row;
-    
-    typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
-    
-    eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
-    
-    val += in_val;
-    
-    if(val == eT(0))  { map_ref.erase(index); }
-    
-    s_parent.sync_state = 1;
-    
-    access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-SpMat_MapMat_val<eT>::sub(const eT in_val)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool done = (s_parent.sync_state == 0) ? s_parent.try_sub_value_csc(row, col, in_val) : false;
-  
-  if(done == false)
-    {
-    s_parent.sync_cache_simple();
-    
-    const uword index = (m_parent.n_rows * col) + row;
-    
-    typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
-    
-    eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
-    
-    val -= in_val;
-    
-    if(val == eT(0))  { map_ref.erase(index); }
-    
-    s_parent.sync_state = 1;
-    
-    access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-SpMat_MapMat_val<eT>::mul(const eT in_val)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool done = (s_parent.sync_state == 0) ? s_parent.try_mul_value_csc(row, col, in_val) : false;
-  
-  if(done == false)
-    {
-    s_parent.sync_cache_simple();
-    
-    const uword index = (m_parent.n_rows * col) + row;
-    
-    typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
-    
-    typename MapMat<eT>::map_type::iterator it     = map_ref.find(index);
-    typename MapMat<eT>::map_type::iterator it_end = map_ref.end();
-    
-    if(it != it_end)
-      {
-      if(in_val != eT(0))
-        {
-        eT& val = (*it).second;
-        
-        val *= in_val;
-        
-        if(val == eT(0))  { map_ref.erase(it); }
-        }
-      else
-        {
-        map_ref.erase(it);
-        }
-      
-      s_parent.sync_state = 1;
-      
-      access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
-      }
-    else
-      {
-      // element not found, ie. it's zero; zero multiplied by anything is zero, except for nan and inf
-      if(arma_isfinite(in_val) == false)
-        {
-        const eT result = eT(0) * in_val;
-        
-        if(result != eT(0))  // paranoia, in case compiling with -ffast-math
-          {
-          m_parent.set_val(index, result);
-          
-          s_parent.sync_state = 1;
-          
-          access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
-          }
-        }
-      }
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-SpMat_MapMat_val<eT>::div(const eT in_val)
-  {
-  arma_extra_debug_sigprint();
-  
-  const bool done = (s_parent.sync_state == 0) ? s_parent.try_div_value_csc(row, col, in_val) : false;
-  
-  if(done == false)
-    {
-    s_parent.sync_cache_simple();
-    
-    const uword index = (m_parent.n_rows * col) + row;
-    
-    typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
-    
-    typename MapMat<eT>::map_type::iterator it     = map_ref.find(index);
-    typename MapMat<eT>::map_type::iterator it_end = map_ref.end();
-    
-    if(it != it_end)
-      {
-      eT& val = (*it).second;
-      
-      val /= in_val;
-      
-      if(val == eT(0))  { map_ref.erase(it); }
-      
-      s_parent.sync_state = 1;
-      
-      access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
-      }
-    else
-      {
-      // element not found, ie. it's zero; zero divided by anything is zero, except for zero and nan
-      if( (in_val == eT(0)) || (arma_isnan(in_val)) )
-        {
-        const eT result = eT(0) / in_val;
-        
-        if(result != eT(0))  // paranoia, in case compiling with -ffast-math
-          {
-          m_parent.set_val(index, result);
-          
-          s_parent.sync_state = 1;
-          
-          access::rw(s_parent.n_nonzero) = m_parent.get_n_nonzero();
-          }
-        }
-      }
-    }
-  }
 
 
 
@@ -1626,11 +1425,46 @@ SpMat_MapMat_val<eT>::div(const eT in_val)
 
 template<typename eT>
 arma_inline
-SpSubview_MapMat_val<eT>::SpSubview_MapMat_val(SpSubview<eT>& in_sv_parent, MapMat<eT>& in_m_parent, const uword in_row, const uword in_col)
-  : SpMat_MapMat_val<eT>(access::rw(in_sv_parent.m), in_m_parent, in_row, in_col)
-  , sv_parent(in_sv_parent)
+SpSubview_MapMat_val<eT>::SpSubview_MapMat_val(SpSubview<eT>& in_v_parent, MapMat<eT>& in_m_parent, const uword in_row, const uword in_col)
+  : v_parent(in_v_parent)
+  , m_parent(in_m_parent)
+  , row     (in_row     )
+  , col     (in_col     )
   {
   arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+arma_inline
+void
+SpSubview_MapMat_val<eT>::update_n_nonzeros()
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword old_n_nonzero = v_parent.m.n_nonzero;
+  
+  access::rw(v_parent.m.n_nonzero) = m_parent.get_n_nonzero();
+  
+       if(v_parent.m.n_nonzero > old_n_nonzero)  { access::rw(v_parent.n_nonzero)++; }
+  else if(v_parent.m.n_nonzero < old_n_nonzero)  { access::rw(v_parent.n_nonzero)--; }
+  }
+
+
+
+template<typename eT>
+inline
+SpSubview_MapMat_val<eT>::operator eT() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const  SpMat<eT>& const_s_parent = v_parent.m;
+  const MapMat<eT>& const_m_parent = m_parent;
+  
+  // get the element from the cache if it has more recent data than CSC
+  
+  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
   }
 
 
@@ -1642,9 +1476,17 @@ SpSubview_MapMat_val<eT>::operator=(const SpSubview_MapMat_val<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  const eT in_val = eT(x);
+  v_parent.m.sync_cache();
   
-  return (*this).operator=(in_val);
+  const eT    in_val = eT(x);
+  const uword index  = (m_parent.n_rows * col) + row;
+  
+  m_parent.set_val(index, in_val);
+  
+  v_parent.m.sync_state = 1;
+  update_n_nonzeros();
+  
+  return *this;
   }
 
 
@@ -1656,12 +1498,14 @@ SpSubview_MapMat_val<eT>::operator=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  SpMat_MapMat_val<eT>::operator=(in_val);
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  m_parent.set_val(index, in_val);
+  
+  v_parent.m.sync_state = 1;
+  update_n_nonzeros();
   
   return *this;
   }
@@ -1675,12 +1519,23 @@ SpSubview_MapMat_val<eT>::operator+=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  SpMat_MapMat_val<eT>::operator+=(in_val);
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  if(in_val != eT(0))
+    {
+    eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+    
+    val += in_val;
+    
+    if(val == eT(0))  { map_ref.erase(index); }
+    
+    v_parent.m.sync_state = 1;
+    update_n_nonzeros();
+    }
   
   return *this;
   }
@@ -1694,12 +1549,23 @@ SpSubview_MapMat_val<eT>::operator-=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  SpMat_MapMat_val<eT>::operator-=(in_val);
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  if(in_val != eT(0))
+    {
+    eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+    
+    val -= in_val;
+    
+    if(val == eT(0))  { map_ref.erase(index); }
+    
+    v_parent.m.sync_state = 1;
+    update_n_nonzeros();
+    }
   
   return *this;
   }
@@ -1713,12 +1579,33 @@ SpSubview_MapMat_val<eT>::operator*=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  SpMat_MapMat_val<eT>::operator*=(in_val);
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  typename MapMat<eT>::map_type::iterator it     = map_ref.find(index);
+  typename MapMat<eT>::map_type::iterator it_end = map_ref.end();
+  
+  if(it != it_end)
+    {
+    if(in_val != eT(0))
+      {
+      eT& val = (*it).second;
+      
+      val *= in_val;
+      
+      if(val == eT(0))  { map_ref.erase(it); }
+      }
+    else
+      {
+      map_ref.erase(it);
+      }
+    
+    v_parent.m.sync_state = 1;
+    update_n_nonzeros();
+    }
   
   return *this;
   }
@@ -1732,12 +1619,40 @@ SpSubview_MapMat_val<eT>::operator/=(const eT in_val)
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  SpMat_MapMat_val<eT>::operator/=(in_val);
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  typename MapMat<eT>::map_type::iterator it     = map_ref.find(index);
+  typename MapMat<eT>::map_type::iterator it_end = map_ref.end();
+  
+  if(it != it_end)
+    {
+    eT& val = (*it).second;
+    
+    val /= in_val;
+    
+    if(val == eT(0))  { map_ref.erase(it); }
+    
+    v_parent.m.sync_state = 1;
+    update_n_nonzeros();
+    }
+  else
+    {
+    // silly operation, but included for completness
+    
+    const eT val = eT(0) / in_val;
+    
+    if(val != eT(0))
+      {
+      m_parent.set_val(index, val);
+      
+      v_parent.m.sync_state = 1;
+      update_n_nonzeros();
+      }
+    }
   
   return *this;
   }
@@ -1751,12 +1666,20 @@ SpSubview_MapMat_val<eT>::operator++()
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  SpMat_MapMat_val<eT>::operator++();
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  val += eT(1);  // can't use ++,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  v_parent.m.sync_state = 1;
+  update_n_nonzeros();
   
   return *this;
   }
@@ -1765,18 +1688,27 @@ SpSubview_MapMat_val<eT>::operator++()
 
 template<typename eT>
 inline
-arma_warn_unused
 eT
 SpSubview_MapMat_val<eT>::operator++(int)
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  const eT old_val = SpMat_MapMat_val<eT>::operator++(int(0));
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  const eT old_val = val;
+  
+  val += eT(1);  // can't use ++,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  v_parent.m.sync_state = 1;
+  update_n_nonzeros();
   
   return old_val;
   }
@@ -1790,12 +1722,20 @@ SpSubview_MapMat_val<eT>::operator--()
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  SpMat_MapMat_val<eT>::operator--();
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  val -= eT(1);  // can't use --,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  v_parent.m.sync_state = 1;
+  update_n_nonzeros();
   
   return *this;
   }
@@ -1804,18 +1744,27 @@ SpSubview_MapMat_val<eT>::operator--()
 
 template<typename eT>
 inline
-arma_warn_unused
 eT
 SpSubview_MapMat_val<eT>::operator--(int)
   {
   arma_extra_debug_sigprint();
   
-  const uword old_n_nonzero = sv_parent.m.n_nonzero;
+  v_parent.m.sync_cache();
   
-  const eT old_val = SpMat_MapMat_val<eT>::operator--(int(0));
+  const uword index = (m_parent.n_rows * col) + row;
   
-  if(sv_parent.m.n_nonzero > old_n_nonzero)  { access::rw(sv_parent.n_nonzero)++; }
-  if(sv_parent.m.n_nonzero < old_n_nonzero)  { access::rw(sv_parent.n_nonzero)--; }
+  typename MapMat<eT>::map_type& map_ref = *(m_parent.map_ptr);
+  
+  eT& val = map_ref.operator[](index);  // creates the element if it doesn't exist
+  
+  const eT old_val = val;
+  
+  val -= eT(1);  // can't use --,  as eT can be std::complex
+  
+  if(val == eT(0))  { map_ref.erase(index); }
+  
+  v_parent.m.sync_state = 1;
+  update_n_nonzeros();
   
   return old_val;
   }

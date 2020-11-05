@@ -27,9 +27,8 @@ class Row : public Mat<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_col  = false;
-  static const bool is_row  = true;
-  static const bool is_xvec = false;
+  static const bool is_col = false;
+  static const bool is_row = true;
   
   inline          Row();
   inline          Row(const Row<eT>& X);
@@ -85,8 +84,6 @@ class Row : public Mat<eT>
   arma_inline const Op<Row<eT>,op_htrans> ht() const;
   arma_inline const Op<Row<eT>,op_strans> st() const;
   
-  arma_inline const Op<Row<eT>,op_strans> as_col() const;
-  
   arma_inline       subview_row<eT> col(const uword col_num);
   arma_inline const subview_row<eT> col(const uword col_num) const;
   
@@ -126,8 +123,6 @@ class Row : public Mat<eT>
   
   inline void shed_col (const uword col_num);
   inline void shed_cols(const uword in_col1, const uword in_col2);
-  
-  template<typename T1> inline void shed_cols(const Base<uword, T1>& indices);
   
                         inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero = true);
   template<typename T1> inline void insert_cols(const uword col_num, const Base<eT,T1>& X);
@@ -185,13 +180,12 @@ class Row<eT>::fixed : public Row<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
-  static const bool is_col  = false;
-  static const bool is_row  = true;
-  static const bool is_xvec = false;
+  static const bool is_col = false;
+  static const bool is_row = true;
   
-  static const uword n_rows;  // value provided below the class definition
-  static const uword n_cols;  // value provided below the class definition
-  static const uword n_elem;  // value provided below the class definition
+  static const uword n_rows = 1;
+  static const uword n_cols = fixed_n_elem;
+  static const uword n_elem = fixed_n_elem;
   
   arma_inline fixed();
   arma_inline fixed(const fixed<fixed_n_elem>& X);
@@ -252,23 +246,6 @@ class Row<eT>::fixed : public Row<eT>
   arma_hot inline const Row<eT>& zeros();
   arma_hot inline const Row<eT>& ones();
   };
-
-
-
-// these definitions are outside of the class due to bizarre C++ rules;
-// C++17 has inline variables to address this shortcoming
-
-template<typename eT>
-template<uword fixed_n_elem>
-const uword Row<eT>::fixed<fixed_n_elem>::n_rows = 1u;
-
-template<typename eT>
-template<uword fixed_n_elem>
-const uword Row<eT>::fixed<fixed_n_elem>::n_cols = fixed_n_elem;
-
-template<typename eT>
-template<uword fixed_n_elem>
-const uword Row<eT>::fixed<fixed_n_elem>::n_elem = fixed_n_elem;
 
 
 

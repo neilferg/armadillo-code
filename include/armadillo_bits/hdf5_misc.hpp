@@ -711,7 +711,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    if(is_cx<eT>::no)
+    if(is_complex<eT>::value == false)
       {
       return -1; // can't read complex data into non-complex matrix/cube
       }
@@ -731,7 +731,7 @@ load_and_convert_hdf5
   
   if(is_equal)
     {
-    if(is_cx<eT>::no)
+    if(is_complex<eT>::value == false)
       {
       return -1; // can't read complex data into non-complex matrix/cube
       }

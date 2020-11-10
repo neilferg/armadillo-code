@@ -364,6 +364,7 @@ class subview_col : public subview<eT>
   inline void operator= (const subview<eT>& x);
   inline void operator= (const subview_col& x);
   inline void operator= (const eT val);
+  inline void operator= (const std::initializer_list<eT>& list);
   
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);
@@ -452,6 +453,7 @@ class subview_row : public subview<eT>
   inline void operator= (const subview<eT>& x);
   inline void operator= (const subview_row& x);
   inline void operator= (const eT val);
+  inline void operator= (const std::initializer_list<eT>& list);
   
   template<typename T1>
   inline void operator= (const Base<eT,T1>& x);

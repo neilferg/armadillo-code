@@ -3160,6 +3160,22 @@ subview_col<eT>::operator=(const subview_col<eT>& X)
 template<typename eT>
 inline
 void
+subview_col<eT>::operator=(const std::initializer_list<eT>& list)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword N = uword(list.size());
+  
+  arma_debug_assert_same_size(subview<eT>::n_rows, subview<eT>::n_cols, N, 1, "copy into submatrix");
+  
+  arrayops::copy( access::rwp(colmem), list.begin(), N );
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview_col<eT>::operator=(const eT val)
   {
   arma_extra_debug_sigprint();
@@ -3757,6 +3773,28 @@ subview_row<eT>::operator=(const eT val)
   arma_extra_debug_sigprint();
   
   subview<eT>::operator=(val); // interprets 'subview_row' as 'subview'
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_row<eT>::operator=(const std::initializer_list<eT>& list)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword N = uword(list.size());
+  
+  arma_debug_assert_same_size(subview<eT>::n_rows, subview<eT>::n_cols, 1, N, "copy into submatrix");
+  
+  auto it = list.begin();
+  
+  for(uword ii=0; ii < N; ++ii)
+    {
+    (*this).operator[](ii) = (*it);
+    ++it;
+    }
   }
 
 

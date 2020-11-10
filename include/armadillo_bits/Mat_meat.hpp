@@ -2872,7 +2872,7 @@ Mat<eT>::operator/=(const spdiagview<eT>& X)
 
 
 template<typename eT>
-arma_deprecated
+arma_cold
 inline
 mat_injector< Mat<eT> >
 Mat<eT>::operator<<(const eT val)
@@ -2883,7 +2883,7 @@ Mat<eT>::operator<<(const eT val)
 
 
 template<typename eT>
-arma_deprecated
+arma_cold
 inline
 mat_injector< Mat<eT> >
 Mat<eT>::operator<<(const injector_end_of_row<>& x)

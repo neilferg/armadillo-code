@@ -635,7 +635,7 @@ field<oT>::at(const uword in_row, const uword in_col, const uword in_slice) cons
 
 
 template<typename oT>
-arma_deprecated
+arma_cold
 inline
 field_injector< field<oT> >
 field<oT>::operator<<(const oT& val)
@@ -646,7 +646,7 @@ field<oT>::operator<<(const oT& val)
 
 
 template<typename oT>
-arma_deprecated
+arma_cold
 inline
 field_injector< field<oT> >
 field<oT>::operator<<(const injector_end_of_row<>& x)

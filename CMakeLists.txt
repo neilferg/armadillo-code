@@ -196,8 +196,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake_au
 if(APPLE)
   message(STATUS "Detected macOS")
   
-  set(ARMA_OS macos)
-  
   set(ARMA_USE_LAPACK     true)
   set(ARMA_USE_BLAS       true)
   set(ARMA_USE_ACCELERATE true)
@@ -257,8 +255,6 @@ if(APPLE)
   set(CMAKE_MACOSX_RPATH 1)
   
 else()
-  
-  set(ARMA_OS unix)
   
   include(ARMA_FindMKL)
   include(ARMA_FindACMLMP)

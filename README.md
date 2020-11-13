@@ -238,7 +238,7 @@ use the following command:
 Otherwise, if you want to use Armadillo without installation
 (ie. without the Armadillo runtime library), use the following command:
   
-    g++ prog.cpp -o prog.cpp -O2 -I /home/blah/armadillo-7.200.3/include -DARMA_DONT_USE_WRAPPER -lopenblas
+    g++ prog.cpp -o prog -O2 -I /home/blah/armadillo-7.200.3/include -DARMA_DONT_USE_WRAPPER -lopenblas
 
 The above command assumes that the armadillo archive was unpacked into /home/blah/  
 The command needs to be adjusted if the archive was unpacked into a different directory

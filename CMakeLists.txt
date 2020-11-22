@@ -87,6 +87,13 @@ string(REGEX REPLACE ".*#define ARMA_VERSION_PATCH ([0-9]+).*" "\\1" ARMA_VERSIO
 
 message(STATUS "Configuring Armadillo ${ARMA_VERSION_MAJOR}.${ARMA_VERSION_MINOR}.${ARMA_VERSION_PATCH}")
 
+string(COMPARE EQUAL "${CMAKE_CXX_FLAGS}" "" CXX_FLAGS_EMPTY)
+if(NOT CXX_FLAGS_EMPTY)
+  message(STATUS "")
+  message(STATUS "*** WARNING: variable 'CMAKE_CXX_FLAGS' is not empty; this may cause problems!")
+  message(STATUS "")
+endif()
+
 
 # NOTE: ARMA_USE_EXTERN_RNG requires compiler support for thread_local and C++11
 # NOTE: for Linux, this is available with gcc 4.8.3 onwards

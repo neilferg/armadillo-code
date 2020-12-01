@@ -734,7 +734,8 @@ Base<elem_type,derived>::has_nan() const
 
 
 template<typename elem_type, typename derived>
-arma_inline
+inline
+arma_warn_unused
 const Op<derived,op_vectorise_col>
 Base<elem_type, derived>::as_col() const
   {
@@ -744,7 +745,8 @@ Base<elem_type, derived>::as_col() const
 
 
 template<typename elem_type, typename derived>
-arma_inline
+inline
+arma_warn_unused
 const Op<derived,op_vectorise_row>
 Base<elem_type, derived>::as_row() const
   {

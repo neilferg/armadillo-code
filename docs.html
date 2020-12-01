@@ -2198,22 +2198,26 @@ each element in the generated object is either 0 or 1, depending on the result o
 </li>
 <br>
 <li>
-<b>Caveat:</b> operators involving an equality comparison (ie. <code><b>==</b></code>, <code><b>!=</b></code>, <code><b>&gt;=</b></code>, <code><b>&lt;=</b></code>)
+<b>Caveat:</b> operators involving equality comparison (ie. <code><b>==</b></code>, <code><b>!=</b></code>, <code><b>&gt;=</b></code>, <code><b>&lt;=</b></code>)
 are not recommended for matrices of type <i>mat</i> or <i>fmat</i>, due to the necessarily <a href="https://en.wikipedia.org/wiki/Floating_point">limited precision</a> of the underlying element types;
 consider using <a href="#approx_equal">approx_equal()</a> instead
 </li>
 <br>
 <li>
-A <i>std::logic_error</i> exception is thrown if incompatible object sizes are used
-</li>
-<br>
-<li>
-If the <code><b>+</b></code>, <code><b>&minus;</b></code> and <code><b>%</b></code> operators are chained, Armadillo will try to avoid the generation of temporaries;
+If the <code><b>+</b></code>, <code><b>&minus;</b></code> and <code><b>%</b></code> operators are chained, Armadillo aims to avoid the generation of temporaries;
 no temporaries are generated if all given objects are of the same type and size
 </li>
 <br>
 <li>
-If the <code><b>*</b></code> operator is chained, Armadillo will try to find an efficient ordering of the matrix multiplications
+If the <code><b>*</b></code> operator is chained, Armadillo aims to find an efficient ordering of the matrix multiplications
+</li>
+<br>
+<li>
+For "broadcasting" operations, use <a href="#each_colrow">.each_col()</a> and <a href="#each_colrow">.each_row()</a>
+</li>
+<br>
+<li>
+A <i>std::logic_error</i> exception is thrown if incompatible object sizes are used
 </li>
 <br>
 <li>
@@ -11141,7 +11145,7 @@ Sum of the elements on the main diagonal of matrix <i>X</i>
 <br>
 <li>
 If <i>X</i> is an expression,
-the function will try to use optimised expression evaluations to calculate only the diagonal elements
+the function aims to use optimised expression evaluations to calculate only the diagonal elements
 </li>
 <br>
 <li>

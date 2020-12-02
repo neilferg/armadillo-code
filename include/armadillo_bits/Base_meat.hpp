@@ -748,7 +748,8 @@ Base<elem_type, derived>::as_row() const
 // extra functions defined in Base_extra_yes
 
 template<typename elem_type, typename derived>
-arma_inline
+inline
+arma_warn_unused
 const Op<derived,op_inv>
 Base_extra_yes<elem_type, derived>::i() const
   {

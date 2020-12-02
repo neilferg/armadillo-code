@@ -22,7 +22,7 @@
 template<typename elem_type, typename derived>
 struct Base_extra_yes
   {
-  arma_inline const Op<derived,op_inv> i() const;   //!< matrix inverse
+  inline arma_warn_unused const Op<derived,op_inv> i() const;   //!< matrix inverse
   
   arma_deprecated inline const Op<derived,op_inv> i(const bool ) const;   //!< kept only for compatibility with old user code
   arma_deprecated inline const Op<derived,op_inv> i(const char*) const;   //!< kept only for compatibility with old user code

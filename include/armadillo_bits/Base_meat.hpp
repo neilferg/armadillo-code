@@ -422,15 +422,15 @@ Base<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result 
       const T val_real = access::tmp_real(val);
       const T val_imag = access::tmp_imag(val);
       
-      if(std::abs(val_real) > tol)  { return false; }
-      if(std::abs(val_imag) > tol)  { return false; }
+      if(eop_aux::arma_abs(val_real) > tol)  { return false; }
+      if(eop_aux::arma_abs(val_imag) > tol)  { return false; }
       }
     }
   else  // not complex
     {
     for(uword i=0; i<n_elem; ++i)
       {
-      if(std::abs(Pea[i]) > tol)  { return false; }
+      if(eop_aux::arma_abs(Pea[i]) > tol)  { return false; }
       }
     }
   

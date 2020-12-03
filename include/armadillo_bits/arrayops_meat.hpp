@@ -1028,7 +1028,7 @@ arrayops::is_zero(const eT* mem, const uword n_elem, const eT abs_limit, const t
     {
     for(uword i=0; i<n_elem; ++i)
       {
-      if(std::abs(mem[i]) > abs_limit)  { return false; }
+      if(eop_aux::arma_abs(mem[i]) > abs_limit)  { return false; }
       }
     }
   

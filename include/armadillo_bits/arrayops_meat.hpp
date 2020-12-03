@@ -135,7 +135,7 @@ arrayops::clean(eT* mem, const uword n_elem, const eT abs_limit, const typename 
     {
     eT& val = mem[i];
     
-    val = (std::abs(val) <= abs_limit) ? eT(0) : val;
+    val = (eop_aux::arma_abs(val) <= abs_limit) ? eT(0) : val;
     }
   }
 

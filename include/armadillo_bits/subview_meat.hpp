@@ -22,21 +22,60 @@ template<typename eT>
 inline
 subview<eT>::~subview()
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
   }
+
 
 
 template<typename eT>
 inline
 subview<eT>::subview(const Mat<eT>& in_m, const uword in_row1, const uword in_col1, const uword in_n_rows, const uword in_n_cols)
-  : m(in_m)
-  , aux_row1(in_row1)
-  , aux_col1(in_col1)
-  , n_rows(in_n_rows)
-  , n_cols(in_n_cols)
-  , n_elem(in_n_rows*in_n_cols)
+  : m       (in_m     )
+  , aux_row1(in_row1  )
+  , aux_col1(in_col1  )
+  , n_rows  (in_n_rows)
+  , n_cols  (in_n_cols)
+  , n_elem  (in_n_rows*in_n_cols)
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+template<typename eT>
+inline
+subview<eT>::subview(const subview<eT>& in)
+  : m       (in.m       )
+  , aux_row1(in.aux_row1)
+  , aux_col1(in.aux_col1)
+  , n_rows  (in.n_rows  )
+  , n_cols  (in.n_cols  )
+  , n_elem  (in.n_elem  )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  }
+
+
+
+template<typename eT>
+inline
+subview<eT>::subview(subview<eT>&& in)
+  : m       (in.m       )
+  , aux_row1(in.aux_row1)
+  , aux_col1(in.aux_col1)
+  , n_rows  (in.n_rows  )
+  , n_cols  (in.n_cols  )
+  , n_elem  (in.n_elem  )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  
+  // for paranoia
+  
+  access::rw(in.aux_row1) = 0;
+  access::rw(in.aux_col1) = 0;
+  access::rw(in.n_rows  ) = 0;
+  access::rw(in.n_cols  ) = 0;
+  access::rw(in.n_elem  ) = 0;
   }
 
 
@@ -3135,6 +3174,30 @@ subview_col<eT>::subview_col(const Mat<eT>& in_m, const uword in_col, const uwor
 
 template<typename eT>
 inline
+subview_col<eT>::subview_col(const subview_col<eT>& in)
+  : subview<eT>(in)   // interprets 'subview_col' as 'subview'
+  , colmem(in.colmem)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+subview_col<eT>::subview_col(subview_col<eT>&& in)
+  : subview<eT>(std::move(in))  // interprets 'subview_col' as 'subview'
+  , colmem(in.colmem)
+  {
+  arma_extra_debug_sigprint();
+  
+  access::rw(in.colmem) = nullptr;
+  }
+
+
+
+template<typename eT>
+inline
 void
 subview_col<eT>::operator=(const subview<eT>& X)
   {
@@ -3735,6 +3798,26 @@ template<typename eT>
 inline
 subview_row<eT>::subview_row(const Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
   : subview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+subview_row<eT>::subview_row(const subview_row<eT>& in)
+  : subview<eT>(in)   // interprets 'subview_row' as 'subview'
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+subview_row<eT>::subview_row(subview_row<eT>&& in)
+  : subview<eT>(std::move(in))  // interprets 'subview_row' as 'subview'
   {
   arma_extra_debug_sigprint();
   }

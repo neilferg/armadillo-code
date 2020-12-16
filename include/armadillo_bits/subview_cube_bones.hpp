@@ -51,6 +51,9 @@ class subview_cube : public BaseCube< eT, subview_cube<eT> >
   inline ~subview_cube();
   inline  subview_cube() = delete;
   
+  inline  subview_cube(const subview_cube&  in);
+  inline  subview_cube(      subview_cube&& in);
+  
   inline void operator=  (const eT val);
   inline void operator+= (const eT val);
   inline void operator-= (const eT val);

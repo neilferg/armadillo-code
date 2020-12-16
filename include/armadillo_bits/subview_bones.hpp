@@ -51,6 +51,9 @@ class subview : public Base< eT, subview<eT> >
   inline ~subview();
   inline  subview() = delete;
   
+  inline  subview(const subview&  in);
+  inline  subview(      subview&& in);
+  
   template<typename op_type             > inline void inplace_op(const eT           val                        );
   template<typename op_type, typename T1> inline void inplace_op(const Base<eT,T1>& x,   const char* identifier);
   template<typename op_type             > inline void inplace_op(const subview<eT>& x,   const char* identifier);
@@ -423,6 +426,9 @@ class subview_col : public subview<eT>
   inline arma_warn_unused uword index_min() const;
   inline arma_warn_unused uword index_max() const;
   
+  inline  subview_col(const subview_col&  in);
+  inline  subview_col(      subview_col&& in);
+  
   
   protected:
   
@@ -506,6 +512,9 @@ class subview_row : public subview<eT>
   inline typename subview<eT>::row_iterator        end();
   inline typename subview<eT>::const_row_iterator  end() const;
   inline typename subview<eT>::const_row_iterator cend() const;
+  
+  inline  subview_row(const subview_row&  in);
+  inline  subview_row(      subview_row&& in);
   
   
   protected:

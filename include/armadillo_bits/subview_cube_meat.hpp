@@ -22,7 +22,7 @@ template<typename eT>
 inline
 subview_cube<eT>::~subview_cube()
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
   }
 
 
@@ -49,7 +49,54 @@ subview_cube<eT>::subview_cube
   , n_slices    (in_n_slices)
   , n_elem      (n_elem_slice * in_n_slices)
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>::subview_cube(const subview_cube<eT>& in)
+  : m           (in.m           )
+  , aux_row1    (in.aux_row1    )
+  , aux_col1    (in.aux_col1    )
+  , aux_slice1  (in.aux_slice1  )
+  , n_rows      (in.n_rows      )
+  , n_cols      (in.n_cols      )
+  , n_elem_slice(in.n_elem_slice)
+  , n_slices    (in.n_slices    )
+  , n_elem      (in.n_elem      )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  }
+
+
+
+template<typename eT>
+inline
+subview_cube<eT>::subview_cube(subview_cube<eT>&& in)
+  : m           (in.m           )
+  , aux_row1    (in.aux_row1    )
+  , aux_col1    (in.aux_col1    )
+  , aux_slice1  (in.aux_slice1  )
+  , n_rows      (in.n_rows      )
+  , n_cols      (in.n_cols      )
+  , n_elem_slice(in.n_elem_slice)
+  , n_slices    (in.n_slices    )
+  , n_elem      (in.n_elem      )
+  {
+  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  
+  // for paranoia
+  
+  access::rw(in.aux_row1    ) = 0;
+  access::rw(in.aux_col1    ) = 0;
+  access::rw(in.aux_slice1  ) = 0;
+  access::rw(in.n_rows      ) = 0;
+  access::rw(in.n_cols      ) = 0;
+  access::rw(in.n_elem_slice) = 0;
+  access::rw(in.n_slices    ) = 0;
+  access::rw(in.n_elem      ) = 0;
   }
 
 

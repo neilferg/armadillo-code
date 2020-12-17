@@ -190,18 +190,18 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
-
+  
   o.unsetf(ios::showbase);
   o.unsetf(ios::uppercase);
   o.unsetf(ios::showpos);
-
+  
   o.fill(' ');
-
+  
   std::streamsize cell_width;
-
+  
   bool use_layout_B  = false;
   bool use_layout_C  = false;
-
+  
   for(typename SpMat<eT>::const_iterator it = begin; it.pos() < n_elem; ++it)
     {
     const eT val = (*it);
@@ -218,7 +218,7 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
       use_layout_C = true;
       break;
       }
-
+    
     if(
       (val >= eT(+10)) || ( (is_signed<eT>::value) && (val <= eT(-10)) )
       )
@@ -226,7 +226,7 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
       use_layout_B = true;
       }
     }
-
+  
   if(use_layout_C)
     {
     o.setf(ios::scientific);
@@ -789,12 +789,12 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
     {
     const std::streamsize cell_width = modify ? arma_ostream::modify_stream<eT>(o, m.begin(), m_n_nonzero) : o.width();
     
-    typename SpMat<eT>::const_iterator begin = m.begin();
-    typename SpMat<eT>::const_iterator m_end = m.end();
+    typename SpMat<eT>::const_iterator it     = m.begin();
+    typename SpMat<eT>::const_iterator it_end = m.end();
     
-    while(begin != m_end)
+    while(it != it_end)
       {
-      const uword row = begin.row();
+      const uword row = it.row();
       
       // TODO: change the maximum number of spaces before and after each location to be dependent on n_rows and n_cols
       
@@ -804,7 +804,7 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
       else if(row < 10000)   { o << "  ";    }
       else if(row < 100000)  { o << ' ';     }
       
-      const uword col = begin.col();
+      const uword col = it.col();
       
       o << '(' << row << ", " << col << ") ";
       
@@ -816,10 +816,10 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
       
       if(cell_width > 0) { o.width(cell_width); }
         
-      arma_ostream::print_elem(o, eT(*begin), modify);
+      arma_ostream::print_elem(o, eT(*it), modify);
       o << '\n';
       
-      ++begin;
+      ++it;
       }
     
     o << '\n';

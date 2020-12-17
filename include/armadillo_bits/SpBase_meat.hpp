@@ -74,9 +74,20 @@ inline
 void
 SpBase<elem_type,derived>::print(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_print(extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::print(get_cout_stream(), tmp.M, true);
   }
 
 
@@ -87,9 +98,20 @@ inline
 void
 SpBase<elem_type,derived>::print(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_print(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print(user_stream, tmp.M, true);
   }
   
 
@@ -100,9 +122,20 @@ inline
 void
 SpBase<elem_type,derived>::raw_print(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_raw_print(extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::print(get_cout_stream(), tmp.M, false);
   }
 
 
@@ -113,9 +146,20 @@ inline
 void
 SpBase<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_raw_print(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print(user_stream, tmp.M, false);
   }
 
 
@@ -126,9 +170,20 @@ inline
 void
 SpBase<elem_type, derived>::print_dense(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
 
-  tmp.M.impl_print_dense(extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::print_dense(get_cout_stream(), tmp.M, true);
   }
 
 
@@ -139,9 +194,20 @@ inline
 void
 SpBase<elem_type, derived>::print_dense(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
 
-  tmp.M.impl_print_dense(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print_dense(user_stream, tmp.M, true);
   }
 
 
@@ -152,9 +218,20 @@ inline
 void
 SpBase<elem_type, derived>::raw_print_dense(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
 
-  tmp.M.impl_raw_print_dense(extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::print_dense(get_cout_stream(), tmp.M, false);
   }
 
 
@@ -165,9 +242,20 @@ inline
 void
 SpBase<elem_type, derived>::raw_print_dense(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_spmat<derived> tmp( (*this).get_ref() );
 
-  tmp.M.impl_raw_print_dense(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::print_dense(user_stream, tmp.M, false);
   }
 
 

@@ -35,9 +35,16 @@ inline
 void
 BaseCube<elem_type,derived>::print(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_print(extra_text);
+  if(extra_text.length() != 0)
+    {
+    get_cout_stream() << extra_text << '\n';
+    }
+  
+  arma_ostream::print(get_cout_stream(), tmp.M, true);
   }
 
 
@@ -48,9 +55,16 @@ inline
 void
 BaseCube<elem_type,derived>::print(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_print(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    user_stream << extra_text << '\n';
+    }
+  
+  arma_ostream::print(user_stream, tmp.M, true);
   }
   
 
@@ -61,9 +75,16 @@ inline
 void
 BaseCube<elem_type,derived>::raw_print(const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_raw_print(extra_text);
+  if(extra_text.length() != 0)
+    {
+    get_cout_stream() << extra_text << '\n';
+    }
+  
+  arma_ostream::print(get_cout_stream(), tmp.M, false);
   }
 
 
@@ -74,9 +95,16 @@ inline
 void
 BaseCube<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string extra_text) const
   {
+  arma_extra_debug_sigprint();
+  
   const unwrap_cube<derived> tmp( (*this).get_ref() );
   
-  tmp.M.impl_raw_print(user_stream, extra_text);
+  if(extra_text.length() != 0)
+    {
+    user_stream << extra_text << '\n';
+    }
+  
+  arma_ostream::print(user_stream, tmp.M, false);
   }
 
 

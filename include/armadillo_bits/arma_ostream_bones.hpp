@@ -61,13 +61,14 @@ class arma_ostream
   
   template<typename oT> arma_cold inline static void print(std::ostream& o, const field<oT>&         m);
   template<typename oT> arma_cold inline static void print(std::ostream& o, const subview_field<oT>& m);
-
-
+  
   template<typename eT> arma_cold inline static void print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify);
   template<typename eT> arma_cold inline static void       print(std::ostream& o, const SpMat<eT>& m, const bool modify);
   
   arma_cold inline static void print(std::ostream& o, const SizeMat&  S);
   arma_cold inline static void print(std::ostream& o, const SizeCube& S);
+  
+  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const Mat<eT>& m);
   };
 
 

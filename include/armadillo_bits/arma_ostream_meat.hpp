@@ -875,4 +875,146 @@ arma_ostream::print(std::ostream& o, const SizeCube& S)
 
 
 
+template<typename eT>
+arma_cold
+inline
+void
+arma_ostream::snip_print(std::ostream& o, const Mat<eT>& m)
+  {
+  arma_extra_debug_sigprint();
+  
+  const arma_ostream_state stream_state(o);
+  
+  if((m.n_elem == 0) || ((m.n_rows <= 5) && (m.n_cols <= 5)))  { arma_ostream::print(o, m, true); return; }
+  
+  const bool print_row_ellipsis = (m.n_rows >= 6);
+  const bool print_col_ellipsis = (m.n_cols >= 6);
+  
+  
+  if( (print_row_ellipsis == true) && (print_col_ellipsis == true) )
+    {
+    Mat<eT> X(4,4);
+    
+    X( span(0,2), span(0,2) ) = m( span(0,2),  span(0,2)  );  // top left submatrix
+    X( 3,         span(0,2) ) = m( m.n_rows-1, span(0,2)  );  // truncated last row
+    X( span(0,2), 3         ) = m( span(0,2),  m.n_cols-1 );  // truncated last column
+    X( 3,         3         ) = m( m.n_rows-1, m.n_cols-1 );  // bottom right element
+    
+    const std::streamsize cell_width = arma_ostream::modify_stream(o, X.memptr(), X.n_elem);
+    
+    for(uword row=0; row <= 2; ++row)
+      {
+      for(uword col=0; col <= 2; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o.width(cell_width);
+      o << "...";
+      
+      o.width(cell_width);
+      o << X.at(row,3) << '\n';
+      }
+    
+    for(uword col=0; col <= 4; ++col)
+      {
+      o.width(cell_width);
+      o << ':';
+      }
+    
+    o.width(cell_width);
+    o << '\n';
+    
+    const uword row = 3;
+      {
+      for(uword col=0; col <= 2; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o.width(cell_width);
+      o << "...";
+      
+      o.width(cell_width);
+      o << X.at(row,3) << '\n';
+      }
+    }
+  
+  
+  if( (print_row_ellipsis == true) && (print_col_ellipsis == false) )
+    {
+    Mat<eT> X(4, m.n_cols);
+    
+    X( span(0,2), span::all ) = m( span(0,2),  span::all );  // top
+    X( 3,         span::all ) = m( m.n_rows-1, span::all );  // bottom
+    
+    const std::streamsize cell_width = arma_ostream::modify_stream(o, X.memptr(), X.n_elem);
+    
+    for(uword row=0; row <= 2; ++row)  // first 3 rows
+      {
+      for(uword col=0; col < m.n_cols; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o << '\n';
+      }
+    
+    for(uword col=0; col < m.n_cols; ++col)
+      {
+      o.width(cell_width);
+      o << ':';
+      }
+    
+    o.width(cell_width);
+    o << '\n';
+    
+    const uword row = 3;
+      {
+      for(uword col=0; col < m.n_cols; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      }
+    
+    o << '\n';
+    }
+  
+  
+  if( (print_row_ellipsis == false) && (print_col_ellipsis == true) )
+    {
+    Mat<eT> X(m.n_rows, 4);
+    
+    X( span::all, span(0,2) ) = m( span::all, span(0,2)  );  // left
+    X( span::all, 3         ) = m( span::all, m.n_cols-1 );  // right
+    
+    const std::streamsize cell_width = arma_ostream::modify_stream(o, X.memptr(), X.n_elem);
+    
+    for(uword row=0; row < m.n_rows; ++row)
+      {
+      for(uword col=0; col <= 2; ++col)
+        {
+        o.width(cell_width);
+        arma_ostream::print_elem(o, X.at(row,col), true);
+        }
+      
+      o.width(cell_width);
+      o << "...";
+      
+      o.width(cell_width);
+      o << X.at(row,3) << '\n';
+      }
+    }
+  
+  
+  o.flush();
+  stream_state.restore(o);
+  }
+
+
+
 //! @}

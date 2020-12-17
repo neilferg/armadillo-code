@@ -1068,5 +1068,152 @@ arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x)
 
 
 
+template<typename eT>
+arma_cold
+inline
+void
+arma_ostream::snip_print(std::ostream& o, const SpMat<eT>& m)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(m.n_nonzero <= 10)  { arma_ostream::print(o, m, true); return; }
+  
+  const arma_ostream_state stream_state(o);
+  
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+  o.unsetf(ios::scientific);
+  o.setf(ios::right);
+  o.setf(ios::fixed);
+  
+  const uword  m_n_nonzero = m.n_nonzero;
+  const double density     = (m.n_elem > 0) ? (double(m_n_nonzero) / double(m.n_elem) * double(100)) : double(0);
+  
+  o << "[matrix size: " << m.n_rows << 'x' << m.n_cols << "; n_nonzero: " << m_n_nonzero;
+  
+  if(density == double(0))
+    {
+    o.precision(0);
+    }
+  else
+  if(density >= (double(10.0)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(1);
+    }
+  else
+  if(density > (double(0.01)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(2);
+    }
+  else
+  if(density > (double(0.001)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(3);
+    }
+  else
+  if(density > (double(0.0001)-std::numeric_limits<double>::epsilon()))
+    {
+    o.precision(4);
+    }
+  else
+    {
+    o.unsetf(ios::fixed);
+    o.setf(ios::scientific);
+    o.precision(2);
+    }
+  
+  o << "; density: " << density  << "%]\n\n";
+  
+  // get the first 9 elements and the last element
+  
+  typename SpMat<eT>::const_iterator it     = m.begin();
+  typename SpMat<eT>::const_iterator it_end = m.end();
+  
+  uvec    storage_row(10);
+  uvec    storage_col(10);
+  Col<eT> storage_val(10);
+  
+  uword count = 0;
+  
+  while( (it != it_end) && (count < 9) )
+    {
+    storage_row(count) = it.row();
+    storage_col(count) = it.col();
+    storage_val(count) = (*it);
+    
+    ++it;
+    ++count;
+    }
+  
+  it = it_end;
+  --it;
+  
+  storage_row(count) = it.row();
+  storage_col(count) = it.col();
+  storage_val(count) = (*it);
+  
+  const std::streamsize cell_width = arma_ostream::modify_stream<eT>(o, storage_val.memptr(), 10);
+  
+  for(uword i=0; i < 9; ++i)
+    {
+    const uword row = storage_row(i);
+    
+         if(row < 10)      { o << "     "; }
+    else if(row < 100)     { o << "    ";  }
+    else if(row < 1000)    { o << "   ";   }
+    else if(row < 10000)   { o << "  ";    }
+    else if(row < 100000)  { o << ' ';     }
+    
+    const uword col = storage_col(i);
+    
+    o << '(' << row << ", " << col << ") ";
+    
+         if(col < 10)      { o << "     "; }
+    else if(col < 100)     { o << "    ";  }
+    else if(col < 1000)    { o << "   ";   }
+    else if(col < 10000)   { o << "  ";    }
+    else if(col < 100000)  { o << ' ';     }
+    
+    if(cell_width > 0) { o.width(cell_width); }
+      
+    arma_ostream::print_elem(o, storage_val(i), true);
+    o << '\n';
+    }
+  
+  o << "...\n";
+  
+  
+  const uword i = 9;
+    {
+    const uword row = storage_row(i);
+    
+         if(row < 10)      { o << "     "; }
+    else if(row < 100)     { o << "    ";  }
+    else if(row < 1000)    { o << "   ";   }
+    else if(row < 10000)   { o << "  ";    }
+    else if(row < 100000)  { o << ' ';     }
+    
+    const uword col = storage_col(i);
+    
+    o << '(' << row << ", " << col << ") ";
+    
+         if(col < 10)      { o << "     "; }
+    else if(col < 100)     { o << "    ";  }
+    else if(col < 1000)    { o << "   ";   }
+    else if(col < 10000)   { o << "  ";    }
+    else if(col < 100000)  { o << ' ';     }
+    
+    if(cell_width > 0) { o.width(cell_width); }
+      
+    arma_ostream::print_elem(o, storage_val(i), true);
+    o << '\n';
+    }
+  
+  o.flush();
+  stream_state.restore(o);
+  }
+
+
 
 //! @}

@@ -260,6 +260,65 @@ SpBase<elem_type, derived>::raw_print_dense(std::ostream& user_stream, const std
 
 
 
+template<typename elem_type, typename derived>
+arma_cold
+inline
+void
+SpBase<elem_type,derived>::snip_print(const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<derived> tmp( (*this).get_ref() );
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
+    }
+  
+  arma_ostream::snip_print(get_cout_stream(), tmp.M);
+  }
+
+
+
+template<typename elem_type, typename derived>
+arma_cold
+inline
+void
+SpBase<elem_type,derived>::snip_print(std::ostream& user_stream, const std::string extra_text) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<derived> tmp( (*this).get_ref() );
+  
+  if(extra_text.length() != 0)
+    {
+    const std::streamsize orig_width = user_stream.width();
+    
+    user_stream << extra_text << '\n';
+    
+    user_stream.width(orig_width);
+    }
+  
+  arma_ostream::snip_print(user_stream, tmp.M);
+  }
+  
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+elem_type
+SpBase<elem_type,derived>::sum() const
+  {
+  return accu( (*this).get_ref() );
+  }
+
+
+
 //
 // extra functions defined in SpBase_eval_SpMat
 

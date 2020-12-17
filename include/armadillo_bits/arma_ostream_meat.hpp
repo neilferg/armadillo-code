@@ -509,7 +509,7 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
     {
     o << "[cube size: " << x.n_rows << 'x' << x.n_cols << 'x' << x.n_slices <<  "]\n";
     }
-
+  
   stream_state.restore(o);
   }
 
@@ -883,9 +883,9 @@ arma_ostream::snip_print(std::ostream& o, const Mat<eT>& m)
   {
   arma_extra_debug_sigprint();
   
-  const arma_ostream_state stream_state(o);
-  
   if((m.n_elem == 0) || ((m.n_rows <= 5) && (m.n_cols <= 5)))  { arma_ostream::print(o, m, true); return; }
+  
+  const arma_ostream_state stream_state(o);
   
   const bool print_row_ellipsis = (m.n_rows >= 6);
   const bool print_col_ellipsis = (m.n_cols >= 6);
@@ -1014,6 +1014,58 @@ arma_ostream::snip_print(std::ostream& o, const Mat<eT>& m)
   o.flush();
   stream_state.restore(o);
   }
+
+
+
+template<typename eT>
+arma_cold
+inline
+void
+arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(x.n_elem == 0)  { arma_ostream::print(o, x, true); return; }
+  
+  const arma_ostream_state stream_state(o);
+  
+  if(x.n_slices <= 3)
+    {
+    for(uword slice=0; slice < x.n_slices; ++slice)
+      {
+      const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
+      
+      o << "[cube slice " << slice << ']' << '\n';
+      arma_ostream::snip_print(o, tmp);
+      o << '\n';
+      }
+    }
+  else
+    {
+    for(uword slice=0; slice <= 1; ++slice)
+      {
+      const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
+      
+      o << "[cube slice " << slice << ']' << '\n';
+      arma_ostream::snip_print(o, tmp);
+      o << '\n';
+      }
+      
+    o << "[cube slice ...]\n\n";
+    
+    const uword slice = x.n_slices-1;
+      {
+      const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
+      
+      o << "[cube slice " << slice << ']' << '\n';
+      arma_ostream::snip_print(o, tmp);
+      o << '\n';
+      }
+    }
+  
+  stream_state.restore(o);
+  }
+
 
 
 

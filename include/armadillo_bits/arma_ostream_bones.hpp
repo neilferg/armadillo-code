@@ -68,7 +68,8 @@ class arma_ostream
   arma_cold inline static void print(std::ostream& o, const SizeMat&  S);
   arma_cold inline static void print(std::ostream& o, const SizeCube& S);
   
-  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const Mat<eT>& m);
+  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const  Mat<eT>& m);
+  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const Cube<eT>& m);
   };
 
 

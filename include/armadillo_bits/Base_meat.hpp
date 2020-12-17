@@ -170,7 +170,7 @@ Base<elem_type,derived>::snip_print(std::ostream& user_stream, const std::string
   
   arma_ostream::snip_print(user_stream, tmp.M);
   }
-  
+
 
 
 template<typename elem_type, typename derived>

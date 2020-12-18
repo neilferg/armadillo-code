@@ -795,24 +795,25 @@ arma_ostream::print(std::ostream& o, const SpMat<eT>& m, const bool modify)
     while(it != it_end)
       {
       const uword row = it.row();
+      const uword col = it.col();
       
       // TODO: change the maximum number of spaces before and after each location to be dependent on n_rows and n_cols
       
-           if(row < 10)      { o << "     "; }
-      else if(row < 100)     { o << "    ";  }
-      else if(row < 1000)    { o << "   ";   }
-      else if(row < 10000)   { o << "  ";    }
-      else if(row < 100000)  { o << ' ';     }
-      
-      const uword col = it.col();
+           if(row < 10)       { o << "      "; }
+      else if(row < 100)      { o << "     ";  }
+      else if(row < 1000)     { o << "    ";   }
+      else if(row < 10000)    { o << "   ";    }
+      else if(row < 100000)   { o << "  ";     }
+      else if(row < 1000000)  { o << ' ';      }
       
       o << '(' << row << ", " << col << ") ";
       
-           if(col < 10)      { o << "     "; }
-      else if(col < 100)     { o << "    ";  }
-      else if(col < 1000)    { o << "   ";   }
-      else if(col < 10000)   { o << "  ";    }
-      else if(col < 100000)  { o << ' ';     }
+           if(col < 10)       { o << "      "; }
+      else if(col < 100)      { o << "     ";  }
+      else if(col < 1000)     { o << "    ";   }
+      else if(col < 10000)    { o << "   ";    }
+      else if(col < 100000)   { o << "  ";     }
+      else if(col < 1000000)  { o << ' ';      }
       
       if(cell_width > 0) { o.width(cell_width); }
         
@@ -1158,22 +1159,23 @@ arma_ostream::snip_print(std::ostream& o, const SpMat<eT>& m)
   for(uword i=0; i < 9; ++i)
     {
     const uword row = storage_row(i);
-    
-         if(row < 10)      { o << "     "; }
-    else if(row < 100)     { o << "    ";  }
-    else if(row < 1000)    { o << "   ";   }
-    else if(row < 10000)   { o << "  ";    }
-    else if(row < 100000)  { o << ' ';     }
-    
     const uword col = storage_col(i);
+    
+         if(row < 10)       { o << "      "; }
+    else if(row < 100)      { o << "     ";  }
+    else if(row < 1000)     { o << "    ";   }
+    else if(row < 10000)    { o << "   ";    }
+    else if(row < 100000)   { o << "  ";     }
+    else if(row < 1000000)  { o << ' ';      }
     
     o << '(' << row << ", " << col << ") ";
     
-         if(col < 10)      { o << "     "; }
-    else if(col < 100)     { o << "    ";  }
-    else if(col < 1000)    { o << "   ";   }
-    else if(col < 10000)   { o << "  ";    }
-    else if(col < 100000)  { o << ' ';     }
+         if(col < 10)       { o << "      "; }
+    else if(col < 100)      { o << "     ";  }
+    else if(col < 1000)     { o << "    ";   }
+    else if(col < 10000)    { o << "   ";    }
+    else if(col < 100000)   { o << "  ";     }
+    else if(col < 1000000)  { o << ' ';      }
     
     if(cell_width > 0) { o.width(cell_width); }
       
@@ -1181,28 +1183,31 @@ arma_ostream::snip_print(std::ostream& o, const SpMat<eT>& m)
     o << '\n';
     }
   
+  o << "      (:, :)     ";
+  if(cell_width > 0) { o.width(cell_width); }
   o << "...\n";
   
   
   const uword i = 9;
     {
     const uword row = storage_row(i);
-    
-         if(row < 10)      { o << "     "; }
-    else if(row < 100)     { o << "    ";  }
-    else if(row < 1000)    { o << "   ";   }
-    else if(row < 10000)   { o << "  ";    }
-    else if(row < 100000)  { o << ' ';     }
-    
     const uword col = storage_col(i);
+    
+         if(row < 10)       { o << "      "; }
+    else if(row < 100)      { o << "     ";  }
+    else if(row < 1000)     { o << "    ";   }
+    else if(row < 10000)    { o << "   ";    }
+    else if(row < 100000)   { o << "  ";     }
+    else if(row < 1000000)  { o << ' ';      }
     
     o << '(' << row << ", " << col << ") ";
     
-         if(col < 10)      { o << "     "; }
-    else if(col < 100)     { o << "    ";  }
-    else if(col < 1000)    { o << "   ";   }
-    else if(col < 10000)   { o << "  ";    }
-    else if(col < 100000)  { o << ' ';     }
+         if(col < 10)       { o << "      "; }
+    else if(col < 100)      { o << "     ";  }
+    else if(col < 1000)     { o << "    ";   }
+    else if(col < 10000)    { o << "   ";    }
+    else if(col < 100000)   { o << "  ";     }
+    else if(col < 1000000)  { o << ' ';      }
     
     if(cell_width > 0) { o.width(cell_width); }
       

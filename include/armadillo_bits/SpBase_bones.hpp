@@ -71,8 +71,6 @@ struct SpBase
   arma_cold inline void snip_print(                           const std::string extra_text = "") const;
   arma_cold inline void snip_print(std::ostream& user_stream, const std::string extra_text = "") const;
   
-  inline arma_warn_unused elem_type sum() const;
-  
   inline arma_warn_unused elem_type min() const;
   inline arma_warn_unused elem_type max() const;
   

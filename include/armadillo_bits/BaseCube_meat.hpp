@@ -177,17 +177,6 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 elem_type
-BaseCube<elem_type,derived>::sum() const
-  {
-  return accu( (*this).get_ref() );
-  }
-
-
-
-template<typename elem_type, typename derived>
-inline
-arma_warn_unused
-elem_type
 BaseCube<elem_type,derived>::min() const
   {
   return op_min::min( (*this).get_ref() );

@@ -308,17 +308,6 @@ SpBase<elem_type,derived>::snip_print(std::ostream& user_stream, const std::stri
   
 
 
-template<typename elem_type, typename derived>
-inline
-arma_warn_unused
-elem_type
-SpBase<elem_type,derived>::sum() const
-  {
-  return accu( (*this).get_ref() );
-  }
-
-
-
 //
 // extra functions defined in SpBase_eval_SpMat
 

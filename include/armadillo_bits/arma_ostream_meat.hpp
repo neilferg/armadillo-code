@@ -508,7 +508,7 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
       {
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
-      o << "[cube slice " << slice << ']' << '\n';
+      o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::print(o, tmp, modify);
       o << '\n';
       }
@@ -556,7 +556,7 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
       {
       for(uword col=0; col < x_n_cols; ++col)
         {
-        o << "[field column " << col << ']' << '\n'; 
+        o << "[field column: " << col << ']' << '\n'; 
         
         for(uword row=0; row < x_n_rows; ++row)
           {
@@ -571,11 +571,11 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
       {
       for(uword slice=0; slice < x_n_slices; ++slice)
         {
-        o << "[field slice " << slice << ']' << '\n';
+        o << "[field slice: " << slice << ']' << '\n';
         
         for(uword col=0; col < x_n_cols; ++col)
           {
-          o << "[field column " << col << ']' << '\n';
+          o << "[field column: " << col << ']' << '\n';
           
           for(uword row=0; row < x_n_rows; ++row)
             {
@@ -630,7 +630,7 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
       {
       for(uword col=0; col < x_n_cols; ++col)
         {
-        o << "[field column " << col << ']' << '\n'; 
+        o << "[field column: " << col << ']' << '\n'; 
         for(uword row=0; row<x_n_rows; ++row)
           {
           o.width(cell_width);
@@ -644,11 +644,11 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
       {
       for(uword slice=0; slice < x_n_slices; ++slice)
         {
-        o << "[field slice " << slice << ']' << '\n';
+        o << "[field slice: " << slice << ']' << '\n';
         
         for(uword col=0; col < x_n_cols; ++col)
           {
-          o << "[field column " << col << ']' << '\n';
+          o << "[field column: " << col << ']' << '\n';
           
           for(uword row=0; row < x_n_rows; ++row)
             {
@@ -1091,7 +1091,7 @@ arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x, const bool print_si
       {
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
-      o << "[cube slice " << slice << ']' << '\n';
+      o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::snip_print(o, tmp, false);
       o << '\n';
       }
@@ -1102,18 +1102,18 @@ arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x, const bool print_si
       {
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
-      o << "[cube slice " << slice << ']' << '\n';
+      o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::snip_print(o, tmp, false);
       o << '\n';
       }
       
-    o << "[cube slice ...]\n\n";
+    o << "[cube slice: ...]\n\n";
     
     const uword slice = x.n_slices-1;
       {
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
-      o << "[cube slice " << slice << ']' << '\n';
+      o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::snip_print(o, tmp, false);
       o << '\n';
       }

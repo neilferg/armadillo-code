@@ -474,6 +474,14 @@ arma_ostream::print(std::ostream& o, const Mat<eT>& m, const bool modify)
     }
   else
     {
+    if(modify)
+      {
+      o.unsetf(ios::showbase);
+      o.unsetf(ios::uppercase);
+      o.unsetf(ios::showpos);
+      o.setf(ios::fixed);
+      }
+    
     o << "[matrix size: " << m_n_rows << 'x' << m_n_cols << "]\n";
     }
   
@@ -507,6 +515,14 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
     }
   else
     {
+    if(modify)
+      {
+      o.unsetf(ios::showbase);
+      o.unsetf(ios::uppercase);
+      o.unsetf(ios::showpos);
+      o.setf(ios::fixed);
+      }
+    
     o << "[cube size: " << x.n_rows << 'x' << x.n_cols << 'x' << x.n_slices <<  "]\n";
     }
   
@@ -538,11 +554,11 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
     {
     if(x_n_slices == 1)
       {
-      for(uword col=0; col<x_n_cols; ++col)
+      for(uword col=0; col < x_n_cols; ++col)
         {
         o << "[field column " << col << ']' << '\n'; 
         
-        for(uword row=0; row<x_n_rows; ++row)
+        for(uword row=0; row < x_n_rows; ++row)
           {
           o.width(cell_width);
           o << x.at(row,col) << '\n';
@@ -553,15 +569,15 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
       }
     else
       {
-      for(uword slice=0; slice<x_n_slices; ++slice)
+      for(uword slice=0; slice < x_n_slices; ++slice)
         {
         o << "[field slice " << slice << ']' << '\n';
         
-        for(uword col=0; col<x_n_cols; ++col)
+        for(uword col=0; col < x_n_cols; ++col)
           {
           o << "[field column " << col << ']' << '\n';
           
-          for(uword row=0; row<x_n_rows; ++row)
+          for(uword row=0; row < x_n_rows; ++row)
             {
             o.width(cell_width);
             o << x.at(row,col,slice) << '\n';
@@ -576,6 +592,11 @@ arma_ostream::print(std::ostream& o, const field<oT>& x)
     }
   else
     {
+    o.unsetf(ios::showbase);
+    o.unsetf(ios::uppercase);
+    o.unsetf(ios::showpos);
+    o.setf(ios::fixed);
+    
     o << "[field size: " << x_n_rows << 'x' << x_n_cols << 'x' << x_n_slices << "]\n";
     }
   
@@ -607,7 +628,7 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
     {
     if(x_n_slices == 1)
       {
-      for(uword col=0; col<x_n_cols; ++col)
+      for(uword col=0; col < x_n_cols; ++col)
         {
         o << "[field column " << col << ']' << '\n'; 
         for(uword row=0; row<x_n_rows; ++row)
@@ -621,15 +642,15 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
       }
     else
       {
-      for(uword slice=0; slice<x_n_slices; ++slice)
+      for(uword slice=0; slice < x_n_slices; ++slice)
         {
         o << "[field slice " << slice << ']' << '\n';
         
-        for(uword col=0; col<x_n_cols; ++col)
+        for(uword col=0; col < x_n_cols; ++col)
           {
           o << "[field column " << col << ']' << '\n';
           
-          for(uword row=0; row<x_n_rows; ++row)
+          for(uword row=0; row < x_n_rows; ++row)
             {
             o.width(cell_width);
             o << x.at(row,col,slice) << '\n';
@@ -644,6 +665,11 @@ arma_ostream::print(std::ostream& o, const subview_field<oT>& x)
     }
   else
     {
+    o.unsetf(ios::showbase);
+    o.unsetf(ios::uppercase);
+    o.unsetf(ios::showpos);
+    o.setf(ios::fixed);
+    
     o << "[field size: " << x_n_rows << 'x' << x_n_cols << 'x' << x_n_slices << "]\n";
     }
   
@@ -719,6 +745,14 @@ arma_ostream::print_dense(std::ostream& o, const SpMat<eT>& m, const bool modify
     }
   else
     {
+    if(modify)
+      {
+      o.unsetf(ios::showbase);
+      o.unsetf(ios::uppercase);
+      o.unsetf(ios::showpos);
+      o.setf(ios::fixed);
+      }
+    
     o << "[matrix size: " << m_n_rows << 'x' << m_n_cols << "]\n";
     }
   

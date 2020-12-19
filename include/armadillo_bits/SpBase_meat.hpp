@@ -264,7 +264,7 @@ template<typename elem_type, typename derived>
 arma_cold
 inline
 void
-SpBase<elem_type,derived>::snip_print(const std::string extra_text) const
+SpBase<elem_type,derived>::brief_print(const std::string extra_text) const
   {
   arma_extra_debug_sigprint();
   
@@ -279,7 +279,7 @@ SpBase<elem_type,derived>::snip_print(const std::string extra_text) const
     get_cout_stream().width(orig_width);
     }
   
-  arma_ostream::snip_print(get_cout_stream(), tmp.M);
+  arma_ostream::brief_print(get_cout_stream(), tmp.M);
   }
 
 
@@ -288,7 +288,7 @@ template<typename elem_type, typename derived>
 arma_cold
 inline
 void
-SpBase<elem_type,derived>::snip_print(std::ostream& user_stream, const std::string extra_text) const
+SpBase<elem_type,derived>::brief_print(std::ostream& user_stream, const std::string extra_text) const
   {
   arma_extra_debug_sigprint();
   
@@ -303,7 +303,7 @@ SpBase<elem_type,derived>::snip_print(std::ostream& user_stream, const std::stri
     user_stream.width(orig_width);
     }
   
-  arma_ostream::snip_print(user_stream, tmp.M);
+  arma_ostream::brief_print(user_stream, tmp.M);
   }
   
 

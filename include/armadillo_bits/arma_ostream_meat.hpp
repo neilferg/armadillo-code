@@ -880,17 +880,28 @@ template<typename eT>
 arma_cold
 inline
 void
-arma_ostream::snip_print(std::ostream& o, const Mat<eT>& m)
+arma_ostream::snip_print(std::ostream& o, const Mat<eT>& m, const bool print_size)
   {
   arma_extra_debug_sigprint();
   
-  if((m.n_elem == 0) || ((m.n_rows <= 5) && (m.n_cols <= 5)))  { arma_ostream::print(o, m, true); return; }
-  
   const arma_ostream_state stream_state(o);
+  
+  if(print_size)
+    {
+    o.unsetf(ios::showbase);
+    o.unsetf(ios::uppercase);
+    o.unsetf(ios::showpos);
+    o.setf(ios::fixed);
+    
+    o << "[matrix size: " << m.n_rows << 'x' << m.n_cols << "]\n";
+    }
+  
+  if(m.n_elem == 0)  { o.flush(); stream_state.restore(o); return; }
+  
+  if((m.n_rows <= 5) && (m.n_cols <= 5))  { arma_ostream::print(o, m, true); return; }
   
   const bool print_row_ellipsis = (m.n_rows >= 6);
   const bool print_col_ellipsis = (m.n_cols >= 6);
-  
   
   if( (print_row_ellipsis == true) && (print_col_ellipsis == true) )
     {
@@ -1022,13 +1033,23 @@ template<typename eT>
 arma_cold
 inline
 void
-arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x)
+arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x, const bool print_size)
   {
   arma_extra_debug_sigprint();
   
-  if(x.n_elem == 0)  { arma_ostream::print(o, x, true); return; }
-  
   const arma_ostream_state stream_state(o);
+  
+  if(print_size)
+    {
+    o.unsetf(ios::showbase);
+    o.unsetf(ios::uppercase);
+    o.unsetf(ios::showpos);
+    o.setf(ios::fixed);
+    
+    o << "[cube size: " << x.n_rows << 'x' << x.n_cols << 'x' << x.n_slices << "]\n";
+    }
+  
+  if(x.n_elem == 0)  { o.flush(); stream_state.restore(o); return; }
   
   if(x.n_slices <= 3)
     {
@@ -1037,7 +1058,7 @@ arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x)
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
       o << "[cube slice " << slice << ']' << '\n';
-      arma_ostream::snip_print(o, tmp);
+      arma_ostream::snip_print(o, tmp, false);
       o << '\n';
       }
     }
@@ -1048,7 +1069,7 @@ arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x)
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
       o << "[cube slice " << slice << ']' << '\n';
-      arma_ostream::snip_print(o, tmp);
+      arma_ostream::snip_print(o, tmp, false);
       o << '\n';
       }
       
@@ -1059,7 +1080,7 @@ arma_ostream::snip_print(std::ostream& o, const Cube<eT>& x)
       const Mat<eT> tmp(const_cast<eT*>(x.slice_memptr(slice)), x.n_rows, x.n_cols, false);
       
       o << "[cube slice " << slice << ']' << '\n';
-      arma_ostream::snip_print(o, tmp);
+      arma_ostream::snip_print(o, tmp, false);
       o << '\n';
       }
     }

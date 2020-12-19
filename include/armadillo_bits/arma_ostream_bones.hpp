@@ -22,15 +22,15 @@
 class arma_ostream_state
   {
   private:
-
+  
   const ios::fmtflags   orig_flags;
   const std::streamsize orig_precision;
   const std::streamsize orig_width;
   const char            orig_fill;
-
-
+  
+  
   public:
-
+  
   inline arma_ostream_state(const std::ostream& o);
   
   inline void restore(std::ostream& o) const;
@@ -68,8 +68,8 @@ class arma_ostream
   arma_cold inline static void print(std::ostream& o, const SizeMat&  S);
   arma_cold inline static void print(std::ostream& o, const SizeCube& S);
   
-  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const   Mat<eT>& m);
-  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const  Cube<eT>& m);
+  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const   Mat<eT>& m, const bool print_size = true);
+  template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const  Cube<eT>& m, const bool print_size = true);
   template<typename eT> arma_cold inline static void snip_print(std::ostream& o, const SpMat<eT>& m);
   };
 

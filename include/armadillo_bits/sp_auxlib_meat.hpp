@@ -1790,12 +1790,6 @@ sp_auxlib::run_aupd_shiftinvert
     SpMat<T> tmpX(X);
     tmpX.diag() -= sigma;
     
-    cout << "sigma: " << sigma << endl;
-    
-    
-    X.print_dense("X:");
-    tmpX.print_dense("tmpX:");
-    
     const bool status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), tmpX);
     
     if(status_x == false)  { arma_stop_runtime_error("run_aupd_shiftinvert(): could not construct SuperLU matrix"); return; }

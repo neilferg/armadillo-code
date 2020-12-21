@@ -1067,21 +1067,18 @@ template<typename eT>
 arma_cold
 inline
 void
-arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x, const bool print_size)
+arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x)
   {
   arma_extra_debug_sigprint();
   
   const arma_ostream_state stream_state(o);
   
-  if(print_size)
-    {
-    o.unsetf(ios::showbase);
-    o.unsetf(ios::uppercase);
-    o.unsetf(ios::showpos);
-    o.setf(ios::fixed);
-    
-    o << "[cube size: " << x.n_rows << 'x' << x.n_cols << 'x' << x.n_slices << "]\n";
-    }
+  o.unsetf(ios::showbase);
+  o.unsetf(ios::uppercase);
+  o.unsetf(ios::showpos);
+  o.setf(ios::fixed);
+  
+  o << "[cube size: " << x.n_rows << 'x' << x.n_cols << 'x' << x.n_slices << "]\n";
   
   if(x.n_elem == 0)  { o.flush(); stream_state.restore(o); return; }
   

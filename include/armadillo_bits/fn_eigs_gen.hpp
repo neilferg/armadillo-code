@@ -103,7 +103,7 @@ eigs_gen
   Mat< std::complex<T> > eigvec;
   Col< std::complex<T> > eigval;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   bool status = false;
   
@@ -150,7 +150,7 @@ eigs_gen
   Mat< std::complex<T> > eigvec;
   Col< std::complex<T> > eigval;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
   
@@ -249,7 +249,7 @@ eigs_gen
   
   Mat< std::complex<T> > eigvec;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   bool status = false;
   
@@ -295,7 +295,7 @@ eigs_gen
   
   Mat< std::complex<T> > eigvec;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
   
@@ -398,7 +398,7 @@ eigs_gen
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   bool status = false;
   
@@ -446,7 +446,7 @@ eigs_gen
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
   

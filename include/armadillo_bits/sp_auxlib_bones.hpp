@@ -68,6 +68,13 @@ class sp_auxlib
   inline static bool spsolve_refine(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
   
   #if defined(ARMA_USE_SUPERLU)
+    
+    template<typename eT>
+    inline static typename get_pod_type<eT>::result norm1(superlu::SuperMatrix* A);
+    
+    template<typename eT>
+    inline static typename get_pod_type<eT>::result lu_rcond(superlu::SuperMatrix* L, superlu::SuperMatrix* U, typename get_pod_type<eT>::result norm_val);
+    
     inline static void set_superlu_opts(superlu::superlu_options_t& options, const superlu_opts& user_opts);
     
     template<typename eT>
@@ -77,6 +84,7 @@ class sp_auxlib
     inline static bool wrap_to_supermatrix(superlu::SuperMatrix& out, const Mat<eT>& A);
     
     inline static void destroy_supermatrix(superlu::SuperMatrix& out);
+  
   #endif
   
   

@@ -1285,6 +1285,42 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 
 #if defined(ARMA_USE_SUPERLU)
   
+  template<typename eT>
+  inline
+  typename get_pod_type<eT>::result
+  sp_auxlib::norm1(superlu::SuperMatrix* A)
+    {
+    arma_extra_debug_sigprint();
+    
+    char norm_id = '1';
+    
+    return superlu::langs<eT>(&norm_id, A);
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  typename get_pod_type<eT>::result
+  sp_auxlib::lu_rcond(superlu::SuperMatrix* L, superlu::SuperMatrix* U, typename get_pod_type<eT>::result norm_val)
+    {
+    arma_extra_debug_sigprint();
+    
+    typedef typename get_pod_type<eT>::result T;
+    
+    char norm_id   = '1';
+    T    rcond_out = T(0);
+    int  info      = int(0);
+    
+    superlustat_wrangler stat;
+    
+    superlu::gscon<eT>(&norm_id, L, U, norm_val, &rcond_out, stat.get_ptr(), &info);
+    
+    return (info == 0) ? T(rcond_out) : T(0);
+    }
+  
+  
+  
   inline
   void
   sp_auxlib::set_superlu_opts(superlu::superlu_options_t& options, const superlu_opts& user_opts)
@@ -1692,7 +1728,7 @@ sp_auxlib::run_aupd_shiftinvert
     {
     char which_lm[3] = "LM";
     
-    char* which = which_lm;  // NOTE: which_lm is the assumed operation when sigma is non-zero
+    char* which = which_lm;  // NOTE: which_lm is the assumed operation when using shift-invert
     
     blas_int ido = 0; // This must be 0 for the first call.
     char bmat = 'I'; // We are considering the standard eigenvalue problem.
@@ -1754,6 +1790,12 @@ sp_auxlib::run_aupd_shiftinvert
     SpMat<T> tmpX(X);
     tmpX.diag() -= sigma;
     
+    cout << "sigma: " << sigma << endl;
+    
+    
+    X.print_dense("X:");
+    tmpX.print_dense("tmpX:");
+    
     const bool status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), tmpX);
     
     if(status_x == false)  { arma_stop_runtime_error("run_aupd_shiftinvert(): could not construct SuperLU matrix"); return; }
@@ -1776,6 +1818,25 @@ sp_auxlib::run_aupd_shiftinvert
     superlu::get_permutation_c(options.ColPerm, x.get_ptr(), perm_c.get_ptr());
     superlu::sp_preorder_mat(&options, x.get_ptr(), perm_c.get_ptr(), etree.get_ptr(), xC.get_ptr());
     superlu::gstrf<T>(&options, xC.get_ptr(), drop_tol, relax, panel_size, etree.get_ptr(), NULL, lwork, perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), &Glu, stat.get_ptr(), &slu_info);
+    
+    if(slu_info != 0)
+      {
+      arma_warn("matrix is singular to working precision");
+      info = blas_int(-1);
+      return;
+      }
+    
+    // TODO: inconsistent use of type names: T can be complex while eT can be real
+    
+    eT x_norm_val = sp_auxlib::norm1<T>(x.get_ptr());
+    eT x_rcond    = sp_auxlib::lu_rcond<T>(l.get_ptr(), u.get_ptr(), x_norm_val);
+    
+    if( (x_rcond < std::numeric_limits<eT>::epsilon()) || arma_isnan(x_rcond) )
+      {
+      arma_warn("matrix is singular to working precision (rcond: ", x_rcond, ")");
+      info = blas_int(-1);
+      return;
+      }
     
     // All the parameters have been set or created.  Time to loop a lot.
     while(ido != 99)

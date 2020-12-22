@@ -31,15 +31,18 @@ class sp_auxlib
   inline static form_type interpret_form_str(const char* form_str);
   
   //
-  // eigs_sym()
+  // eigs_sym() for real matrices
   
   template<typename eT, typename T1>
-  inline static bool eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
+  inline static bool eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
+  
+  template<typename eT, typename T1>
+  inline static bool eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const eT sigma, const eigs_opts& opts);
   
   template<typename eT>
   inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
-  template<typename eT>
+  template<typename eT, bool use_sigma>
   inline static bool eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
   
   //

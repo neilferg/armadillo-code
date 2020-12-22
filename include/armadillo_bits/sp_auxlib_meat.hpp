@@ -53,11 +53,10 @@ sp_auxlib::interpret_form_str(const char* form_str)
 
 
 
-//! immediate eigendecomposition of symmetric real sparse object
 template<typename eT, typename T1>
 inline
 bool
-sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts)
+sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
@@ -72,38 +71,64 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   // TODO: investigate optional redirection of "sm" to ARPACK as it's capable of shift-invert;
   // TODO: in shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix (with sigma = 0)
   
-  if(form_val == form_sigma)
-    {
-    #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
-      {
-      return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
-      }
-    #else
-      {
-      arma_stop_logic_error("eigs_sym(): use of ARPACK and SuperLU must be enabled to use 'sigma'");
-      return false;
-      }
-    #endif
-    }
-  
   #if   defined(ARMA_USE_NEWARP)
     {
     return sp_auxlib::eigs_sym_newarp(eigval, eigvec, U.M, n_eigvals, form_val, opts);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
-    return sp_auxlib::eigs_sym_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
+    constexpr eT sigma = eT(0);
+    
+    return sp_auxlib::eigs_sym_arpack<eT,false>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
     }
   #else
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
+    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
-    arma_ignore(sigma);
     arma_ignore(opts);
     
     arma_stop_logic_error("eigs_sym(): use of NEWARP or ARPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+bool
+sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const eT sigma, const eigs_opts& opts)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
+    {
+    const unwrap_spmat<T1> U(X.get_ref());
+    
+    if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
+      {
+      if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
+      if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
+      }
+    
+    constexpr form_type form_val = form_sigma;
+    
+    return sp_auxlib::eigs_sym_arpack<eT,true>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(eigvec);
+    arma_ignore(X);
+    arma_ignore(n_eigvals);
+    arma_ignore(sigma);
+    arma_ignore(opts);
+    
+    arma_stop_logic_error("eigs_sym(): use of ARPACK and SuperLU must be enabled to use 'sigma'");
     return false;
     }
   #endif
@@ -244,7 +269,7 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
 
 
 
-template<typename eT>
+template<typename eT, bool use_sigma>
 inline
 bool
 sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts)
@@ -323,7 +348,8 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
         }
       }
     
-    if(form_val == form_sigma)
+    if(use_sigma)
+    //if(form_val == form_sigma)
       {
       run_aupd_shiftinvert(n_eigvals, sigma, X, true /* sym, not gen */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
       }
@@ -592,7 +618,6 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
-    arma_ignore(sigma);
     arma_ignore(opts);
     
     return false;

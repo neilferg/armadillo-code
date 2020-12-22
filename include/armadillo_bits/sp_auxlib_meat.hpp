@@ -487,11 +487,11 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
   
   #if defined(ARMA_USE_NEWARP)
     {
-    arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si), "eigs_sym(): unknown form specified" );
+    arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si), "eigs_gen(): unknown form specified" );
     
     const newarp::SparseGenMatProd<T> op(X);
     
-    arma_debug_check( (op.n_rows != op.n_cols), "eigs_sym(): given matrix must be square sized" );
+    arma_debug_check( (op.n_rows != op.n_cols), "eigs_gen(): given matrix must be square sized" );
     
     arma_debug_check( (n_eigvals + 1 >= op.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
     
@@ -639,7 +639,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
   
   #if defined(ARMA_USE_ARPACK)
     {
-    arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si) && (form_val != form_sigma), "eigs_sym(): unknown form specified" );
+    arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si) && (form_val != form_sigma), "eigs_gen(): unknown form specified" );
     
     char which_lm[3] = "LM";
     char which_sm[3] = "SM";
@@ -896,7 +896,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     // typedef typename std::complex<T> eT;
     
-    arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si) && (form_val != form_sigma), "eigs_sym(): unknown form specified" );
+    arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si) && (form_val != form_sigma), "eigs_gen(): unknown form specified" );
     
     char which_lm[3] = "LM";
     char which_sm[3] = "SM";

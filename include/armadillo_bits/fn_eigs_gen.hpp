@@ -42,9 +42,7 @@ eigs_gen
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  std::complex<T> sigma = T(0);
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {
@@ -103,19 +101,17 @@ eigs_gen
   Mat< std::complex<T> > eigvec;
   Col< std::complex<T> > eigval;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
-  
   bool status = false;
   
   // If X is real and sigma is truly complex, treat X as complex.
   // The reason is that we are still not able to apply truly complex shifts to real matrices
   if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
     {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, form_val, sigma, opts);
+    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
     }
   else
     {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, sigma, opts);
     }
   
   if(status == false)
@@ -150,9 +146,7 @@ eigs_gen
   Mat< std::complex<T> > eigvec;
   Col< std::complex<T> > eigval;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(sigma), opts);
   
   if(status == false)
     {
@@ -188,9 +182,7 @@ eigs_gen
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  std::complex<T> sigma = T(0);
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {
@@ -249,19 +241,17 @@ eigs_gen
   
   Mat< std::complex<T> > eigvec;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
-  
   bool status = false;
   
   // If X is real and sigma is truly complex, treat X as complex.
   // The reason is that we are still not able to apply truly complex shifts to real matrices
   if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
     {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, form_val, sigma, opts);
+    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
     }
   else
     {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, sigma, opts);
     }
   
   if(status == false)
@@ -295,9 +285,7 @@ eigs_gen
   
   Mat< std::complex<T> > eigvec;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(sigma), opts);
   
   if(status == false)
     {
@@ -328,15 +316,13 @@ eigs_gen
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
+  // typedef typename T1::pod_type T;
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   sp_auxlib::form_type form_val = sp_auxlib::interpret_form_str(form);
   
-  std::complex<T> sigma = T(0);
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, opts);
   
   if(status == false)
     {
@@ -398,19 +384,17 @@ eigs_gen
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
-  
   bool status = false;
   
   // If X is real and sigma is truly complex, treat X as complex.
   // The reason is that we are still not able to apply truly complex shifts to real matrices
   if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
     {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, form_val, sigma, opts);
+    status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
     }
   else
     {
-    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+    status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, sigma, opts);
     }
   
   if(status == false)
@@ -446,9 +430,7 @@ eigs_gen
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
-  
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, form_val, std::complex<T>(sigma), opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(sigma), opts);
   
   if(status == false)
     {

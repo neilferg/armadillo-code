@@ -379,36 +379,26 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
 template<typename T, typename T1>
 inline
 bool
-sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
-  
-  const unwrap_spmat<T1> U(X.get_ref());
   
   // TODO: investigate optional redirection of "sm" to ARPACK as it's capable of shift-invert;
   // TODO: in shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix (with sigma = 0)
   
-  if(form_val == form_sigma)
-    {
-    #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
-      {
-      return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
-      }
-    #else
-      {
-      arma_stop_logic_error("eigs_gen(): use of ARPACK and SuperLU must be enabled to use 'sigma'");
-      return false;
-      }
-    #endif
-    }
-  
   #if defined(ARMA_USE_NEWARP)
     {
+    const unwrap_spmat<T1> U(X.get_ref());
+    
     return sp_auxlib::eigs_gen_newarp(eigval, eigvec, U.M, n_eigvals, form_val, opts);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
-    return sp_auxlib::eigs_gen_arpack(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
+    const unwrap_spmat<T1> U(X.get_ref());
+    
+    constexpr std::complex<T> sigma = T(0);
+    
+    return sp_auxlib::eigs_gen_arpack<T,false>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
     }
   #else
     {
@@ -417,10 +407,42 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
-    arma_ignore(sigma);
     arma_ignore(opts);
     
     arma_stop_logic_error("eigs_gen(): use of NEWARP or ARPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! immediate eigendecomposition of non-symmetric real sparse object
+template<typename T, typename T1>
+inline
+bool
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const std::complex<T> sigma, const eigs_opts& opts)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
+    {
+    const unwrap_spmat<T1> U(X.get_ref());
+    
+    constexpr form_type form_val = form_sigma;
+    
+    return sp_auxlib::eigs_gen_arpack<T,true>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(eigvec);
+    arma_ignore(X);
+    arma_ignore(n_eigvals);
+    arma_ignore(sigma);
+    arma_ignore(opts);
+    
+    arma_stop_logic_error("eigs_gen(): use of ARPACK and SuperLU must be enabled to use 'sigma'");
     return false;
     }
   #endif
@@ -581,7 +603,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 
 
 
-template<typename T>
+template<typename T, bool use_sigma>
 inline
 bool
 sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
@@ -675,7 +697,8 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     T sigmar = real(sigma);
     T sigmai = imag(sigma);
     
-    if(form_val == form_sigma)
+    if(use_sigma)
+    //if(form_val == form_sigma)
       {
       if(sigmai != T(0))
         {
@@ -783,17 +806,67 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 
 
 
-//! immediate eigendecomposition of non-symmetric complex sparse object
 template<typename T, typename T1>
 inline
 bool
-sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X_expr, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X_expr, const uword n_eigvals, const form_type form_val, const eigs_opts& opts)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> U(X_expr.get_ref());
+  
+  const SpMat< std::complex<T> >& X = U.M;
+  
+  constexpr std::complex<T> sigma = T(0);
+  
+  return sp_auxlib::eigs_gen<T, false>(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  }
+
+
+
+template<typename T, typename T1>
+inline
+bool
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const std::complex<T> sigma, const eigs_opts& opts)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if (defined(ARMA_USE_APRACK) && defined(ARMA_USE_SUPERLU))
+    {
+    const unwrap_spmat<T1> U(X_expr.get_ref());
+    
+    constexpr form_type form_val = form_sigma;
+    
+    return sp_auxlib::eigs_gen<T, true>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(eigvec);
+    arma_ignore(X);
+    arma_ignore(n_eigvals);
+    arma_ignore(sigma);
+    arma_ignore(opts);
+    
+    arma_stop_logic_error("eigs_gen(): use of ARPACK and SuperLU must be enabled to use 'sigma'");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! immediate eigendecomposition of non-symmetric complex sparse object
+template<typename T, bool use_sigma>
+inline
+bool
+sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat< std::complex<T> >& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts)
   {
   arma_extra_debug_sigprint();
   
   #if defined(ARMA_USE_ARPACK)
     {
-    typedef typename std::complex<T> eT;
+    // typedef typename std::complex<T> eT;
     
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si) && (form_val != form_sigma), "eigs_sym(): unknown form specified" );
     
@@ -817,10 +890,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       
       default:       which = which_lm;
       }
-    
-    const unwrap_spmat<T1> U(X_expr.get_ref());
-    
-    const SpMat<eT>& X = U.M;
     
     // Make sure it's square.
     arma_debug_check( (X.n_rows != X.n_cols), "eigs_gen(): given matrix must be square sized" );
@@ -873,7 +942,8 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
         }
       }
     
-    if(form_val == form_sigma)
+    if(use_sigma)
+    //if(form_val == form_sigma)
       {
       run_aupd_shiftinvert(n_eigvals, sigma, X, false /* gen, not sym */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
       }

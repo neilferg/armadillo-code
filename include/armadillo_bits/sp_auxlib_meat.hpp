@@ -53,6 +53,7 @@ sp_auxlib::interpret_form_str(const char* form_str)
 
 
 
+//! immediate eigendecomposition of symmetric real sparse object
 template<typename eT, typename T1>
 inline
 bool
@@ -85,7 +86,6 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
     arma_ignore(opts);
@@ -98,6 +98,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
 
 
 
+//! immediate eigendecomposition of symmetric real sparse object
 template<typename eT, typename T1>
 inline
 bool
@@ -392,6 +393,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
+    arma_ignore(sigma)
     arma_ignore(opts);
     
     return false;
@@ -713,7 +715,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     
     // WARNING!!!
     // We are still not able to apply truly complex shifts to real matrices,
-    // in which case the OP that ARPACKS wants is different (see [s/d]naupd).
+    // in which case the OP that ARPACK wants is different (see [s/d]naupd).
     // Also, if sigma contains a non-zero imaginary part, retrieving the eigenvalues
     // becomes utterly messy (see [s/d]eupd, remark #3).
     // We should never get to the point in which the imaginary part of sigma is non-zero;
@@ -831,6 +833,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
 
 
 
+//! immediate eigendecomposition of non-symmetric complex sparse object
 template<typename T, typename T1>
 inline
 bool
@@ -849,6 +852,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 
 
 
+//! immediate eigendecomposition of non-symmetric complex sparse object
 template<typename T, typename T1>
 inline
 bool
@@ -856,7 +860,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   {
   arma_extra_debug_sigprint();
   
-  #if (defined(ARMA_USE_APRACK) && defined(ARMA_USE_SUPERLU))
+  #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
     const unwrap_spmat<T1> U(X_expr.get_ref());
     
@@ -881,7 +885,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 
 
 
-//! immediate eigendecomposition of non-symmetric complex sparse object
 template<typename T, bool use_sigma>
 inline
 bool

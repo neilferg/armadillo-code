@@ -105,7 +105,7 @@ eigs_gen
   
   // If X is real and sigma is truly complex, treat X as complex.
   // The reason is that we are still not able to apply truly complex shifts to real matrices
-  if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
+  if( (is_real<typename T1::elem_type>::yes) && (std::imag(sigma) != T(0)) )
     {
     status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
     }
@@ -245,7 +245,7 @@ eigs_gen
   
   // If X is real and sigma is truly complex, treat X as complex.
   // The reason is that we are still not able to apply truly complex shifts to real matrices
-  if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
+  if( (is_real<typename T1::elem_type>::yes) && (std::imag(sigma) != T(0)) )
     {
     status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
     }
@@ -388,7 +388,7 @@ eigs_gen
   
   // If X is real and sigma is truly complex, treat X as complex.
   // The reason is that we are still not able to apply truly complex shifts to real matrices
-  if( (is_same_type<typename T1::elem_type, T>::yes) && (std::abs(std::imag(sigma)) > std::numeric_limits<T>::epsilon()) )
+  if( (is_real<typename T1::elem_type>::yes) && (std::imag(sigma) != T(0)) )
     {
     status = sp_auxlib::eigs_gen(eigval, eigvec, conv_to< SpMat< std::complex<T> > >::from(X), n_eigvals, sigma, opts);
     }

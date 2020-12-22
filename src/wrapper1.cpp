@@ -1634,17 +1634,17 @@ extern "C"
       return slangs(norm, A);
       }
     
-    double wrapper_dlangs(char* norm, superlu::SuperMatrix* A);
+    double wrapper_dlangs(char* norm, superlu::SuperMatrix* A)
       {
       return dlangs(norm, A);
       }
     
-    float  wrapper_clangs(char* norm, superlu::SuperMatrix* A);
+    float  wrapper_clangs(char* norm, superlu::SuperMatrix* A)
       {
       return clangs(norm, A);
       }
     
-    double wrapper_zlangs(char* norm, superlu::SuperMatrix* A);
+    double wrapper_zlangs(char* norm, superlu::SuperMatrix* A)
       {
       return zlangs(norm, A);
       }

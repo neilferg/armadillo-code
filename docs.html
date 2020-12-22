@@ -13233,7 +13233,7 @@ See also:
 </ul>
 </li>
 <br>
-<li>The argument <i>sigma</i> is optional; if <i>sigma</i> is given, eigenvalues closest to <i>sigma</i> are found
+<li>The argument <i>sigma</i> is optional; if <i>sigma</i> is given, eigenvalues closest to <i>sigma</i> are found via shift-invert mode
 <br><b>NOTE:</b> to use <i>sigma</i>, both <i>ARMA_USE_ARPACK</i> and <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a>
 </li>
 <br>
@@ -13272,10 +13272,11 @@ struct eigs_opts
 <ul>
 <li>the number of obtained eigenvalues/eigenvectors may be lower than requested, depending on the given data</li>
 <li>
-if the decomposition fails, try first increasing <i>opts.subdim</i> (Krylov subspace dimension)
-<br>and, as secondary options, try increasing <i>opts.subdim</i> (maximum number of iterations)
-<br>and/or <i>opts.tol</i> (tolerance for convergence) and/or <i>k</i> (number of eigenvalues)
+if the decomposition fails, try first increasing <i>opts.subdim</i> (Krylov subspace dimension),
+and, as secondary options, try increasing <i>opts.maxiter</i> (maximum number of iterations),
+and/or <i>opts.tol</i> (tolerance for convergence), and/or <i>k</i> (number of eigenvalues)
 </li>
+<li>as an alternative to the "sm" form, use the shift-invert mode with <i>sigma</i> set to zero</li>
 </ul>
 </li>
 <br>
@@ -13357,7 +13358,7 @@ Obtain a limited number of eigenvalues and eigenvectors of <b>sparse</b> general
 </ul>
 </li>
 <br>
-<li>The argument <i>sigma</i> is optional; if <i>sigma</i> is given, eigenvalues closest to <i>sigma</i> are found
+<li>The argument <i>sigma</i> is optional; if <i>sigma</i> is given, eigenvalues closest to <i>sigma</i> are found via shift-invert mode
 <br><b>NOTE:</b> to use <i>sigma</i>, both <i>ARMA_USE_ARPACK</i> and <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a>
 </li>
 <br>
@@ -13401,9 +13402,10 @@ If <i>X</i> is not square sized, a <i>std::logic_error</i> exception is thrown
 <li>the number of obtained eigenvalues/eigenvectors may be lower than requested, depending on the given data</li>
 <li>
 if the decomposition fails, try first increasing <i>opts.subdim</i> (Krylov subspace dimension)
-<br>and, as secondary options, try increasing <i>opts.subdim</i> (maximum number of iterations)
-<br>and/or <i>opts.tol</i> (tolerance for convergence) and/or <i>k</i> (number of eigenvalues)
+and, as secondary options, try increasing <i>opts.maxiter</i> (maximum number of iterations),
+and/or <i>opts.tol</i> (tolerance for convergence), and/or <i>k</i> (number of eigenvalues)
 </li>
+<li>as an alternative to the "sm" form, use the shift-invert mode with <i>sigma</i> set to zero</li>
 </ul>
 </li>
 <br>
@@ -18995,6 +18997,7 @@ List of additions and changes for each version:
 <ul>
 <li>added <a href="#misc_fns">tgamma()</a></li>
 <li>added <a href="#brief_print">.brief_print()</a> for abridged printing of matrices &amp; cubes</li>
+<li>expanded <a href="#eigs_sym">eigs_sym()</a> and <a href="#eigs_gen">eigs_gen()</a> with optional shift-invert mode</li>
 </ul>
 </li>
 <br>

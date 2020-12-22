@@ -1018,7 +1018,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X_expr);
+    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
     arma_ignore(sigma);

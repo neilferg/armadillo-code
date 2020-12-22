@@ -862,7 +862,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
-    const unwrap_spmat<T1> U(X_expr.get_ref());
+    const unwrap_spmat<T1> U(X.get_ref());
     
     constexpr form_type form_val = form_sigma;
     

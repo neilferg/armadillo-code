@@ -99,7 +99,7 @@ eigs_sym
   Mat<typename T1::elem_type> eigvec;
   Col<typename T1::pod_type > eigval;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
   
@@ -194,7 +194,7 @@ eigs_sym
   
   Mat<typename T1::elem_type> eigvec;
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
   
@@ -293,7 +293,7 @@ eigs_sym
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_sym(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  sp_auxlib::form_type form_val = sp_auxlib::form_sm;
+  sp_auxlib::form_type form_val = sp_auxlib::form_sigma;
   
   const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
   

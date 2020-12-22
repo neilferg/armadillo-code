@@ -25,7 +25,7 @@ class sp_auxlib
   
   enum form_type
     {
-    form_none, form_lm, form_sm, form_lr, form_la, form_sr, form_li, form_si, form_sa
+    form_none, form_lm, form_sm, form_lr, form_la, form_sr, form_li, form_si, form_sa, form_sigma
     };
   
   inline static form_type interpret_form_str(const char* form_str);
@@ -37,7 +37,7 @@ class sp_auxlib
   inline static bool eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
   
   template<typename eT>
-  inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
+  inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   template<typename eT>
   inline static bool eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
@@ -49,7 +49,7 @@ class sp_auxlib
   inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase<T, T1>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
   
   template<typename T>
-  inline static bool eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
+  inline static bool eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
   
   template<typename T>
   inline static bool eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpMat<T>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
@@ -68,6 +68,13 @@ class sp_auxlib
   inline static bool spsolve_refine(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
   
   #if defined(ARMA_USE_SUPERLU)
+    
+    template<typename eT>
+    inline static typename get_pod_type<eT>::result norm1(superlu::SuperMatrix* A);
+    
+    template<typename eT>
+    inline static typename get_pod_type<eT>::result lu_rcond(superlu::SuperMatrix* L, superlu::SuperMatrix* U, typename get_pod_type<eT>::result norm_val);
+    
     inline static void set_superlu_opts(superlu::superlu_options_t& options, const superlu_opts& user_opts);
     
     template<typename eT>
@@ -77,6 +84,7 @@ class sp_auxlib
     inline static bool wrap_to_supermatrix(superlu::SuperMatrix& out, const Mat<eT>& A);
     
     inline static void destroy_supermatrix(superlu::SuperMatrix& out);
+  
   #endif
   
   
@@ -88,9 +96,21 @@ class sp_auxlib
   // functions are very different and we can't combine their code
   
   template<typename eT, typename T>
-  inline static void run_aupd
+  inline static void run_aupd_plain
     (
-    const uword n_eigvals, char* which, const T sigma, const bool shiftinvert,
+    const uword n_eigvals, char* which,
+    const SpMat<T>& X, const bool sym,
+    blas_int& n, eT& tol, blas_int& maxiter,
+    podarray<T>& resid, blas_int& ncv, podarray<T>& v, blas_int& ldv,
+    podarray<blas_int>& iparam, podarray<blas_int>& ipntr,
+    podarray<T>& workd, podarray<T>& workl, blas_int& lworkl, podarray<eT>& rwork,
+    blas_int& info
+    );
+  
+  template<typename eT, typename T>
+  inline static void run_aupd_shiftinvert
+    (
+    const uword n_eigvals, const T sigma,
     const SpMat<T>& X, const bool sym,
     blas_int& n, eT& tol, blas_int& maxiter,
     podarray<T>& resid, blas_int& ncv, podarray<T>& v, blas_int& ldv,

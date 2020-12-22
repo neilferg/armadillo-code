@@ -934,7 +934,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 
 
 
-// TODO: refactor to use supermatrix_wrangler, superlustat_wrangler, superluintarray_wrangler
+// TODO: refactor to use superlu_supermatrix_wrangler
 template<typename T1, typename T2>
 inline
 bool
@@ -1014,22 +1014,15 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     
     // paranoia: use SuperLU's memory allocation, in case it reallocs
     
-    int* perm_c = (int*) superlu::malloc( (A.n_cols+1) * sizeof(int));  // extra paranoia: increase array length by 1
-    int* perm_r = (int*) superlu::malloc( (A.n_rows+1) * sizeof(int));
+    superlu_array_wrangler<int> perm_c(A.n_cols+1);  // extra paranoia: increase array length by 1
+    superlu_array_wrangler<int> perm_r(A.n_rows+1);
     
-    arma_check_bad_alloc( (perm_c == 0), "spsolve(): out of memory" );
-    arma_check_bad_alloc( (perm_r == 0), "spsolve(): out of memory" );
-    
-    arrayops::inplace_set(perm_c, 0, A.n_cols+1);
-    arrayops::inplace_set(perm_r, 0, A.n_rows+1);
-    
-    superlu::SuperLUStat_t stat;
-    superlu::init_stat(&stat);
+    superlu_stat_wrangler stat;
     
     int info = 0; // Return code.
     
     arma_extra_debug_print("superlu::gssv()");
-    superlu::gssv<eT>(&options, &a, perm_c, perm_r, &l, &u, &x, &stat, &info);
+    superlu::gssv<eT>(&options, &a, perm_c.get_ptr(), perm_r.get_ptr(), &l, &u, &x, stat.get_ptr(), &info);
     
     
     // Process the return code.
@@ -1049,12 +1042,6 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
       {
       arma_debug_warn("spsolve(): unknown SuperLU error code from gssv(): ", info);
       }
-    
-    
-    superlu::free_stat(&stat);
-    
-    superlu::free(perm_c);
-    superlu::free(perm_r);
     
     destroy_supermatrix(u);
     destroy_supermatrix(l);
@@ -1077,7 +1064,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
 
 
 
-// TODO: refactor to use supermatrix_wrangler, superlustat_wrangler, superluintarray_wrangler
+// TODO: refactor to use superlu_supermatrix_wrangler
 template<typename T1, typename T2>
 inline
 bool
@@ -1171,32 +1158,14 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     // paranoia: use SuperLU's memory allocation, in case it reallocs
     
-    int* perm_c = (int*) superlu::malloc( (A.n_cols+1) * sizeof(int) );  // extra paranoia: increase array length by 1
-    int* perm_r = (int*) superlu::malloc( (A.n_rows+1) * sizeof(int) );
-    int* etree  = (int*) superlu::malloc( (A.n_cols+1) * sizeof(int) );
+    superlu_array_wrangler<int> perm_c(A.n_cols+1);  // extra paranoia: increase array length by 1
+    superlu_array_wrangler<int> perm_r(A.n_rows+1);
+    superlu_array_wrangler<int>  etree(A.n_cols+1);
     
-    T* R    = (T*) superlu::malloc( (A.n_rows+1) * sizeof(T) );
-    T* C    = (T*) superlu::malloc( (A.n_cols+1) * sizeof(T) );
-    T* ferr = (T*) superlu::malloc( (B.n_cols+1) * sizeof(T) );
-    T* berr = (T*) superlu::malloc( (B.n_cols+1) * sizeof(T) );
-    
-    arma_check_bad_alloc( (perm_c == 0), "spsolve(): out of memory" );
-    arma_check_bad_alloc( (perm_r == 0), "spsolve(): out of memory" );
-    arma_check_bad_alloc( (etree  == 0), "spsolve(): out of memory" );
-    
-    arma_check_bad_alloc( (R    == 0), "spsolve(): out of memory" );
-    arma_check_bad_alloc( (C    == 0), "spsolve(): out of memory" );
-    arma_check_bad_alloc( (ferr == 0), "spsolve(): out of memory" );
-    arma_check_bad_alloc( (berr == 0), "spsolve(): out of memory" );
-    
-    arrayops::inplace_set(perm_c, int(0), A.n_cols+1);
-    arrayops::inplace_set(perm_r, int(0), A.n_rows+1);
-    arrayops::inplace_set(etree,  int(0), A.n_cols+1);
-    
-    arrayops::inplace_set(R,    T(0), A.n_rows+1);
-    arrayops::inplace_set(C,    T(0), A.n_cols+1);
-    arrayops::inplace_set(ferr, T(0), B.n_cols+1);
-    arrayops::inplace_set(berr, T(0), B.n_cols+1);
+    superlu_array_wrangler<T>    R(A.n_rows+1);
+    superlu_array_wrangler<T>    C(A.n_cols+1);
+    superlu_array_wrangler<T> ferr(B.n_cols+1);
+    superlu_array_wrangler<T> berr(B.n_cols+1);
     
     superlu::GlobalLU_t glu;
     arrayops::inplace_set(reinterpret_cast<char*>(&glu), char(0), sizeof(superlu::GlobalLU_t));
@@ -1204,8 +1173,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     superlu::mem_usage_t  mu;
     arrayops::inplace_set(reinterpret_cast<char*>(&mu), char(0), sizeof(superlu::mem_usage_t));
     
-    superlu::SuperLUStat_t stat;
-    superlu::init_stat(&stat);
+    superlu_stat_wrangler stat;
     
     char equed[8];       // extra characters for paranoia
     T    rpg   = T(0);
@@ -1216,7 +1184,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     int  lwork = int(0);  // 0 means superlu will allocate memory
     
     arma_extra_debug_print("superlu::gssvx()");
-    superlu::gssvx<eT>(&options, &a, perm_c, perm_r, etree, equed, R, C, &l, &u, &work[0], lwork, &b, &x, &rpg, &rcond, ferr, berr, &glu, &mu, &stat, &info);
+    superlu::gssvx<eT>(&options, &a, perm_c.get_ptr(), perm_r.get_ptr(), etree.get_ptr(), equed, R.get_ptr(), C.get_ptr(), &l, &u, &work[0], lwork, &b, &x, &rpg, &rcond, ferr.get_ptr(), berr.get_ptr(), &glu, &mu, stat.get_ptr(), &info);
     
     bool status = false;
     
@@ -1247,16 +1215,6 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       {
       arma_debug_warn("spsolve(): unknown SuperLU error code from gssvx(): ", info);
       }
-    
-    superlu::free_stat(&stat);
-    
-    superlu::free(berr);
-    superlu::free(ferr);
-    superlu::free(C);
-    superlu::free(R);
-    superlu::free(etree);
-    superlu::free(perm_r);
-    superlu::free(perm_c);
     
     destroy_supermatrix(u);
     destroy_supermatrix(l);
@@ -1312,7 +1270,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     T    rcond_out = T(0);
     int  info      = int(0);
     
-    superlustat_wrangler stat;
+    superlu_stat_wrangler stat;
     
     superlu::gscon<eT>(&norm_id, L, U, norm_val, &rcond_out, stat.get_ptr(), &info);
     
@@ -1784,8 +1742,8 @@ sp_auxlib::run_aupd_shiftinvert
     superlu::GlobalLU_t Glu; /* Not needed on return. */
     arrayops::fill_zeros(reinterpret_cast<char*>(&Glu), sizeof(superlu::GlobalLU_t));
     
-    supermatrix_wrangler x;
-    supermatrix_wrangler xC;
+    superlu_supermatrix_wrangler x;
+    superlu_supermatrix_wrangler xC;
     
     SpMat<T> tmpX(X);
     tmpX.diag() -= sigma;
@@ -1794,14 +1752,14 @@ sp_auxlib::run_aupd_shiftinvert
     
     if(status_x == false)  { arma_stop_runtime_error("run_aupd_shiftinvert(): could not construct SuperLU matrix"); return; }
     
-    supermatrix_wrangler l;
-    supermatrix_wrangler u;
+    superlu_supermatrix_wrangler l;
+    superlu_supermatrix_wrangler u;
     
-    superluintarray_wrangler perm_c(X.n_cols+1);  // paranoia: increase array length by 1
-    superluintarray_wrangler perm_r(X.n_rows+1);
-    superluintarray_wrangler etree (X.n_cols+1);
+    superlu_array_wrangler<int> perm_c(X.n_cols+1);  // paranoia: increase array length by 1
+    superlu_array_wrangler<int> perm_r(X.n_rows+1);
+    superlu_array_wrangler<int>  etree(X.n_cols+1);
     
-    superlustat_wrangler stat;
+    superlu_stat_wrangler stat;
     
     int   panel_size = superlu::sp_ispec_environ(1);
     int   relax      = superlu::sp_ispec_environ(2);
@@ -1872,7 +1830,7 @@ sp_auxlib::run_aupd_shiftinvert
           // Instead of "spsolve(out,X,in)" we call gstrf above and gstrs below
           
           out = in;
-          supermatrix_wrangler out_slu;
+          superlu_supermatrix_wrangler out_slu;
           
           const bool status_out_slu = sp_auxlib::wrap_to_supermatrix(out_slu.get_ref(), out);
           
@@ -2046,7 +2004,7 @@ sp_auxlib::rudimentary_sym_check(const SpMat< std::complex<T> >& X)
 #if defined(ARMA_USE_SUPERLU)
 
 inline
-supermatrix_wrangler::~supermatrix_wrangler()
+superlu_supermatrix_wrangler::~superlu_supermatrix_wrangler()
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2064,7 +2022,7 @@ supermatrix_wrangler::~supermatrix_wrangler()
   }
 
 inline
-supermatrix_wrangler::supermatrix_wrangler()
+superlu_supermatrix_wrangler::superlu_supermatrix_wrangler()
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2073,7 +2031,7 @@ supermatrix_wrangler::supermatrix_wrangler()
 
 inline
 superlu::SuperMatrix&
-supermatrix_wrangler::get_ref()
+superlu_supermatrix_wrangler::get_ref()
   {
   used = true;
   
@@ -2082,7 +2040,7 @@ supermatrix_wrangler::get_ref()
 
 inline
 superlu::SuperMatrix*
-supermatrix_wrangler::get_ptr()
+superlu_supermatrix_wrangler::get_ptr()
   {
   used = true;
   
@@ -2094,7 +2052,7 @@ supermatrix_wrangler::get_ptr()
 
 
 inline
-superlustat_wrangler::~superlustat_wrangler()
+superlu_stat_wrangler::~superlu_stat_wrangler()
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2102,7 +2060,7 @@ superlustat_wrangler::~superlustat_wrangler()
   }
 
 inline
-superlustat_wrangler::superlustat_wrangler()
+superlu_stat_wrangler::superlu_stat_wrangler()
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2113,7 +2071,7 @@ superlustat_wrangler::superlustat_wrangler()
 
 inline
 superlu::SuperLUStat_t*
-superlustat_wrangler::get_ptr()
+superlu_stat_wrangler::get_ptr()
   {
   return &stat;
   }
@@ -2122,8 +2080,9 @@ superlustat_wrangler::get_ptr()
 //
 
 
+template<typename eT>
 inline
-superluintarray_wrangler::~superluintarray_wrangler()
+superlu_array_wrangler<eT>::~superlu_array_wrangler()
   {
   arma_extra_debug_sigprint_this(this);
   
@@ -2134,21 +2093,23 @@ superluintarray_wrangler::~superluintarray_wrangler()
     }
   }
 
+template<typename eT>
 inline
-superluintarray_wrangler::superluintarray_wrangler(const uword n_elem)
+superlu_array_wrangler<eT>::superlu_array_wrangler(const uword n_elem)
   {
   arma_extra_debug_sigprint_this(this);
   
-  mem = (int*)(superlu::malloc(n_elem * sizeof(int)));
+  mem = (eT*)(superlu::malloc(n_elem * sizeof(eT)));
   
   arma_check_bad_alloc( (mem == nullptr), "superlu::malloc(): out of memory" );
   
   arrayops::fill_zeros(mem, n_elem);
   }
 
+template<typename eT>
 inline
-int*
-superluintarray_wrangler::get_ptr()
+eT*
+superlu_array_wrangler<eT>::get_ptr()
   {
   return mem;
   }

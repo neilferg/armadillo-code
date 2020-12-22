@@ -131,7 +131,7 @@ class sp_auxlib
 
 #if defined(ARMA_USE_SUPERLU)
 
-class supermatrix_wrangler
+class superlu_supermatrix_wrangler
   {
   private:
   
@@ -141,18 +141,18 @@ class supermatrix_wrangler
   
   public:
   
-  inline ~supermatrix_wrangler();
-  inline  supermatrix_wrangler();
+  inline ~superlu_supermatrix_wrangler();
+  inline  superlu_supermatrix_wrangler();
   
-  inline supermatrix_wrangler(const supermatrix_wrangler&) = delete;
-  inline void operator=      (const supermatrix_wrangler&) = delete;
+  inline superlu_supermatrix_wrangler(const superlu_supermatrix_wrangler&) = delete;
+  inline void operator=              (const superlu_supermatrix_wrangler&) = delete;
   
   inline superlu::SuperMatrix& get_ref();
   inline superlu::SuperMatrix* get_ptr();
   };
 
 
-class superlustat_wrangler
+class superlu_stat_wrangler
   {
   private:
   
@@ -160,32 +160,33 @@ class superlustat_wrangler
   
   public:
   
-  inline ~superlustat_wrangler();
-  inline  superlustat_wrangler();
+  inline ~superlu_stat_wrangler();
+  inline  superlu_stat_wrangler();
   
-  inline superlustat_wrangler(const superlustat_wrangler&) = delete;
-  inline void operator=      (const superlustat_wrangler&) = delete;
+  inline superlu_stat_wrangler(const superlu_stat_wrangler&) = delete;
+  inline void operator=       (const superlu_stat_wrangler&) = delete;
   
   inline superlu::SuperLUStat_t* get_ptr();
   };
 
 
-class superluintarray_wrangler
+template<typename eT>
+class superlu_array_wrangler
   {
   private:
   
-  arma_aligned int* mem = nullptr;
+  arma_aligned eT* mem = nullptr;
   
   public:
   
-  inline ~superluintarray_wrangler();
-  inline  superluintarray_wrangler(const uword n_elem);
+  inline ~superlu_array_wrangler();
+  inline  superlu_array_wrangler(const uword n_elem);
   
-  inline superluintarray_wrangler()                                = delete;
-  inline superluintarray_wrangler(const superluintarray_wrangler&) = delete;
-  inline void operator=          (const superluintarray_wrangler&) = delete;
+  inline superlu_array_wrangler()                              = delete;
+  inline superlu_array_wrangler(const superlu_array_wrangler&) = delete;
+  inline void operator=        (const superlu_array_wrangler&) = delete;
   
-  inline int* get_ptr();
+  inline eT* get_ptr();
   };
 
 #endif

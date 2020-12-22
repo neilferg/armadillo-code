@@ -351,7 +351,7 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     
     const newarp::SparseGenMatProd<T> op(X);
     
-    arma_debug_check( (op.n_rows != op.n_cols), "eigs_sym(): given matrix must be square sized" );
+    arma_debug_check( (op.n_rows != op.n_cols), "eigs_gen(): given matrix must be square sized" );
     
     arma_debug_check( (n_eigvals + 1 >= op.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
     

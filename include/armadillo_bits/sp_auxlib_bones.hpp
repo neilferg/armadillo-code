@@ -57,7 +57,6 @@ class sp_auxlib
   template<typename T, typename T1>
   inline static bool eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigvec, const SpBase< std::complex<T>, T1>& X, const uword n_eigvals, const form_type form_val, const std::complex<T> sigma, const eigs_opts& opts);
   
-  
   //
   // spsolve() via SuperLU
   
@@ -66,6 +65,15 @@ class sp_auxlib
   
   template<typename T1, typename T2>
   inline static bool spsolve_refine(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
+  
+  //
+  // rcond() via SuperLU
+  
+  template<typename T1>
+  inline static typename T1::pod_type rcond(const SpBase<typename T1::elem_type, T1>& A);
+  
+  //
+  // support functions
   
   #if defined(ARMA_USE_SUPERLU)
     

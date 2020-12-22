@@ -934,7 +934,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 
 
 
-// TODO: refactor to use superlu_supermatrix_wrangler
 template<typename T1, typename T2>
 inline
 bool
@@ -995,22 +994,20 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
         }
       }
     
-    superlu::SuperMatrix x;  arrayops::inplace_set(reinterpret_cast<char*>(&x), char(0), sizeof(superlu::SuperMatrix));
-    superlu::SuperMatrix a;  arrayops::inplace_set(reinterpret_cast<char*>(&a), char(0), sizeof(superlu::SuperMatrix));
+    superlu_supermatrix_wrangler x;
+    superlu_supermatrix_wrangler a;
     
-    const bool status_x = wrap_to_supermatrix(x, X);
-    const bool status_a = copy_to_supermatrix(a, A);
+    const bool status_x = wrap_to_supermatrix(x.get_ref(), X);
+    const bool status_a = copy_to_supermatrix(a.get_ref(), A);
     
     if( (status_x == false) || (status_a == false) )
       {
-      destroy_supermatrix(a);
-      destroy_supermatrix(x);
       X.soft_reset();
       return false;
       }
     
-    superlu::SuperMatrix l;  arrayops::inplace_set(reinterpret_cast<char*>(&l), char(0), sizeof(superlu::SuperMatrix));
-    superlu::SuperMatrix u;  arrayops::inplace_set(reinterpret_cast<char*>(&u), char(0), sizeof(superlu::SuperMatrix));
+    superlu_supermatrix_wrangler l;
+    superlu_supermatrix_wrangler u;
     
     // paranoia: use SuperLU's memory allocation, in case it reallocs
     
@@ -1022,7 +1019,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     int info = 0; // Return code.
     
     arma_extra_debug_print("superlu::gssv()");
-    superlu::gssv<eT>(&options, &a, perm_c.get_ptr(), perm_r.get_ptr(), &l, &u, &x, stat.get_ptr(), &info);
+    superlu::gssv<eT>(&options, a.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), l.get_ptr(), u.get_ptr(), x.get_ptr(), stat.get_ptr(), &info);
     
     
     // Process the return code.
@@ -1043,10 +1040,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
       arma_debug_warn("spsolve(): unknown SuperLU error code from gssv(): ", info);
       }
     
-    destroy_supermatrix(u);
-    destroy_supermatrix(l);
-    destroy_supermatrix(a);
-    destroy_supermatrix(x);  // No need to extract the data from x, since it's using the same memory as X
+    // No need to extract the data from x, since it's using the same memory as X
     
     return (info == 0);
     }
@@ -1064,7 +1058,6 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
 
 
 
-// TODO: refactor to use superlu_supermatrix_wrangler
 template<typename T1, typename T2>
 inline
 bool
@@ -1136,25 +1129,22 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
         }
       }
     
-    superlu::SuperMatrix x;  arrayops::inplace_set(reinterpret_cast<char*>(&x), char(0), sizeof(superlu::SuperMatrix));
-    superlu::SuperMatrix a;  arrayops::inplace_set(reinterpret_cast<char*>(&a), char(0), sizeof(superlu::SuperMatrix));
-    superlu::SuperMatrix b;  arrayops::inplace_set(reinterpret_cast<char*>(&b), char(0), sizeof(superlu::SuperMatrix));
+    superlu_supermatrix_wrangler x;
+    superlu_supermatrix_wrangler a;
+    superlu_supermatrix_wrangler b;
     
-    const bool status_x = wrap_to_supermatrix(x, X);
-    const bool status_a = copy_to_supermatrix(a, A);  // NOTE: superlu::gssvx() modifies 'a' if equilibration is enabled
-    const bool status_b = wrap_to_supermatrix(b, B);  // NOTE: superlu::gssvx() modifies 'b' if equilibration is enabled
+    const bool status_x = wrap_to_supermatrix(x.get_ref(), X);
+    const bool status_a = copy_to_supermatrix(a.get_ref(), A);  // NOTE: superlu::gssvx() modifies 'a' if equilibration is enabled
+    const bool status_b = wrap_to_supermatrix(b.get_ref(), B);  // NOTE: superlu::gssvx() modifies 'b' if equilibration is enabled
     
     if( (status_x == false) || (status_a == false) || (status_b == false) )
       {
-      destroy_supermatrix(x);
-      destroy_supermatrix(a);
-      destroy_supermatrix(b);
       X.soft_reset();
       return false;
       }
     
-    superlu::SuperMatrix l;  arrayops::inplace_set(reinterpret_cast<char*>(&l), char(0), sizeof(superlu::SuperMatrix));
-    superlu::SuperMatrix u;  arrayops::inplace_set(reinterpret_cast<char*>(&u), char(0), sizeof(superlu::SuperMatrix));
+    superlu_supermatrix_wrangler l;
+    superlu_supermatrix_wrangler u;
     
     // paranoia: use SuperLU's memory allocation, in case it reallocs
     
@@ -1184,7 +1174,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     int  lwork = int(0);  // 0 means superlu will allocate memory
     
     arma_extra_debug_print("superlu::gssvx()");
-    superlu::gssvx<eT>(&options, &a, perm_c.get_ptr(), perm_r.get_ptr(), etree.get_ptr(), equed, R.get_ptr(), C.get_ptr(), &l, &u, &work[0], lwork, &b, &x, &rpg, &rcond, ferr.get_ptr(), berr.get_ptr(), &glu, &mu, stat.get_ptr(), &info);
+    superlu::gssvx<eT>(&options, a.get_ptr(), perm_c.get_ptr(), perm_r.get_ptr(), etree.get_ptr(), equed, R.get_ptr(), C.get_ptr(), l.get_ptr(), u.get_ptr(), &work[0], lwork, b.get_ptr(), x.get_ptr(), &rpg, &rcond, ferr.get_ptr(), berr.get_ptr(), &glu, &mu, stat.get_ptr(), &info);
     
     bool status = false;
     
@@ -1216,11 +1206,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       arma_debug_warn("spsolve(): unknown SuperLU error code from gssvx(): ", info);
       }
     
-    destroy_supermatrix(u);
-    destroy_supermatrix(l);
-    destroy_supermatrix(b);
-    destroy_supermatrix(a);
-    destroy_supermatrix(x);  // No need to extract the data from x, since it's using the same memory as X
+    // No need to extract the data from x, since it's using the same memory as X
     
     out_rcond = rcond;
     

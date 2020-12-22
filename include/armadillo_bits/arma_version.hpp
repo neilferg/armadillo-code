@@ -21,7 +21,7 @@
 
 #define ARMA_VERSION_MAJOR 10
 #define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_PATCH 92
 #define ARMA_VERSION_NAME  "unstable"
 
 

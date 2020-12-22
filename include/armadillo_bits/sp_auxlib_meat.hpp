@@ -393,7 +393,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
-    arma_ignore(sigma)
+    arma_ignore(sigma);
     arma_ignore(opts);
     
     return false;

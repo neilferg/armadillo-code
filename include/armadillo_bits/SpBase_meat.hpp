@@ -571,8 +571,8 @@ SpBase<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::resul
       const T val_real = access::tmp_real(val);
       const T val_imag = access::tmp_imag(val);
       
-      if(std::abs(val_real) > tol)  { return false; }
-      if(std::abs(val_imag) > tol)  { return false; }
+      if(eop_aux::arma_abs(val_real) > tol)  { return false; }
+      if(eop_aux::arma_abs(val_imag) > tol)  { return false; }
       
       ++it;
       }
@@ -581,7 +581,7 @@ SpBase<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::resul
     {
     while(it != it_end)
       {
-      if(std::abs(*it) > tol)  { return false; }
+      if(eop_aux::arma_abs(*it) > tol)  { return false; }
       
       ++it;
       }

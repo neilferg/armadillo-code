@@ -87,6 +87,9 @@ class subview : public Base< eT, subview<eT> >
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
   
+  inline void operator=(const std::initializer_list<eT>& list);
+  inline void operator=(const std::initializer_list< std::initializer_list<eT> >& list);
+  
   
   inline static void extract(Mat<eT>& out, const subview& in);
   

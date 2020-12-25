@@ -750,6 +750,50 @@ subview<eT>::operator= (const Gen<T1,gen_type>& in)
 
 
 
+template<typename eT>
+inline
+void
+subview<eT>::operator=(const std::initializer_list<eT>& list)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (is_vec() == false), "copy into submatrix: size mismatch" );
+  
+  const uword N = uword(list.size());
+  
+  if(n_rows == 1)
+    {
+    arma_debug_assert_same_size(1, n_cols, 1, N, "copy into submatrix");
+    
+    auto it = list.begin();
+    
+    for(uword ii=0; ii < N; ++ii)  { (*this).at(0,ii) = (*it); ++it; }
+    }
+  else
+  if(n_cols == 1)
+    {
+    arma_debug_assert_same_size(n_rows, 1, N, 1, "copy into submatrix");
+    
+    arrayops::copy( (*this).colptr(0), list.begin(), N );
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::operator=(const std::initializer_list< std::initializer_list<eT> >& list)
+  {
+  arma_extra_debug_sigprint();
+  
+  const Mat<eT> tmp(list);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
 //! apply a functor to each element
 template<typename eT>
 template<typename functor>

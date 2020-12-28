@@ -1840,6 +1840,8 @@ sp_auxlib::run_aupd_shiftinvert
   blas_int& info
   )
   {
+  // TODO: inconsistent use of type names: T can be complex while eT can be real
+  
   #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
     char which_lm[3] = "LM";
@@ -1903,12 +1905,30 @@ sp_auxlib::run_aupd_shiftinvert
     superlu_supermatrix_wrangler x;
     superlu_supermatrix_wrangler xC;
     
-    SpMat<T> tmpX(X);
-    tmpX.diag() -= sigma;
+    bool status_x = false;
     
-    const bool status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), tmpX);
+    if(sigma == T(0))
+      {
+      arma_extra_debug_print("run_aupd_shiftinvert(): not subtracting sigma");
+      status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), X);
+      }
+    else
+      {
+      arma_extra_debug_print("run_aupd_shiftinvert(): subtracting sigma");
+      
+      SpMat<T> X_shifted(X);
+      
+      X_shifted.diag() -= sigma;
+      
+      status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), X_shifted);
+      }
     
-    if(status_x == false)  { arma_stop_runtime_error("run_aupd_shiftinvert(): could not construct SuperLU matrix"); return; }
+    if(status_x == false)
+      {
+      arma_stop_runtime_error("run_aupd_shiftinvert(): could not construct SuperLU matrix");
+      info = blas_int(-1);
+      return;
+      }
     
     superlu_supermatrix_wrangler l;
     superlu_supermatrix_wrangler u;
@@ -1935,8 +1955,6 @@ sp_auxlib::run_aupd_shiftinvert
       info = blas_int(-1);
       return;
       }
-    
-    // TODO: inconsistent use of type names: T can be complex while eT can be real
     
     eT x_norm_val = sp_auxlib::norm1<T>(x.get_ptr());
     eT x_rcond    = sp_auxlib::lu_rcond<T>(l.get_ptr(), u.get_ptr(), x_norm_val);

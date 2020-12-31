@@ -41,7 +41,10 @@ class sp_auxlib
   
   template<typename eT>
   inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eigs_opts& opts);
-  
+
+  template<typename eT>
+  inline static bool eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const eT sigma, const eigs_opts& opts);
+
   template<typename eT, bool use_sigma>
   inline static bool eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const form_type form_val, const eT sigma, const eigs_opts& opts);
   
@@ -102,6 +105,9 @@ class sp_auxlib
     
     template<typename eT>
     inline static bool copy_to_supermatrix(superlu::SuperMatrix& out, const SpMat<eT>& A);
+
+    template<typename eT>
+    inline static bool copy_to_supermatrix_with_shift(superlu::SuperMatrix& out, const SpMat<eT>& A, const eT shift);
     
     template<typename eT>
     inline static bool wrap_to_supermatrix(superlu::SuperMatrix& out, const Mat<eT>& A);

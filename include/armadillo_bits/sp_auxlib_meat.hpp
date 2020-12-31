@@ -106,7 +106,19 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   {
   arma_extra_debug_sigprint();
   
-  #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
+  #if   (defined(ARMA_USE_NEWARP) && defined(ARMA_USE_SUPERLU))
+    {
+    const unwrap_spmat<T1> U(X.get_ref());
+    
+    if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
+      {
+      if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
+      if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
+      }
+    
+    return sp_auxlib::eigs_sym_newarp(eigval, eigvec, U.M, n_eigvals, sigma, opts);
+    }
+  #elif (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
     const unwrap_spmat<T1> U(X.get_ref());
     
@@ -129,7 +141,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     arma_ignore(sigma);
     arma_ignore(opts);
     
-    arma_stop_logic_error("eigs_sym(): use of ARPACK and SuperLU must be enabled to use 'sigma'");
+    arma_stop_logic_error("eigs_sym(): use of SuperLU must be enabled to use 'sigma'");
     return false;
     }
   #endif
@@ -261,6 +273,107 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
+    arma_ignore(opts);
+    
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT>
+inline
+bool
+sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X, const uword n_eigvals, const eT sigma, const eigs_opts& opts)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_NEWARP)
+    {
+    const newarp::SparseGenRealShiftSolve<eT> op(X, sigma);
+    
+    arma_debug_check( (op.n_rows != op.n_cols), "eigs_sym(): given matrix must be square sized" );
+    
+    arma_debug_check( (n_eigvals >= op.n_rows), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix" );
+    
+    // If the matrix is empty, the case is trivial.
+    if( (op.n_cols == 0) || (n_eigvals == 0) ) // We already know n_cols == n_rows.
+      {
+      eigval.reset();
+      eigvec.reset();
+      return true;
+      }
+    
+    uword n   = op.n_rows;
+    
+    // Use max(2*k+1, 20) as default subspace dimension for the sym case; MATLAB uses max(2*k, 20), but we need to be backward-compatible.
+    uword ncv_default = uword( ((2*n_eigvals+1)>(20)) ? (2*n_eigvals+1) : (20) );
+    
+    // Use opts.subdim only if it's within the limits, otherwise cap it.
+    uword ncv = ncv_default;
+    
+    if(opts.subdim != 0)
+      {
+      if(opts.subdim < (n_eigvals + 1))
+        {
+        arma_debug_warn("eigs_sym(): opts.subdim must be greater than k; using k+1 instead of ", opts.subdim);
+        ncv = uword(n_eigvals + 1);
+        }
+      else
+      if(opts.subdim > n)
+        {
+        arma_debug_warn("eigs_sym(): opts.subdim cannot be greater than n_rows; using n_rows instead of ", opts.subdim);
+        ncv = n;
+        }
+      else
+        {
+        ncv = uword(opts.subdim);
+        }
+      }
+    
+    // Re-check that we are within the limits
+    if(ncv < (n_eigvals + 1)) { ncv = (n_eigvals + 1); }
+    if(ncv > n              ) { ncv = n;               }
+    
+    eT tol = (std::max)(eT(opts.tol), std::numeric_limits<eT>::epsilon());
+    
+    uword maxiter = uword(opts.maxiter);
+    
+    // eigval.set_size(n_eigvals);
+    // eigvec.set_size(n, n_eigvals);
+    
+    bool status = true;
+    
+    uword nconv = 0;
+    
+    try
+      {
+      newarp::SymEigsShiftSolver< eT, newarp::EigsSelect::LARGEST_MAGN, newarp::SparseGenRealShiftSolve<eT> > eigs(op, n_eigvals, ncv, sigma);
+      eigs.init();
+      nconv  = eigs.compute(maxiter, tol);
+      eigval = eigs.eigenvalues();
+      eigvec = eigs.eigenvectors();
+      }
+    catch(const std::runtime_error&)
+      {
+      status = false;
+      }
+    
+    if(status == true)
+      {
+      if(nconv == 0)  { status = false; }
+      }
+    
+    return status;
+    }
+  #else
+    {
+    arma_ignore(eigval);
+    arma_ignore(eigvec);
+    arma_ignore(X);
+    arma_ignore(n_eigvals);
+    arma_ignore(sigma);
     arma_ignore(opts);
     
     return false;
@@ -1531,6 +1644,133 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     arrayops::convert(nc->colptr, A.col_ptrs,    A.n_cols+1 );
     arrayops::convert(nc->rowind, A.row_indices, A.n_nonzero);
+    
+    out.nrow  = A.n_rows;
+    out.ncol  = A.n_cols;
+    out.Store = (void*) nc;
+    
+    return true;
+    }
+  
+  
+  
+  // Copy A-shift*I to out, assuming A is a square matrix
+  // Useful for eigs_sym() and eigs_gen()
+  template<typename eT>
+  inline
+  bool
+  sp_auxlib::copy_to_supermatrix_with_shift(superlu::SuperMatrix& out, const SpMat<eT>& A, const eT shift)
+    {
+    arma_extra_debug_sigprint();
+
+    arma_debug_check( (A.is_square() == false), "sp_auxlib::copy_to_supermatrix_with_shift(): given matrix must be square sized" );
+    
+    // We store in column-major CSC.
+    out.Stype = superlu::SLU_NC;
+    
+    if(is_float<eT>::value)
+      {
+      out.Dtype = superlu::SLU_S;
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      out.Dtype = superlu::SLU_D;
+      }
+    else
+    if(is_cx_float<eT>::value)
+      {
+      out.Dtype = superlu::SLU_C;
+      }
+    else
+    if(is_cx_double<eT>::value)
+      {
+      out.Dtype = superlu::SLU_Z;
+      }
+    
+    out.Mtype = superlu::SLU_GE; // Just a general matrix.  We don't know more now.
+    
+    // We have to actually create the object which stores the data.
+    // This gets cleaned by destroy_supermatrix().
+    superlu::NCformat* nc = (superlu::NCformat*)superlu::malloc(sizeof(superlu::NCformat));
+    if(nc == nullptr)  { return false; }
+    
+    A.sync();
+
+    // Since A needs to be subtracted by shift*I, we treat the diagonal elements of out
+    // as non-zero elements, even if some of them may be numerically zero.
+    // As a result, we need to recompute the total number of non-zero elements.
+    const uword search_cols = std::min(A.n_rows, A.n_cols);
+    uword nnz_new = A.n_nonzero + search_cols;
+    for(uword j = 0; j < search_cols; j++)
+      {
+      // A.col_ptrs[j+1]-A.col_ptrs[j] is the number of non-zero elements in the j-th column of A
+      const uword idx_start = A.col_ptrs[j];
+      const uword idx_end = A.col_ptrs[j + 1];
+      // Test whether A.row_indices[start:end] contains j
+      // If yes, it means A[j,j] is already there
+      for(uword i = idx_start; (i < idx_end) && (A.row_indices[i] <= j); i++)
+        {
+        if(A.row_indices[i] == j)
+          {
+          // Decrease nnz_new by one if the diagonal element already exists
+          nnz_new--;
+          break;
+          }
+        }
+      }
+
+    nc->nnz    = nnz_new;
+    nc->nzval  = (void*)          superlu::malloc(sizeof(eT)             * nnz_new       );
+    nc->colptr = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * (A.n_cols + 1));
+    nc->rowind = (superlu::int_t*)superlu::malloc(sizeof(superlu::int_t) * nnz_new       );
+    
+    if( (nc->nzval == nullptr) || (nc->colptr == nullptr) || (nc->rowind == nullptr) )  { return false; }
+    nc->colptr[0] = 0;
+    
+    // Fill the matrix column by column, and insert diagonal elements when necessary
+    eT*             values_current = (eT*) nc->nzval;
+    superlu::int_t* rowind_current = nc->rowind;
+    for(uword j = 0; j < A.n_cols; j++)
+      {
+      const uword idx_start = A.col_ptrs[j];
+      const uword idx_end = A.col_ptrs[j + 1];
+      const eT* values_start = values_current;
+      
+      uword i;
+      // Segment 1: elements in the strictly upper triangular part
+      for(i = idx_start; (i < idx_end) && A.row_indices[i] < j; i++, values_current++, rowind_current++)
+        {
+        *values_current = A.values[i];
+        *rowind_current = A.row_indices[i];
+        }
+      // Segment 2-a: A[j,j] exists
+      if( (i < idx_end) && A.row_indices[i] == j )
+        {
+        *values_current = A.values[i] - shift;
+        *rowind_current = j;
+        values_current++;
+        rowind_current++;
+        i++;
+        }
+      // Segment 2-b: A[j,j] does not exist, so we insert a new element
+      else if(j < search_cols)
+        {
+        *values_current = -shift;
+        *rowind_current = j;
+        values_current++;
+        rowind_current++;
+        }
+      // Segment 3: elements in the strictly lower triangular part
+      for(; i < idx_end; i++, values_current++, rowind_current++)
+        {
+        *values_current = A.values[i];
+        *rowind_current = A.row_indices[i];
+        }
+      // Number of non-zero elements in the j-th column of out
+      const uword nnz_col = values_current - values_start;
+      nc->colptr[j + 1] = nc->colptr[j] + nnz_col;
+      }
     
     out.nrow  = A.n_rows;
     out.ncol  = A.n_cols;

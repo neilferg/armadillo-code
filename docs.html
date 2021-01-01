@@ -18005,9 +18005,10 @@ Disable use of BLAS; overrides <i>ARMA_USE_BLAS</i>
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Enable use of the built-in reimplementation of ARPACK (Armadillo 7.x and later versions).
+Enable use of NEWARP (built-in alternative to ARPACK).
 This is used for the eigen decomposition of real (non-complex) sparse matrices, ie. <a href="#eigs_gen">eigs_gen()</a>, <a href="#eigs_sym">eigs_sym()</a> and <a href="#svds">svds().</a>
 Requires ARMA_USE_LAPACK to be enabled.
+If use of both NEWARP and ARPACK is enabled, NEWARP will be preferred.
     </td>
   </tr>
   <tr>
@@ -18029,7 +18030,7 @@ Requires ARMA_USE_LAPACK to be enabled.
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Disable use of the built-in reimplementation of ARPACK; overrides <i>ARMA_USE_NEWARP</i>
+Disable use of NEWARP (built-in alternative to ARPACK); overrides <i>ARMA_USE_NEWARP</i>
     </td>
   </tr>
   <tr>
@@ -18052,7 +18053,8 @@ Disable use of the built-in reimplementation of ARPACK; overrides <i>ARMA_USE_NE
     </td>
     <td style="vertical-align: top;">
 Enable use of ARPACK, or a high-speed replacement for ARPACK.
-Armadillo requires ARPACK for the eigen decomposition of complex sparse matrices, ie. <a href="#eigs_gen">eigs_gen()</a>, <a href="#eigs_sym">eigs_sym()</a> and <a href="#svds">svds()</a>
+Armadillo requires ARPACK for the eigen decomposition of complex sparse matrices, ie. <a href="#eigs_gen">eigs_gen()</a>, <a href="#eigs_sym">eigs_sym()</a> and <a href="#svds">svds()</a>.
+If use of NEWARP is disabled, ARPACK will also be used for the eigen decomposition of real sparse matrices.
     </td>
   </tr>
   <tr>

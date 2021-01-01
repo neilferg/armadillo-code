@@ -41,18 +41,7 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
   superlu_array_wrangler<int> etree(mat_obj.n_cols+1);
 
   // Copy A-shift*I to x
-  bool status_x = false;
-  // If shift==0, use the fast copy function
-  if(shift == eT(0))
-    {
-    arma_extra_debug_print("newarp::SparseGenRealShiftSolve::SparseGenRealShiftSolve(): direct copying");
-    status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), mat_obj);
-    }
-  else
-    {
-    arma_extra_debug_print("newarp::SparseGenRealShiftSolve::SparseGenRealShiftSolve(): copying with shift");
-    status_x = sp_auxlib::copy_to_supermatrix_with_shift(x.get_ref(), mat_obj, shift);
-    }
+  const bool status_x = sp_auxlib::copy_to_supermatrix_with_shift(x.get_ref(), mat_obj, shift);
   
   if(status_x == false)  { arma_stop_runtime_error("newarp::SparseGenRealShiftSolve::SparseGenRealShiftSolve(): could not construct SuperLU matrix"); return; }
 

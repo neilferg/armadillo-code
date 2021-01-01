@@ -64,13 +64,13 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
 template<typename eT>
 inline
 SpSubview<eT>::SpSubview(const SpSubview<eT>& in)
-  : m        (in.m       )
-  , aux_row1 (in.aux_row1)
-  , aux_col1 (in.aux_col1)
-  , n_rows   (in.n_rows  )
-  , n_cols   (in.n_cols  )
-  , n_elem   (in.n_elem  )
-  , n_nonzero(in.nonzero )
+  : m        (in.m        )
+  , aux_row1 (in.aux_row1 )
+  , aux_col1 (in.aux_col1 )
+  , n_rows   (in.n_rows   )
+  , n_cols   (in.n_cols   )
+  , n_elem   (in.n_elem   )
+  , n_nonzero(in.n_nonzero)
   {
   arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
   }

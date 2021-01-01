@@ -1632,8 +1632,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     arrayops::convert(nc->colptr, A.col_ptrs,    A.n_cols+1 );
     arrayops::convert(nc->rowind, A.row_indices, A.n_nonzero);
     
-    out.nrow  = A.n_rows;
-    out.ncol  = A.n_cols;
+    out.nrow  = superlu::int_t(A.n_rows);
+    out.ncol  = superlu::int_t(A.n_cols);
     out.Store = (void*) nc;
     
     return true;
@@ -1748,7 +1748,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       for(; (i < idx_end) && (A.row_indices[i] < j); ++i)
         {
         (*values_current) = A.values[i];
-        (*rowind_current) = A.row_indices[i];
+        (*rowind_current) = superlu::int_t(A.row_indices[i]);
         
         ++values_current;
         ++rowind_current;
@@ -1766,7 +1766,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
         if(new_diag_val != eT(0))
           {
           (*values_current) = new_diag_val;
-          (*rowind_current) = j;
+          (*rowind_current) = superlu::int_t(j);
           
           ++values_current;
           ++rowind_current;
@@ -1783,7 +1783,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
         if(j < n_search_cols)   
           {
           (*values_current) = -shift;
-          (*rowind_current) = j;
+          (*rowind_current) = superlu::int_t(j);
           
           ++values_current;
           ++rowind_current;
@@ -1796,7 +1796,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       for(; i < idx_end; ++i)
         {
         (*values_current) = A.values[i];
-        (*rowind_current) = A.row_indices[i];
+        (*rowind_current) = superlu::int_t(A.row_indices[i]);
         
         ++values_current;
         ++rowind_current;
@@ -1806,15 +1806,15 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       
       // number of non-zero elements in the j-th column of out
       const uword nnz_col = values_current - values_start;
-      nc->colptr[j + 1] = nc->colptr[j] + nnz_col;
+      nc->colptr[j + 1] = superlu::int_t(nc->colptr[j] + nnz_col);
       }
     
     arma_extra_debug_print( arma_str::format("count: %d") % count );
     
     arma_check( (count != out_n_nonzero), "internal error: sp_auxlib::copy_to_supermatrix_with_shift(): count != out_n_nonzero" );
     
-    out.nrow  = A.n_rows;
-    out.ncol  = A.n_cols;
+    out.nrow  = superlu::int_t(A.n_rows);
+    out.ncol  = superlu::int_t(A.n_cols);
     out.Store = (void*) nc;
     
     return true;

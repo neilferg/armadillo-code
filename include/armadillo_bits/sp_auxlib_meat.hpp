@@ -1641,7 +1641,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
   
   
   
-  // memory efficient implemenation of out = A - shift*I, where A is a square matrix
+  // memory efficient implementation of out = A - shift*I, where A is a square matrix
   template<typename eT>
   inline
   bool

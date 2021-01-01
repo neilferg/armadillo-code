@@ -32,7 +32,9 @@ class SparseGenRealShiftSolve
 
 
   public:
-
+  
+  bool valid = false;
+  
   const uword n_rows;  // number of rows of the underlying matrix
   const uword n_cols;  // number of columns of the underlying matrix
 

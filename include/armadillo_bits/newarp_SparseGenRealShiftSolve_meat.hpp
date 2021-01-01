@@ -53,6 +53,7 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
     arma_extra_debug_print("newarp::SparseGenRealShiftSolve::SparseGenRealShiftSolve(): copying with shift");
     status_x = sp_auxlib::copy_to_supermatrix_with_shift(x.get_ref(), mat_obj, shift);
     }
+  
   if(status_x == false)  { arma_stop_runtime_error("newarp::SparseGenRealShiftSolve::SparseGenRealShiftSolve(): could not construct SuperLU matrix"); return; }
 
   int   panel_size = superlu::sp_ispec_environ(1);
@@ -82,6 +83,8 @@ SparseGenRealShiftSolve<eT>::SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, c
     arma_warn("matrix is singular to working precision (rcond: ", x_rcond, ")");
     return;
     }
+  
+  valid = true;
   }
 
 

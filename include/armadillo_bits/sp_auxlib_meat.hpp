@@ -1641,8 +1641,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
   
   
   
-  // Copy A-shift*I to out, assuming A is a square matrix
-  // Useful for eigs_sym() and eigs_gen()
+  // memory efficient implemenation of out = A - shift*I, where A is a square matrix
   template<typename eT>
   inline
   bool
@@ -1652,7 +1651,11 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     arma_debug_check( (A.is_square() == false), "sp_auxlib::copy_to_supermatrix_with_shift(): given matrix must be square sized" );
     
-    if(shift == eT(0))  { return sp_auxlib::copy_to_supermatrix(out, A); }
+    if(shift == eT(0))
+      {
+      arma_extra_debug_print("sp_auxlib::copy_to_supermatrix_with_shift(): shift is zero; redirecting to sp_auxlib::copy_to_supermatrix()");
+      return sp_auxlib::copy_to_supermatrix(out, A);
+      }
     
     // We store in column-major CSC.
     out.Stype = superlu::SLU_NC;
@@ -2183,23 +2186,7 @@ sp_auxlib::run_aupd_shiftinvert
     superlu_supermatrix_wrangler x;
     superlu_supermatrix_wrangler xC;
     
-    bool status_x = false;
-    
-    if(sigma == T(0))
-      {
-      arma_extra_debug_print("run_aupd_shiftinvert(): not subtracting sigma");
-      status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), X);
-      }
-    else
-      {
-      arma_extra_debug_print("run_aupd_shiftinvert(): subtracting sigma");
-      
-      SpMat<T> X_shifted(X);
-      
-      X_shifted.diag() -= sigma;
-      
-      status_x = sp_auxlib::copy_to_supermatrix(x.get_ref(), X_shifted);
-      }
+    const bool status_x = sp_auxlib::copy_to_supermatrix_with_shift(x.get_ref(), X, sigma);
     
     if(status_x == false)
       {

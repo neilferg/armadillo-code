@@ -29,7 +29,7 @@ TEST_CASE("fn_eigs_test")
     for (size_t i = 0; i < 10; ++i)
       {
       dd.sprandu(1000, 1, 0.15);
-      double eig = rand();
+      double eig = 10.0 * randu<double>();
       m += eig * dd * dd.t();
       }
     mat d(m);
@@ -70,8 +70,8 @@ TEST_CASE("fn_eigs_float_test")
     for (size_t i = 0; i < 10; ++i)
       {
       dd.sprandu(100, 1, 0.15);
-      float eig = rand();
-      m += 0.000001 * eig * dd * dd.t();
+      float eig = 10.0 * randu<float>();
+      m += eig * dd * dd.t();
       }
     Mat<float> d(m);
 

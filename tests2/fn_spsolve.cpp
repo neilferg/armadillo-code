@@ -34,10 +34,8 @@ TEST_CASE("fn_spsolve_sparse_test")
 
     sp_mat A;
     A.sprandu(size, size, 0.25);
-    for (uword i = 0; i < size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     mat B = A * rX;
 
@@ -76,10 +74,8 @@ TEST_CASE("fn_spsolve_sparse_nonsymmetric_test")
 
     sp_mat A;
     A.sprandu(r_size, r_size, 0.25);
-    for (uword i = 0; i < r_size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     mat B = A * rX;
 
@@ -119,10 +115,8 @@ TEST_CASE("fn_spsolve_sparse_float_test")
 
     SpMat<float> A;
     A.sprandu(size, size, 0.25);
-    for (uword i = 0; i < size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     fmat B = A * rX;
 
@@ -161,10 +155,8 @@ TEST_CASE("fn_spsolve_sparse_nonsymmetric_float_test")
 
     SpMat<float> A;
     A.sprandu(r_size, r_size, 0.25);
-    for (uword i = 0; i < r_size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     fmat B = A * rX;
 
@@ -204,10 +196,8 @@ TEST_CASE("fn_spsolve_sparse_complex_float_test")
 
     SpMat<cx_float> A;
     A.sprandu(size, size, 0.25);
-    for(uword i = 0; i < size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     Mat<cx_float> B = A * rX;
 
@@ -247,10 +237,8 @@ TEST_CASE("fn_spsolve_sparse_nonsymmetric_complex_float_test")
 
     SpMat<cx_float> A;
     A.sprandu(r_size, r_size, 0.25);
-    for (uword i = 0; i < r_size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     Mat<cx_float> B = A * rX;
 
@@ -291,10 +279,8 @@ TEST_CASE("fn_spsolve_sparse_complex_test")
 
     SpMat<cx_double> A;
     A.sprandu(size, size, 0.25);
-    for (uword i = 0; i < size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     Mat<cx_double> B = A * rX;
 
@@ -334,10 +320,8 @@ TEST_CASE("fn_spsolve_sparse_nonsymmetric_complex_test")
 
     SpMat<cx_double> A;
     A.sprandu(r_size, r_size, 0.25);
-    for (uword i = 0; i < r_size; ++i)
-      {
-      A(i, i) += rand();
-      }
+    A.diag().randu();
+    A.diag() += 1;
 
     Mat<cx_double> B = A * rX;
 
@@ -374,10 +358,8 @@ TEST_CASE("fn_spsolve_delayed_sparse_test")
 
   sp_mat A;
   A.sprandu(size, size, 0.25);
-  for (uword i = 0; i < size; ++i)
-    {
-    A(i, i) += rand();
-    }
+  A.diag().randu();
+  A.diag() += 1;
 
   mat B = A * rX;
 

@@ -141,36 +141,45 @@ TEST_CASE("fn_eigs_sm_test")
 
 TEST_CASE("fn_eigs_sigma_test")
   {
-  for (size_t trial = 0; trial < 10; ++trial)
+  const uword n_trials = 10;
+  
+  uword count = 0;
+  
+  for(uword trial=0; trial < n_trials; ++trial)
     {
     // Test ARPACK decomposition of sparse matrices.
-    sp_mat m(100, 100);
-    for (uword i = 0; i < 100; ++i)
-      {
-      m(i, i) = i + 10;
-      }
+    sp_mat m; m.sprandu(100, 100, 0.1);
+    m = m.t() + m;
+    for(uword i = 0; i < 100; ++i)  { m(i, i) = i + 10; }
     mat d(m);
 
     // Eigendecompose, getting first 5 eigenvectors around 12.1.
     vec sp_eigval;
     mat sp_eigvec;
-    eigs_sym(sp_eigval, sp_eigvec, m, 5, 12.1);
-
+    const bool status_sparse = eigs_sym(sp_eigval, sp_eigvec, m, 5, 12.1);
+    
     // Do the same for the dense case.
     vec eigval;
     mat eigvec;
-    eig_sym(eigval, eigvec, d);
-
-    for (size_t i = 0; i < 5; ++i)
+    const bool status_dense = eig_sym(eigval, eigvec, d);
+    
+    if(status_sparse && status_dense)
       {
-      // It may be pointed the wrong direction.
-      REQUIRE( sp_eigval(i) == Approx(eigval(i)).epsilon(0.01) );
-
-      for (size_t j = 0; j < 100; ++j)
+      ++count;
+      
+      for(uword i = 0; i < 5; ++i)
         {
-        REQUIRE( std::abs(sp_eigvec(j, i)) ==
-                 Approx(std::abs(eigvec(j, i))).epsilon(0.01) );
+        // It may be pointed the wrong direction.
+        REQUIRE( sp_eigval(i) == Approx(eigval(i)).epsilon(0.01) );
+
+        for (size_t j = 0; j < 100; ++j)
+          {
+          REQUIRE( std::abs(sp_eigvec(j, i)) ==
+                   Approx(std::abs(eigvec(j, i))).epsilon(0.01) );
+          }
         }
       }
     }
+  
+  REQUIRE( count > 0 );
   }

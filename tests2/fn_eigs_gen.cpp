@@ -24,7 +24,7 @@ TEST_CASE("fn_eigs_gen_odd_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -46,7 +46,7 @@ TEST_CASE("fn_eigs_gen_odd_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -83,7 +83,7 @@ TEST_CASE("fn_eigs_gen_even_test")
   const uword n_rows = 10;
   const uword n_eigval = 4;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -108,7 +108,7 @@ TEST_CASE("fn_eigs_gen_even_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -145,7 +145,7 @@ TEST_CASE("fn_eigs_gen_even_opts_test")
   const uword n_rows = 10;
   const uword n_eigval = 4;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -171,7 +171,7 @@ TEST_CASE("fn_eigs_gen_even_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -209,7 +209,7 @@ TEST_CASE("fn_eigs_gen_odd_sigma_test")
   const uword n_eigval = 5;
   const double sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -235,7 +235,7 @@ TEST_CASE("fn_eigs_gen_odd_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -273,7 +273,7 @@ TEST_CASE("fn_eigs_gen_even_sigma_test")
   const uword n_eigval = 4;
   const double sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -299,7 +299,7 @@ TEST_CASE("fn_eigs_gen_even_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -337,7 +337,7 @@ TEST_CASE("fn_eigs_gen_even_sigma_opts_test")
   const uword n_eigval = 4;
   const double sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -364,7 +364,7 @@ TEST_CASE("fn_eigs_gen_even_sigma_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -401,7 +401,7 @@ TEST_CASE("fn_eigs_gen_odd_sm_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -427,7 +427,7 @@ TEST_CASE("fn_eigs_gen_odd_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -464,7 +464,7 @@ TEST_CASE("fn_eigs_gen_even_sm_test")
   const uword n_rows = 10;
   const uword n_eigval = 4;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -490,7 +490,7 @@ TEST_CASE("fn_eigs_gen_even_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -527,7 +527,7 @@ TEST_CASE("fn_eigs_gen_even_sm_opts_test")
   const uword n_rows = 10;
   const uword n_eigval = 4;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -554,7 +554,7 @@ TEST_CASE("fn_eigs_gen_even_sm_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -591,7 +591,7 @@ TEST_CASE("fn_eigs_gen_odd_float_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -617,7 +617,7 @@ TEST_CASE("fn_eigs_gen_odd_float_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -654,7 +654,7 @@ TEST_CASE("fn_eigs_gen_even_float_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -680,7 +680,7 @@ TEST_CASE("fn_eigs_gen_even_float_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -717,7 +717,7 @@ TEST_CASE("fn_eigs_gen_even_float_opts_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -744,7 +744,7 @@ TEST_CASE("fn_eigs_gen_even_float_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -782,7 +782,7 @@ TEST_CASE("fn_eigs_gen_odd_float_sigma_test")
   const uword n_eigval = 5;
   const float sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -809,7 +809,7 @@ TEST_CASE("fn_eigs_gen_odd_float_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -847,7 +847,7 @@ TEST_CASE("fn_eigs_gen_even_float_sigma_test")
   const uword n_eigval = 8;
   const float sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -874,7 +874,7 @@ TEST_CASE("fn_eigs_gen_even_float_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -912,7 +912,7 @@ TEST_CASE("fn_eigs_gen_even_float_sigma_opts_test")
   const uword n_eigval = 8;
   const float sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -940,7 +940,7 @@ TEST_CASE("fn_eigs_gen_even_float_sigma_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -977,7 +977,7 @@ TEST_CASE("fn_eigs_gen_odd_float_sm_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1004,7 +1004,7 @@ TEST_CASE("fn_eigs_gen_odd_float_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1041,7 +1041,7 @@ TEST_CASE("fn_eigs_gen_even_float_sm_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1068,7 +1068,7 @@ TEST_CASE("fn_eigs_gen_even_float_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1105,7 +1105,7 @@ TEST_CASE("fn_eigs_gen_even_float_sm_opts_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1133,7 +1133,7 @@ TEST_CASE("fn_eigs_gen_even_float_sm_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1170,7 +1170,7 @@ TEST_CASE("fn_eigs_gen_odd_complex_float_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1192,7 +1192,7 @@ TEST_CASE("fn_eigs_gen_odd_complex_float_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1229,7 +1229,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1251,7 +1251,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1288,7 +1288,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_opts_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1311,7 +1311,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1349,7 +1349,7 @@ TEST_CASE("fn_eigs_gen_odd_complex_float_sigma_test")
   const uword n_eigval = 5;
   const cx_float sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1375,7 +1375,7 @@ TEST_CASE("fn_eigs_gen_odd_complex_float_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1413,7 +1413,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sigma_test")
   const uword n_eigval = 8;
   const cx_float sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1439,7 +1439,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1477,7 +1477,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sigma_opts_test")
   const uword n_eigval = 8;
   const cx_float sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1504,7 +1504,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sigma_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1541,7 +1541,7 @@ TEST_CASE("fn_eigs_gen_odd_complex_float_sm_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1567,7 +1567,7 @@ TEST_CASE("fn_eigs_gen_odd_complex_float_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1604,7 +1604,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sm_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1630,7 +1630,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1667,7 +1667,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sm_opts_test")
   const uword n_rows = 12;
   const uword n_eigval = 8;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1694,7 +1694,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_sm_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1731,7 +1731,7 @@ TEST_CASE("eigs_gen_odd_complex_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1753,7 +1753,7 @@ TEST_CASE("eigs_gen_odd_complex_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1790,7 +1790,7 @@ TEST_CASE("fn_eigs_gen_even_complex_test")
   const uword n_rows = 15;
   const uword n_eigval = 6;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1812,7 +1812,7 @@ TEST_CASE("fn_eigs_gen_even_complex_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1849,7 +1849,7 @@ TEST_CASE("fn_eigs_gen_even_complex_opts_test")
   const uword n_rows = 15;
   const uword n_eigval = 6;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1872,7 +1872,7 @@ TEST_CASE("fn_eigs_gen_even_complex_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1910,7 +1910,7 @@ TEST_CASE("eigs_gen_odd_complex_sigma_test")
   const uword n_eigval = 5;
   const cx_double sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -1936,7 +1936,7 @@ TEST_CASE("eigs_gen_odd_complex_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -1974,7 +1974,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sigma_test")
   const uword n_eigval = 6;
   const cx_double sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -2000,7 +2000,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sigma_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -2038,7 +2038,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sigma_opts_test")
   const uword n_eigval = 6;
   const cx_double sigma = 1.0;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -2065,7 +2065,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sigma_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -2102,7 +2102,7 @@ TEST_CASE("eigs_gen_odd_complex_sm_test")
   const uword n_rows = 10;
   const uword n_eigval = 5;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -2125,7 +2125,7 @@ TEST_CASE("eigs_gen_odd_complex_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -2162,7 +2162,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sm_test")
   const uword n_rows = 15;
   const uword n_eigval = 6;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -2185,7 +2185,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sm_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
@@ -2222,7 +2222,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sm_opts_test")
   const uword n_rows = 15;
   const uword n_eigval = 6;
   const uword n_trials = 10;
-  const uword count = 0;
+  uword count = 0;
   
   for(uword trial=0; trial < n_trials; ++trial)
     {
@@ -2246,7 +2246,7 @@ TEST_CASE("fn_eigs_gen_even_complex_sm_opts_test")
     
     uvec used(n_rows, fill::zeros);
 
-    for(uword i 0; i < n_eigval; ++i)
+    for(uword i=0; i < n_eigval; ++i)
       {
       // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.

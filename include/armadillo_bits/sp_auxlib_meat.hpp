@@ -108,32 +108,22 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   {
   arma_extra_debug_sigprint();
   
+  const unwrap_spmat<T1> U(X.get_ref());
+  
+  arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
+  
+  if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
+    {
+    if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
+    if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
+    }
+  
   #if   (defined(ARMA_USE_NEWARP) && defined(ARMA_USE_SUPERLU))
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-    
-    arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
-    
-    if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
-      {
-      if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
-      if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
-      }
-    
     return sp_auxlib::eigs_sym_newarp(eigval, eigvec, U.M, n_eigvals, sigma, opts);
     }
   #elif (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-    
-    arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
-    
-    if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
-      {
-      if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
-      if(is_cx<eT>::yes)  { arma_debug_warn("eigs_sym(): given matrix is not hermitian"); }
-      }
-    
     constexpr form_type form_val = form_sigma;
     
     return sp_auxlib::eigs_sym_arpack<eT,true>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
@@ -142,7 +132,6 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(sigma);
     arma_ignore(opts);
@@ -531,23 +520,19 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   {
   arma_extra_debug_sigprint();
   
+  const unwrap_spmat<T1> U(X.get_ref());
+  
+  arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
+  
   // TODO: investigate optional redirection of "sm" to ARPACK as it's capable of shift-invert;
   // TODO: in shift-invert mode, "sm" maps to "lm" of the shift-inverted matrix (with sigma = 0)
   
   #if defined(ARMA_USE_NEWARP)
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-    
-    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
-    
     return sp_auxlib::eigs_gen_newarp(eigval, eigvec, U.M, n_eigvals, form_val, opts);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-    
-    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
-    
     constexpr std::complex<T> sigma = T(0);
     
     return sp_auxlib::eigs_gen_arpack<T,false>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
@@ -556,7 +541,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(form_val);
     arma_ignore(opts);
@@ -577,12 +561,12 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   {
   arma_extra_debug_sigprint();
   
+  const unwrap_spmat<T1> U(X.get_ref());
+  
+  arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
+  
   #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-    
-    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
-    
     constexpr form_type form_val = form_sigma;
     
     return sp_auxlib::eigs_gen_arpack<T,true>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
@@ -591,7 +575,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(sigma);
     arma_ignore(opts);
@@ -985,12 +968,12 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   {
   arma_extra_debug_sigprint();
   
+  const unwrap_spmat<T1> U(X.get_ref());
+  
+  arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
+  
   #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
-    const unwrap_spmat<T1> U(X.get_ref());
-    
-    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
-    
     constexpr form_type form_val = form_sigma;
     
     return sp_auxlib::eigs_gen<T, true>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
@@ -999,7 +982,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
-    arma_ignore(X);
     arma_ignore(n_eigvals);
     arma_ignore(sigma);
     arma_ignore(opts);

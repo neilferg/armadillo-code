@@ -435,7 +435,6 @@ SpSubview<eT>::operator%=(const SpBase<eT, T1>& x)
 
 
 
-//! If you are using this function, you are probably misguided.
 template<typename eT>
 template<typename T1>
 inline
@@ -443,6 +442,8 @@ const SpSubview<eT>&
 SpSubview<eT>::operator/=(const SpBase<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
+  
+  // NOTE: use of this function is not advised; it is implemented only for completeness
   
   SpProxy<T1> p(x.get_ref());
   

@@ -2669,12 +2669,12 @@ Mat<eT>::operator/=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
   
+  // NOTE: use of this function is not advised; it is implemented only for completeness 
+  
   const SpProxy<T1> p(m.get_ref());
   
   arma_debug_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise division");
   
-  // If you use this method, you are probably stupid or misguided, but for completeness it is implemented.
-  // Unfortunately the best way to do this is loop over every element.
   for(uword c = 0; c < n_cols; ++c)
   for(uword r = 0; r < n_rows; ++r)
     {

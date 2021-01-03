@@ -100,9 +100,8 @@ struct SpBase
   inline arma_warn_unused bool has_inf()    const;
   inline arma_warn_unused bool has_nan()    const;
   
-  inline const SpOp<derived,spop_vectorise_col> as_col() const;
-  inline const SpOp<derived,spop_vectorise_row> as_row() const;
-  
+  inline arma_warn_unused const SpOp<derived,spop_vectorise_col> as_col() const;
+  inline arma_warn_unused const SpOp<derived,spop_vectorise_row> as_row() const;
   };
 
 

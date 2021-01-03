@@ -105,9 +105,13 @@ class sp_auxlib
     
     template<typename eT>
     inline static bool copy_to_supermatrix(superlu::SuperMatrix& out, const SpMat<eT>& A);
-
+    
     template<typename eT>
     inline static bool copy_to_supermatrix_with_shift(superlu::SuperMatrix& out, const SpMat<eT>& A, const eT shift);
+    
+    // // for debugging only
+    // template<typename eT>
+    // inline static void copy_to_spmat(SpMat<eT>& out, const superlu::SuperMatrix& A);
     
     template<typename eT>
     inline static bool wrap_to_supermatrix(superlu::SuperMatrix& out, const Mat<eT>& A);

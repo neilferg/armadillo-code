@@ -1822,6 +1822,46 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
   
   
   
+//   // for debugging only
+//   template<typename eT>
+//   inline
+//   void
+//   sp_auxlib::copy_to_spmat(SpMat<eT>& out, const superlu::SuperMatrix& A)
+//     {
+//     arma_extra_debug_sigprint();
+//     
+//     bool type_matched = false;
+//     
+//          if(    is_float<eT>::value)  { type_matched = (A.Dtype == superlu::SLU_S); }
+//     else if(   is_double<eT>::value)  { type_matched = (A.Dtype == superlu::SLU_D); }
+//     else if( is_cx_float<eT>::value)  { type_matched = (A.Dtype == superlu::SLU_C); }
+//     else if(is_cx_double<eT>::value)  { type_matched = (A.Dtype == superlu::SLU_Z); }
+//     
+//     arma_debug_check( (type_matched == false),      "copy_to_spmat(): type mismatch"  );
+//     arma_debug_check( (A.Mtype != superlu::SLU_GE), "copy_to_spmat(): unknown layout" );
+//     
+//     const superlu::NCformat* nc = (const superlu::NCformat*)(A.Store);
+//     
+//     if(nc == nullptr)  { out.reset(); return; }
+//     
+//     if( (nc->nzval == nullptr) || (nc->colptr == nullptr) || (nc->rowind == nullptr) )  { out.reset(); return; }
+//     
+//     const uword A_n_rows    = uword(A.nrow );
+//     const uword A_n_cols    = uword(A.ncol );
+//     const uword A_n_nonzero = uword(nc->nnz);
+//     
+//     if(A_n_nonzero == 0)  { out.zeros(A_n_rows, A_n_cols); return; }
+//     
+//     out.reserve(A_n_rows, A_n_cols, A_n_nonzero);
+//     
+//     arrayops::copy(access::rwp(out.values), (const eT*)(nc->nzval), A_n_nonzero);
+//     
+//     arrayops::convert(access::rwp(out.col_ptrs),    nc->colptr, A_n_cols+1 );
+//     arrayops::convert(access::rwp(out.row_indices), nc->rowind, A_n_nonzero);
+//     }
+  
+  
+  
   template<typename eT>
   inline
   bool
@@ -2194,6 +2234,30 @@ sp_auxlib::run_aupd_shiftinvert
       info = blas_int(-1);
       return;
       }
+    
+    // // for debugging only
+    // if(true)
+    //   {
+    //   cout << "*** testing output of copy_to_supermatrix_with_shift()" << endl;
+    //   cout << "*** sigma: " << sigma << endl;
+    //   
+    //   SpMat<T> Y(X);
+    //   Y.diag() -= sigma;
+    //   
+    //   SpMat<T> Z;
+    //   
+    //   sp_auxlib::copy_to_spmat(Z, x.get_ref());
+    //   
+    //   cout << "*** size(Y): " << arma::size(Y) << endl;
+    //   cout << "*** size(Z): " << arma::size(Z) << endl;
+    //   cout << "*** accu(abs(Y)): " << accu(abs(Y)) << endl;
+    //   cout << "*** accu(abs(Z)): " << accu(abs(Z)) << endl;
+    //   
+    //   if(arma::size(Y) == arma::size(Z))
+    //     {
+    //     cout << "*** error: " << accu(abs(Y-Z)) << endl;
+    //     }
+    //   }
     
     superlu_supermatrix_wrangler l;
     superlu_supermatrix_wrangler u;

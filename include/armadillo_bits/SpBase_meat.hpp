@@ -714,6 +714,7 @@ SpBase<elem_type,derived>::has_nan() const
 
 template<typename elem_type, typename derived>
 inline
+arma_warn_unused
 const SpOp<derived,spop_vectorise_col>
 SpBase<elem_type, derived>::as_col() const
   {
@@ -724,6 +725,7 @@ SpBase<elem_type, derived>::as_col() const
 
 template<typename elem_type, typename derived>
 inline
+arma_warn_unused
 const SpOp<derived,spop_vectorise_row>
 SpBase<elem_type, derived>::as_row() const
   {

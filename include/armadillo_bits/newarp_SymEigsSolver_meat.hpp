@@ -365,10 +365,7 @@ SymEigsSolver<eT, SelectionRule, OpType>::init(eT* init_resid)
 
   // In some cases f is zero in exact arithmetics, but due to rounding errors
   // it may contain tiny fluctuations. When this happens, we force f to be zero
-  if(abs(fac_f).max() < eps)
-    {
-      fac_f.zeros();
-    }
+  if(abs(fac_f).max() < eps)  { fac_f.zeros(); }
   }
 
 

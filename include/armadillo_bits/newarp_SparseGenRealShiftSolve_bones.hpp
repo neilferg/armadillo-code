@@ -23,23 +23,25 @@ template<typename eT>
 class SparseGenRealShiftSolve
   {
   private:
-
-  // The following objects are read-only in perform_op()
-  mutable superlu_supermatrix_wrangler l;
-  mutable superlu_supermatrix_wrangler u;
-  mutable superlu_array_wrangler<int>  perm_c;
-  mutable superlu_array_wrangler<int>  perm_r;
-
-
+  
+  #if defined(ARMA_USE_SUPERLU)
+    // The following objects are read-only in perform_op()
+    mutable superlu_supermatrix_wrangler l;
+    mutable superlu_supermatrix_wrangler u;
+    mutable superlu_array_wrangler<int>  perm_c;
+    mutable superlu_array_wrangler<int>  perm_r;
+  #endif
+  
+  
   public:
   
   bool valid = false;
   
   const uword n_rows;  // number of rows of the underlying matrix
   const uword n_cols;  // number of columns of the underlying matrix
-
+  
   inline SparseGenRealShiftSolve(const SpMat<eT>& mat_obj, const eT shift);
-
+  
   inline void perform_op(eT* x_in, eT* y_out) const;
   };
 

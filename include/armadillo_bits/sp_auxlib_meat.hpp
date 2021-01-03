@@ -487,11 +487,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arpack::seupd(&rvec, &howmny, select.memptr(), eigval.memptr(), eigvec.memptr(), &ldz, (eT*) &sigma, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
     
     // Check for errors.
-    if(info != 0)
-      {
-      arma_debug_warn("eigs_sym(): ARPACK error ", info, " in seupd()");
-      return false;
-      }
+    if(info != 0)  { arma_debug_warn("eigs_sym(): ARPACK error ", info, " in seupd()"); return false; }
     
     return (info == 0);
     }
@@ -835,11 +831,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     if(use_sigma)
     //if(form_val == form_sigma)
       {
-      if(sigmai != T(0))
-        {
-        arma_stop_logic_error("eigs_gen(): complex 'sigma' not applicable to real matrix");
-        return false;
-        }
+      if(sigmai != T(0))  { arma_stop_logic_error("eigs_gen(): complex 'sigma' not applicable to real matrix"); return false; }
     
       run_aupd_shiftinvert(n_eigvals, sigmar, X, false /* gen, not sym */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
       }
@@ -848,10 +840,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       run_aupd_plain(n_eigvals, which, X, false /* gen, not sym */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
       }
     
-    if(info != 0)
-      {
-      return false;
-      }
+    if(info != 0)  { return false; }
 
     // The process has converged, and now we need to recover the actual eigenvectors using neupd().
     blas_int rvec = 1; // .TRUE
@@ -874,11 +863,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) &sigmar, (T*) &sigmai, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
-    if(info != 0)
-      {
-      arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()");
-      return false;
-      }
+    if(info != 0)  { arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
     
     // Put it into the outputs.
     eigval.set_size(n_eigvals);
@@ -1088,10 +1073,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       run_aupd_plain(n_eigvals, which, X, false /* gen, not sym */, n, tol, maxiter, resid, ncv, v, ldv, iparam, ipntr, workd, workl, lworkl, rwork, info);
       }
     
-    if(info != 0)
-      {
-      return false;
-      }
+    if(info != 0)  { return false; }
     
     // The process has converged, and now we need to recover the actual eigenvectors using neupd().
     blas_int rvec = 1; // .TRUE
@@ -1114,11 +1096,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 (std::complex<T>*) NULL, eigvec.memptr(), &ldz, (std::complex<T>*) &sigma, (std::complex<T>*) NULL, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
-    if(info != 0)
-      {
-      arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()");
-      return false;
-      }
+    if(info != 0)  { arma_debug_warn("eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
     
     return (info == 0);
     }
@@ -1206,11 +1184,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     const bool status_x = wrap_to_supermatrix(x.get_ref(), X);
     const bool status_a = copy_to_supermatrix(a.get_ref(), A);
     
-    if( (status_x == false) || (status_a == false) )
-      {
-      X.soft_reset();
-      return false;
-      }
+    if( (status_x == false) || (status_a == false) )  { X.soft_reset(); return false; }
     
     superlu_supermatrix_wrangler l;
     superlu_supermatrix_wrangler u;
@@ -1343,11 +1317,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     const bool status_a = copy_to_supermatrix(a.get_ref(), A);  // NOTE: superlu::gssvx() modifies 'a' if equilibration is enabled
     const bool status_b = wrap_to_supermatrix(b.get_ref(), B);  // NOTE: superlu::gssvx() modifies 'b' if equilibration is enabled
     
-    if( (status_x == false) || (status_a == false) || (status_b == false) )
-      {
-      X.soft_reset();
-      return false;
-      }
+    if( (status_x == false) || (status_a == false) || (status_b == false) )  { X.soft_reset(); return false; }
     
     superlu_supermatrix_wrangler l;
     superlu_supermatrix_wrangler u;

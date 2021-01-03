@@ -63,6 +63,8 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   
   const unwrap_spmat<T1> U(X.get_ref());
   
+  arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
+  
   if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
     {
     if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
@@ -110,6 +112,8 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     {
     const unwrap_spmat<T1> U(X.get_ref());
     
+    arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
+    
     if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
       {
       if(is_cx<eT>::no )  { arma_debug_warn("eigs_sym(): given matrix is not symmetric"); }
@@ -121,6 +125,8 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   #elif (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
     const unwrap_spmat<T1> U(X.get_ref());
+    
+    arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
     
     if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
       {
@@ -160,9 +166,9 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     {
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_la) && (form_val != form_sa), "eigs_sym(): unknown form specified" );
     
-    const newarp::SparseGenMatProd<eT> op(X);
+    if(X.is_square() == false)  { return false; }
     
-    arma_debug_check( (op.n_rows != op.n_cols), "eigs_sym(): given matrix must be square sized" );
+    const newarp::SparseGenMatProd<eT> op(X);
     
     arma_debug_check( (n_eigvals >= op.n_rows), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix" );
     
@@ -291,11 +297,11 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
   
   #if defined(ARMA_USE_NEWARP)
     {
+    if(X.is_square() == false)  { return false; }
+    
     const newarp::SparseGenRealShiftSolve<eT> op(X, sigma);
     
     if(op.valid == false)  { return false; }
-    
-    arma_debug_check( (op.n_rows != op.n_cols), "eigs_sym(): given matrix must be square sized" );
     
     arma_debug_check( (n_eigvals >= op.n_rows), "eigs_sym(): n_eigvals must be less than the number of rows in the matrix" );
     
@@ -396,6 +402,8 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     {
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_la) && (form_val != form_sa) && (form_val != form_sigma), "eigs_sym(): unknown form specified" );
     
+    if(X.is_square() == false)  { return false; }
+    
     char  which_sm[3] = "SM";
     char  which_lm[3] = "LM";
     char  which_sa[3] = "SA";
@@ -411,9 +419,6 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
       
       default:       which = which_lm;  break;
       }
-    
-    // Make sure it's square.
-    arma_debug_check( (X.n_rows != X.n_cols), "eigs_sym(): given matrix must be square sized" );
     
     // Make sure we aren't asking for every eigenvalue.
     // The _saupd() functions allow asking for one more eigenvalue than the _naupd() functions.
@@ -533,11 +538,15 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     const unwrap_spmat<T1> U(X.get_ref());
     
+    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
+    
     return sp_auxlib::eigs_gen_newarp(eigval, eigvec, U.M, n_eigvals, form_val, opts);
     }
   #elif defined(ARMA_USE_ARPACK)
     {
     const unwrap_spmat<T1> U(X.get_ref());
+    
+    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
     
     constexpr std::complex<T> sigma = T(0);
     
@@ -572,6 +581,8 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     {
     const unwrap_spmat<T1> U(X.get_ref());
     
+    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
+    
     constexpr form_type form_val = form_sigma;
     
     return sp_auxlib::eigs_gen_arpack<T,true>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
@@ -604,9 +615,9 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     {
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si), "eigs_gen(): unknown form specified" );
     
-    const newarp::SparseGenMatProd<T> op(X);
+    if(X.is_square() == false)  { return false; }
     
-    arma_debug_check( (op.n_rows != op.n_cols), "eigs_gen(): given matrix must be square sized" );
+    const newarp::SparseGenMatProd<T> op(X);
     
     arma_debug_check( (n_eigvals + 1 >= op.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
     
@@ -756,6 +767,8 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     {
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si) && (form_val != form_sigma), "eigs_gen(): unknown form specified" );
     
+    if(X.is_square() == false)  { return false; }
+    
     char which_lm[3] = "LM";
     char which_sm[3] = "SM";
     char which_lr[3] = "LR";
@@ -776,9 +789,6 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
       
       default:       which = which_lm;
       }
-    
-    // Make sure it's square.
-    arma_debug_check( (X.n_rows != X.n_cols), "eigs_gen(): given matrix must be square sized" );
     
     // Make sure we aren't asking for every eigenvalue.
     arma_debug_check( (n_eigvals + 1 >= X.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );
@@ -958,11 +968,11 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   
   const unwrap_spmat<T1> U(X_expr.get_ref());
   
-  const SpMat< std::complex<T> >& X = U.M;
+  arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
   
   constexpr std::complex<T> sigma = T(0);
   
-  return sp_auxlib::eigs_gen<T, false>(eigval, eigvec, X, n_eigvals, form_val, sigma, opts);
+  return sp_auxlib::eigs_gen<T, false>(eigval, eigvec, U.M, n_eigvals, form_val, sigma, opts);
   }
 
 
@@ -978,6 +988,8 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
   #if (defined(ARMA_USE_ARPACK) && defined(ARMA_USE_SUPERLU))
     {
     const unwrap_spmat<T1> U(X.get_ref());
+    
+    arma_debug_check( (U.M.is_square() == false), "eigs_gen(): given matrix must be square sized" );
     
     constexpr form_type form_val = form_sigma;
     
@@ -1013,6 +1025,8 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     
     arma_debug_check( (form_val != form_lm) && (form_val != form_sm) && (form_val != form_lr) && (form_val != form_sr) && (form_val != form_li) && (form_val != form_si) && (form_val != form_sigma), "eigs_gen(): unknown form specified" );
     
+    if(X.is_square() == false)  { return false; }
+    
     char which_lm[3] = "LM";
     char which_sm[3] = "SM";
     char which_lr[3] = "LR";
@@ -1033,9 +1047,6 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
       
       default:       which = which_lm;
       }
-    
-    // Make sure it's square.
-    arma_debug_check( (X.n_rows != X.n_cols), "eigs_gen(): given matrix must be square sized" );
     
     // Make sure we aren't asking for every eigenvalue.
     arma_debug_check( (n_eigvals + 1 >= X.n_rows), "eigs_gen(): n_eigvals + 1 must be less than the number of rows in the matrix" );

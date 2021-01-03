@@ -136,7 +136,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
     arma_ignore(sigma);
     arma_ignore(opts);
     
-    arma_stop_logic_error("eigs_sym(): use of SuperLU must be enabled to use 'sigma'");
+    arma_stop_logic_error("eigs_sym(): use of NEWARP or ARPACK as well as SuperLU must be enabled to use 'sigma'");
     return false;
     }
   #endif

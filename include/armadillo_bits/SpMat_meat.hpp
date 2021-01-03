@@ -782,16 +782,14 @@ SpMat<eT>::operator/=(const SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
+  // NOTE: use of this function is not advised; it is implemented only for completeness
+  
   arma_debug_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
   
-  // If you use this method, you are probably stupid or misguided,
-  // but for compatibility with Mat, we have implemented it anyway.
   for(uword c = 0; c < n_cols; ++c)
+  for(uword r = 0; r < n_rows; ++r)
     {
-    for(uword r = 0; r < n_rows; ++r)
-      {
-      at(r, c) /= x.at(r, c);
-      }
+    at(r, c) /= x.at(r, c);
     }
   
   return *this;

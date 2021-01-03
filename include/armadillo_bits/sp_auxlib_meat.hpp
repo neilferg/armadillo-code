@@ -1570,7 +1570,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     // We have to actually create the object which stores the data.
     // This gets cleaned by destroy_supermatrix().
-    // We have to use SuperLU's stupid memory allocation routines since they are
+    // We have to use SuperLU's problematic memory allocation routines since they are
     // not guaranteed to be new and delete.  See the comments in def_superlu.hpp
     superlu::NCformat* nc = (superlu::NCformat*)superlu::malloc(sizeof(superlu::NCformat));
     

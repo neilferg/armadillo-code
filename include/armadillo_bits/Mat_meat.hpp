@@ -7401,7 +7401,7 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_stat
     save_okay = diskio::save_hdf5_binary(*this, spec, err_msg);
     }
   
-  if((print_status == true) && (save_okay == false))
+  if(print_status && (save_okay == false))
     {
     if(err_msg.length() > 0)
       {
@@ -7485,7 +7485,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
-  if((print_status == true) && (save_okay == false))
+  if(print_status && (save_okay == false))
     {
     arma_debug_warn("Mat::save(): couldn't write to ", spec.filename);
     }
@@ -7599,7 +7599,7 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       load_okay = false;
     }
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -7655,7 +7655,7 @@ Mat<eT>::load(const hdf5_name& spec, const file_type type, const bool print_stat
     }
   
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -7811,7 +7811,7 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       load_okay = false;
     }
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {

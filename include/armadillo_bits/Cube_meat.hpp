@@ -3467,7 +3467,7 @@ Cube<eT>::in_range(const span& x) const
   {
   arma_extra_debug_sigprint();
   
-  if(x.whole == true)
+  if(x.whole)
     {
     return true;
     }
@@ -3517,7 +3517,7 @@ Cube<eT>::in_range(const span& row_span, const span& col_span, const span& slice
   const bool slices_ok = slice_span.whole ? true : ( (in_slice1 <= in_slice2) && (in_slice2 < n_slices) );
   
   
-  return ( (rows_ok == true) && (cols_ok == true) && (slices_ok == true) );
+  return ( (rows_ok) && (cols_ok) && (slices_ok) );
   }
 
 
@@ -4346,7 +4346,7 @@ Cube<eT>::save(const hdf5_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_hdf5_binary(*this, spec, err_msg);
     }
   
-  if((print_status == true) && (save_okay == false))
+  if(print_status) && (save_okay == false))
     {
     if(err_msg.length() > 0)
       {
@@ -4459,7 +4459,7 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
       load_okay = false;
     }
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -4515,7 +4515,7 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type, const bool print_sta
     }
   
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -4580,7 +4580,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
       load_okay = false;
     }
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {

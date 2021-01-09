@@ -1520,7 +1520,7 @@ subview<eT>::extract(Mat<eT>& out, const subview<eT>& in)
   arma_extra_debug_print(arma_str::format("out.n_rows = %d   out.n_cols = %d    in.m.n_rows = %d  in.m.n_cols = %d") % out.n_rows % out.n_cols % in.m.n_rows % in.m.n_cols );
   
   
-  if(in.is_vec() == true)
+  if(in.is_vec())
     {
     if(n_cols == 1)   // a column vector
       {

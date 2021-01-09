@@ -3611,7 +3611,7 @@ SpMat<eT>::in_range(const span& x) const
   {
   arma_extra_debug_sigprint();
   
-  if(x.whole == true)
+  if(x.whole)
     {
     return true;
     }
@@ -3646,7 +3646,7 @@ SpMat<eT>::in_range(const span& row_span, const uword in_col) const
   {
   arma_extra_debug_sigprint();
   
-  if(row_span.whole == true)
+  if(row_span.whole)
     {
     return (in_col < n_cols);
     }
@@ -3669,7 +3669,7 @@ SpMat<eT>::in_range(const uword in_row, const span& col_span) const
   {
   arma_extra_debug_sigprint();
   
-  if(col_span.whole == true)
+  if(col_span.whole)
     {
     return (in_row < n_rows);
     }
@@ -3701,7 +3701,7 @@ SpMat<eT>::in_range(const span& row_span, const span& col_span) const
   const bool rows_ok = row_span.whole ? true : ( (in_row1 <= in_row2) && (in_row2 < n_rows) );
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
   
-  return ( (rows_ok == true) && (cols_ok == true) );
+  return ( (rows_ok) && (cols_ok) );
   }
 
 
@@ -4626,7 +4626,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
-  if((print_status == true) && (save_okay == false))
+  if((print_status) && (save_okay == false))
     {
     arma_debug_warn("SpMat::save(): couldn't write to ", spec.filename);
     }
@@ -4785,7 +4785,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
     load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
     }
   
-  if(print_status == true)
+  if(print_status)
     {
     if(load_okay == false)
       {
@@ -5798,7 +5798,7 @@ SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
   
   const SpProxy<T1> P(A.get_ref());
   
-  if( (P.is_alias(*this) == true) || (is_SpMat<typename SpProxy<T1>::stored_type>::value == true) )
+  if( P.is_alias(*this) || (is_SpMat<typename SpProxy<T1>::stored_type>::value) )
     {
     // NOTE: unwrap_spmat will convert a submatrix to a matrix, which in effect takes care of aliasing with submatrices;
     // NOTE: however, when more delayed ops are implemented, more elaborate handling of aliasing will be necessary

@@ -1525,7 +1525,7 @@ field<oT>::in_range(const span& x) const
   {
   arma_extra_debug_sigprint();
   
-  if(x.whole == true)
+  if(x.whole)
     {
     return true;
     }
@@ -1560,7 +1560,7 @@ field<oT>::in_range(const span& row_span, const uword in_col) const
   {
   arma_extra_debug_sigprint();
   
-  if(row_span.whole == true)
+  if(row_span.whole)
     {
     return (in_col < n_cols);
     }
@@ -1583,7 +1583,7 @@ field<oT>::in_range(const uword in_row, const span& col_span) const
   {
   arma_extra_debug_sigprint();
   
-  if(col_span.whole == true)
+  if(col_span.whole)
     {
     return (in_row < n_rows);
     }
@@ -1615,7 +1615,7 @@ field<oT>::in_range(const span& row_span, const span& col_span) const
   const bool rows_ok = row_span.whole ? true : ( (in_row1 <= in_row2) && (in_row2 < n_rows) );
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
   
-  return ( (rows_ok == true) && (cols_ok == true) );
+  return ( (rows_ok) && (cols_ok) );
   }
 
 
@@ -1673,7 +1673,7 @@ field<oT>::in_range(const span& row_span, const span& col_span, const span& slic
   const bool   cols_ok =   col_span.whole ? true : ( (in_col1   <= in_col2  ) && (in_col2   < n_cols  ) );
   const bool slices_ok = slice_span.whole ? true : ( (in_slice1 <= in_slice2) && (in_slice2 < n_slices) );
   
-  return ( (rows_ok == true) && (cols_ok == true) && (slices_ok == true) );
+  return ( (rows_ok) && (cols_ok) && (slices_ok) );
   }
 
 
@@ -1711,7 +1711,7 @@ field<oT>::save(const std::string name, const file_type type, const bool print_s
   std::string err_msg;
   const bool save_okay = field_aux::save(*this, name, type, err_msg);
   
-  if( (print_status == true) && (save_okay == false) )
+  if( (print_status) && (save_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -1739,7 +1739,7 @@ field<oT>::save(std::ostream& os, const file_type type, const bool print_status)
   std::string err_msg;
   const bool save_okay = field_aux::save(*this, os, type, err_msg);
   
-  if( (print_status == true) && (save_okay == false) )
+  if( (print_status) && (save_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -1767,7 +1767,7 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
   std::string err_msg;
   const bool load_okay = field_aux::load(*this, name, type, err_msg);
   
-  if( (print_status == true) && (load_okay == false) )
+  if( (print_status) && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -1800,7 +1800,7 @@ field<oT>::load(std::istream& is, const file_type type, const bool print_status)
   std::string err_msg;
   const bool load_okay = field_aux::load(*this, is, type, err_msg);
   
-  if( (print_status == true) && (load_okay == false) )
+  if( (print_status) && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {

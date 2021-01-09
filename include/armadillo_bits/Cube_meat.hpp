@@ -4346,7 +4346,7 @@ Cube<eT>::save(const hdf5_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_hdf5_binary(*this, spec, err_msg);
     }
   
-  if(print_status) && (save_okay == false))
+  if(print_status && (save_okay == false))
     {
     if(err_msg.length() > 0)
       {

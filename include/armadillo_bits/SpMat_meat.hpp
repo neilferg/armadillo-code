@@ -339,10 +339,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   const uword N_old = vals.n_elem;
         uword N_new = 0;
   
-  for(uword i = 0; i < N_old; ++i)
-    {
-    if(vals[i] != eT(0))  { ++N_new; }
-    }
+  for(uword i=0; i < N_old; ++i)  { N_new += (vals[i] != eT(0)) ? uword(1) : uword(0); }
   
   if(N_new != N_old)
     {
@@ -412,10 +409,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
     const uword N_old = vals.n_elem;
           uword N_new = 0;
     
-    for(uword i = 0; i < N_old; ++i)
-      {
-      if(vals[i] != eT(0))  { ++N_new; }
-      }
+    for(uword i=0; i < N_old; ++i)  { N_new += (vals[i] != eT(0)) ? uword(1) : uword(0); }
     
     if(N_new != N_old)
       {
@@ -484,10 +478,7 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
     const uword N_old = vals.n_elem;
           uword N_new = 0;
     
-    for(uword i = 0; i < N_old; ++i)
-      {
-      if(vals[i] != eT(0))  { ++N_new; }
-      }
+    for(uword i=0; i < N_old; ++i)  { N_new += (vals[i] != eT(0)) ? uword(1) : uword(0); }
     
     if(N_new != N_old)
       {
@@ -597,9 +588,9 @@ SpMat<eT>::operator=(const eT val)
     init(1, 1, 1); // Sets col_ptrs to 0.
     
     // Manually set element.
-    access::rw(values[0]) = val;
+    access::rw(values[0])      = val;
     access::rw(row_indices[0]) = 0;
-    access::rw(col_ptrs[1]) = 1;
+    access::rw(col_ptrs[1])    = 1;
     }
   else
     {
@@ -972,10 +963,7 @@ SpMat<eT>::operator=(const Base<eT, T1>& expr)
   
   const eT* x_mem = x.memptr();
   
-  for(uword i = 0; i < x_n_elem; ++i)
-    {
-    n += (x_mem[i] != eT(0)) ? uword(1) : uword(0);
-    }
+  for(uword i=0; i < x_n_elem; ++i)  { n += (x_mem[i] != eT(0)) ? uword(1) : uword(0); }
   
   init(x_n_rows, x_n_cols, n);
   
@@ -4724,10 +4712,7 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).reset();
-    }
+  if(load_okay == false)  { (*this).reset(); }
   
   return load_okay;
   }
@@ -4870,10 +4855,7 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).reset();
-    }
+  if(load_okay == false)  { (*this).reset(); }
   
   return load_okay;
   }

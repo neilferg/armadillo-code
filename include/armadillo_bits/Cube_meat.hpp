@@ -476,7 +476,9 @@ Cube<eT>::operator=(const eT val)
   arma_extra_debug_sigprint();
   
   init_warm(1,1,1);
+  
   access::rw(mem[0]) = val;
+  
   return *this;
   }
 
@@ -2864,6 +2866,7 @@ Cube<eT>::Cube(const GlueCube<T1, T2, glue_type>& X)
   , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
+  
   this->operator=(X);
   }
 
@@ -3202,6 +3205,7 @@ const eT&
 Cube<eT>::at_alt(const uword i) const
   {
   const eT* mem_aligned = mem;
+  
   memory::mark_as_aligned(mem_aligned);
   
   return mem_aligned[i];
@@ -3217,6 +3221,7 @@ eT&
 Cube<eT>::operator() (const uword i)
   {
   arma_debug_check( (i >= n_elem), "Cube::operator(): index out of bounds");
+  
   return access::rw(mem[i]);
   }
 
@@ -3230,6 +3235,7 @@ const eT&
 Cube<eT>::operator() (const uword i) const
   {
   arma_debug_check( (i >= n_elem), "Cube::operator(): index out of bounds");
+  
   return mem[i];
   }
 
@@ -3355,6 +3361,7 @@ const Cube<eT>&
 Cube<eT>::operator++()
   {
   Cube_aux::prefix_pp(*this);
+  
   return *this;
   }
 
@@ -4471,10 +4478,7 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -4527,10 +4531,7 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type, const bool print_sta
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -4592,10 +4593,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }

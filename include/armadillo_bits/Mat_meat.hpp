@@ -366,6 +366,7 @@ Mat<eT>::operator=(const char* text)
   arma_extra_debug_sigprint();
   
   init( std::string(text) );
+  
   return *this;
   }
   
@@ -401,6 +402,7 @@ Mat<eT>::operator=(const std::string& text)
   arma_extra_debug_sigprint();
   
   init(text);
+  
   return *this;
   }
 
@@ -540,10 +542,7 @@ Mat<eT>::Mat(const std::vector<eT>& x)
   
   init_cold();
   
-  if(n_elem > 0)
-    {
-    arrayops::copy( memptr(), &(x[0]), n_elem );
-    }
+  if(n_elem > 0)  { arrayops::copy( memptr(), &(x[0]), n_elem ); }
   }
   
   
@@ -558,10 +557,7 @@ Mat<eT>::operator=(const std::vector<eT>& x)
   
   init_warm(uword(x.size()), 1);
   
-  if(x.size() > 0)
-    {
-    arrayops::copy( memptr(), &(x[0]), uword(x.size()) );
-    }
+  if(x.size() > 0)  { arrayops::copy( memptr(), &(x[0]), uword(x.size()) ); }
   
   return *this;
   }
@@ -707,7 +703,9 @@ Mat<eT>::operator=(const eT val)
   arma_extra_debug_sigprint();
   
   init_warm(1,1);
+  
   access::rw(mem[0]) = val;
+  
   return *this;
   }
 
@@ -843,10 +841,7 @@ Mat<eT>::init(const std::initializer_list< std::initializer_list<eT> >& list)
   auto it     = list.begin();
   auto it_end = list.end();
   
-  for(; it != it_end; ++it)
-    {
-    x_n_cols = (std::max)(x_n_cols, uword((*it).size()));
-    }
+  for(; it != it_end; ++it)  { x_n_cols = (std::max)(x_n_cols, uword((*it).size())); }
   
   Mat<eT>& t = (*this);
   
@@ -1256,6 +1251,7 @@ Mat<eT>::Mat(const char junk, const eT* aux_mem, const uword aux_n_rows, const u
   , mem      (aux_mem              )
   {
   arma_extra_debug_sigprint_this(this);
+  
   arma_ignore(junk);
   }
 
@@ -2118,6 +2114,7 @@ Mat<eT>::operator*=(const subview_cube<eT>& X)
   arma_extra_debug_sigprint();
 
   const Mat<eT> tmp(X);
+  
   glue_times::apply_inplace(*this, tmp);
   
   return *this;
@@ -2569,11 +2566,7 @@ Mat<eT>::operator+=(const SpBase<eT, T1>& m)
   typename SpProxy<T1>::const_iterator_type it     = p.begin();
   typename SpProxy<T1>::const_iterator_type it_end = p.end();
   
-  while(it != it_end)
-    {
-    at(it.row(), it.col()) += (*it);
-    ++it;
-    }
+  for(; it != it_end; ++it)  { at(it.row(), it.col()) += (*it); }
   
   return *this;
   }
@@ -2595,11 +2588,7 @@ Mat<eT>::operator-=(const SpBase<eT, T1>& m)
   typename SpProxy<T1>::const_iterator_type it     = p.begin();
   typename SpProxy<T1>::const_iterator_type it_end = p.end();
   
-  while(it != it_end)
-    {
-    at(it.row(), it.col()) -= (*it);
-    ++it;
-    }
+  for(; it != it_end; ++it)  { at(it.row(), it.col()) -= (*it); }
   
   return *this;
   }
@@ -2743,11 +2732,7 @@ Mat<eT>::operator=(const SpSubview<eT>& X)
     typename SpSubview<eT>::const_iterator it     = X.begin();
     typename SpSubview<eT>::const_iterator it_end = X.end();
     
-    while(it != it_end)
-      {
-      at(it.row(), it.col()) = (*it);
-      ++it;
-      }
+    for(; it != it_end; ++it)  { at(it.row(), it.col()) = (*it); }
     }
   
   return *this;
@@ -4294,7 +4279,7 @@ Mat<eT>::shed_rows(const Base<uword, T1>& indices)
   
   arma_debug_check( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_rows(): list of indices must be a vector" );
   
-  if(tmp1.is_empty()) { return; }
+  if(tmp1.is_empty())  { return; }
   
   const Col<uword> tmp2(const_cast<uword*>(tmp1.memptr()), tmp1.n_elem, false, false);
   
@@ -4364,7 +4349,7 @@ Mat<eT>::shed_cols(const Base<uword, T1>& indices)
   
   arma_debug_check( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_cols(): list of indices must be a vector" );
   
-  if(tmp1.is_empty()) { return; }
+  if(tmp1.is_empty())  { return; }
   
   const Col<uword> tmp2(const_cast<uword*>(tmp1.memptr()), tmp1.n_elem, false, false);
   
@@ -5693,6 +5678,7 @@ Mat<eT>::operator*=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
   
   glue_times::apply_inplace(*this, X);
+  
   return *this;
   }
 
@@ -5710,6 +5696,7 @@ Mat<eT>::operator%=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
   
   eglue_type::apply_inplace_schur(*this, X);
+  
   return *this;
   }
 
@@ -5727,6 +5714,7 @@ Mat<eT>::operator/=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
   
   eglue_type::apply_inplace_div(*this, X);
+  
   return *this;
   }
 
@@ -5851,6 +5839,7 @@ const eT&
 Mat<eT>::at_alt(const uword ii) const
   {
   const eT* mem_aligned = mem;
+  
   memory::mark_as_aligned(mem_aligned);
   
   return mem_aligned[ii];
@@ -5866,6 +5855,7 @@ eT&
 Mat<eT>::operator() (const uword ii)
   {
   arma_debug_check( (ii >= n_elem), "Mat::operator(): index out of bounds");
+  
   return access::rw(mem[ii]);
   }
 
@@ -5879,6 +5869,7 @@ const eT&
 Mat<eT>::operator() (const uword ii) const
   {
   arma_debug_check( (ii >= n_elem), "Mat::operator(): index out of bounds");
+  
   return mem[ii];
   }
 
@@ -5939,6 +5930,7 @@ eT&
 Mat<eT>::operator() (const uword in_row, const uword in_col)
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "Mat::operator(): index out of bounds");
+  
   return access::rw(mem[in_row + in_col*n_rows]);
   }
 
@@ -5952,6 +5944,7 @@ const eT&
 Mat<eT>::operator() (const uword in_row, const uword in_col) const
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "Mat::operator(): index out of bounds");
+  
   return mem[in_row + in_col*n_rows];
   }
 
@@ -5988,6 +5981,7 @@ const Mat<eT>&
 Mat<eT>::operator++()
   {
   Mat_aux::prefix_pp(*this);
+  
   return *this;
   }
 
@@ -6011,6 +6005,7 @@ const Mat<eT>&
 Mat<eT>::operator--()
   {
   Mat_aux::prefix_mm(*this);
+  
   return *this;
   }
 
@@ -7062,10 +7057,7 @@ Mat<eT>::eye()
   
   const uword N = (std::min)(n_rows, n_cols);
   
-  for(uword ii=0; ii<N; ++ii)
-    {
-    at(ii,ii) = eT(1);
-    }
+  for(uword ii=0; ii<N; ++ii)  { at(ii,ii) = eT(1); }
   
   return *this;
   }
@@ -7386,6 +7378,7 @@ Mat<eT>::save(const hdf5_name& spec, const file_type type, const bool print_stat
     }
   
   bool save_okay = false;
+  
   std::string err_msg;
   
   if(do_trans)
@@ -7611,10 +7604,7 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -7667,10 +7657,7 @@ Mat<eT>::load(const hdf5_name& spec, const file_type type, const bool print_stat
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -7823,10 +7810,7 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -7949,7 +7933,8 @@ Mat<eT>::row_iterator::row_iterator()
   , current_col(0   )
   {
   arma_extra_debug_sigprint();
-  // Technically this iterator is invalid (it does not point to a valid element)
+  
+  // NOTE: this instance of row_iterator is invalid (it does not point to a valid element)
   }
 
 
@@ -8112,7 +8097,8 @@ Mat<eT>::const_row_iterator::const_row_iterator()
   , current_col(0   )
   {
   arma_extra_debug_sigprint();
-  // Technically this iterator is invalid (it does not point to a valid element)
+  
+  // NOTE: this instance of const_row_iterator is invalid (it does not point to a valid element)
   }
 
 
@@ -9123,7 +9109,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const std::initializer_lis
   
   arrayops::copy( this_mem, list.begin(), N );
   
-  for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
+  for(uword iq=N; iq < fixed_n_elem; ++iq)  { this_mem[iq] = eT(0); }
   
   return *this;
   }

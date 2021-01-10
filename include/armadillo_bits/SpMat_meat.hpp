@@ -3701,7 +3701,7 @@ SpMat<eT>::in_range(const span& row_span, const span& col_span) const
   const bool rows_ok = row_span.whole ? true : ( (in_row1 <= in_row2) && (in_row2 < n_rows) );
   const bool cols_ok = col_span.whole ? true : ( (in_col1 <= in_col2) && (in_col2 < n_cols) );
   
-  return ( (rows_ok) && (cols_ok) );
+  return ( rows_ok && cols_ok );
   }
 
 
@@ -4626,7 +4626,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
-  if((print_status) && (save_okay == false))
+  if(print_status && (save_okay == false))
     {
     arma_debug_warn("SpMat::save(): couldn't write to ", spec.filename);
     }

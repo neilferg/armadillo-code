@@ -604,9 +604,9 @@ Cube<eT>::Cube(eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, cons
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(prealloc_mat == true)  { arma_debug_warn("Cube::Cube(): parameter 'prealloc_mat' ignored as it's no longer used"); }
+  if(prealloc_mat)  { arma_debug_warn("Cube::Cube(): parameter 'prealloc_mat' ignored as it's no longer used"); }
   
-  if(copy_aux_mem == true)
+  if(copy_aux_mem)
     {
     init_cold();
     
@@ -2161,7 +2161,7 @@ Cube<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero
       out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
       }
     
-    if(set_to_zero == true)
+    if(set_to_zero)
       {
       out.rows(row_num, row_num + N - 1).zeros();
       }
@@ -2201,7 +2201,7 @@ Cube<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero
       out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
       }
     
-    if(set_to_zero == true)
+    if(set_to_zero)
       {
       out.cols(col_num, col_num + N - 1).zeros();
       }
@@ -2243,7 +2243,7 @@ Cube<eT>::insert_slices(const uword slice_num, const uword N, const bool set_to_
       out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices-1);
       }
     
-    if(set_to_zero == true)
+    if(set_to_zero)
       {
       //out.slices(slice_num, slice_num + N - 1).zeros();
       
@@ -3517,7 +3517,7 @@ Cube<eT>::in_range(const span& row_span, const span& col_span, const span& slice
   const bool slices_ok = slice_span.whole ? true : ( (in_slice1 <= in_slice2) && (in_slice2 < n_slices) );
   
   
-  return ( (rows_ok) && (cols_ok) && (slices_ok) );
+  return ( rows_ok && cols_ok && slices_ok );
   }
 
 

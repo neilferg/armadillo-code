@@ -5209,7 +5209,7 @@ SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const boo
   
   bool actually_sorted = true;
   
-  if(sort_locations == true)
+  if(sort_locations)
     {
     // check if we really need a time consuming sort
     
@@ -5352,7 +5352,7 @@ SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const boo
   
   bool actually_sorted = true;
   
-  if(sort_locations == true)
+  if(sort_locations)
     {
     // sort_index() uses std::sort() which may use quicksort... so we better
     // make sure it's not already sorted before taking an O(N^2) sort penalty.

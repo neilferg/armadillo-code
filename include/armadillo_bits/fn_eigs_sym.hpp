@@ -110,6 +110,31 @@ eigs_sym
 
 
 
+template<typename T1>
+arma_warn_unused
+inline
+Col<typename T1::pod_type>
+eigs_sym
+  (
+  const SpBase<typename T1::elem_type,T1>& X,
+  const uword                              n_eigvals,
+  const int                                sigma,
+  const eigs_opts                          opts = eigs_opts(),
+  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  arma_extra_debug_print("eigs_sym(): detected integer sigma");
+  
+  typedef typename T1::pod_type T;
+  
+  return eigs_sym(X, n_eigvals, T(sigma), opts);
+  }
+
+
+
 //! eigenvalues of symmetric real sparse matrix X
 template<typename T1>
 inline
@@ -197,6 +222,31 @@ eigs_sym
     }
   
   return status;
+  }
+
+
+
+template<typename T1>
+inline
+bool
+eigs_sym
+  (
+           Col<typename T1::pod_type >&    eigval,
+  const SpBase<typename T1::elem_type,T1>& X,
+  const uword                              n_eigvals,
+  const int                                sigma,
+  const eigs_opts                          opts = eigs_opts(),
+  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  arma_extra_debug_print("eigs_sym(): detected integer sigma");
+  
+  typedef typename T1::pod_type T;
+  
+  return eigs_sym(eigval, X, n_eigvals, T(sigma), opts);
   }
 
 
@@ -293,6 +343,32 @@ eigs_sym
     }
   
   return status;
+  }
+
+
+
+template<typename T1>
+inline
+bool
+eigs_sym
+  (
+           Col<typename T1::pod_type >&    eigval,
+           Mat<typename T1::elem_type>&    eigvec,
+  const SpBase<typename T1::elem_type,T1>& X,
+  const uword                              n_eigvals,
+  const int                                sigma,
+  const eigs_opts                          opts = eigs_opts(),
+  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
+  
+  arma_extra_debug_print("eigs_sym(): detected integer sigma");
+  
+  typedef typename T1::pod_type T;
+  
+  return eigs_sym(eigval, eigvec, X, n_eigvals, T(sigma), opts);
   }
 
 

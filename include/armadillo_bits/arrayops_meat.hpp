@@ -25,20 +25,23 @@ arma_inline
 void
 arrayops::copy(eT* dest, const eT* src, const uword n_elem)
   {
-  if(is_cx<eT>::no)
+  if(dest != src)
     {
-    if(n_elem <= 9)
+    if(is_cx<eT>::no)
       {
-      arrayops::copy_small(dest, src, n_elem);
+      if(n_elem <= 9)
+        {
+        arrayops::copy_small(dest, src, n_elem);
+        }
+      else
+        {
+        std::memcpy(dest, src, n_elem*sizeof(eT));
+        }
       }
     else
       {
-      std::memcpy(dest, src, n_elem*sizeof(eT));
+      if(n_elem > 0)  { std::memcpy(dest, src, n_elem*sizeof(eT)); }
       }
-    }
-  else
-    {
-    if(n_elem > 0)  { std::memcpy(dest, src, n_elem*sizeof(eT)); }
     }
   }
 

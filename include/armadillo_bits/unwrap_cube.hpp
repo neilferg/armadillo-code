@@ -99,10 +99,7 @@ struct unwrap_cube_check< Cube<eT> >
     {
     arma_extra_debug_sigprint();
     
-    if(M_local)
-      {
-      delete M_local;
-      }
+    if(M_local)  { delete M_local; }
     }
   
   

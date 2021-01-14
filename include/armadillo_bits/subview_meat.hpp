@@ -81,25 +81,6 @@ subview<eT>::subview(subview<eT>&& in)
 
 
 template<typename eT>
-inline
-void
-subview<eT>::operator= (const eT val)
-  {
-  arma_extra_debug_sigprint();
-  
-  if(n_elem != 1)
-    {
-    arma_debug_assert_same_size(n_rows, n_cols, 1, 1, "copy into submatrix");
-    }
-  
-  Mat<eT>& X = const_cast< Mat<eT>& >(m);
-  
-  X.at(aux_row1, aux_col1) = val;
-  }
-
-
-
-template<typename eT>
 template<typename op_type>
 inline
 void
@@ -408,6 +389,25 @@ subview<eT>::inplace_op(const subview<eT>& x, const char* identifier)
       if(is_same_type<op_type, op_internal_div  >::yes)  { arrayops::inplace_div  ( s.colptr(ucol), x.colptr(ucol), s_n_rows ); }
       }
     }
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::operator= (const eT val)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(n_elem != 1)
+    {
+    arma_debug_assert_same_size(n_rows, n_cols, 1, 1, "copy into submatrix");
+    }
+  
+  Mat<eT>& X = const_cast< Mat<eT>& >(m);
+  
+  X.at(aux_row1, aux_col1) = val;
   }
 
 

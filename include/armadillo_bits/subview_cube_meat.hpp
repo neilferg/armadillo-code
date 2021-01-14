@@ -1642,13 +1642,22 @@ subview_cube<eT>::extract(Cube<eT>& out, const subview_cube<eT>& in)
   
   arma_extra_debug_print(arma_str::format("out.n_rows = %d   out.n_cols = %d    out.n_slices = %d    in.m.n_rows = %d   in.m.n_cols = %d   in.m.n_slices = %d") % out.n_rows % out.n_cols % out.n_slices % in.m.n_rows % in.m.n_cols % in.m.n_slices);
   
-  
-  for(uword slice = 0; slice < n_slices; ++slice)
+  if( (in.aux_col1 == 0) && (in.aux_row1 == 0) && (in.n_cols == in.m.n_cols) && (in.n_rows == in.m.n_rows) )
     {
-    for(uword col = 0; col < n_cols; ++col)
+    const uword n_elem_slice = in.n_elem_slice;
+    
+    for(uword s=0; s < n_slices; ++s)
       {
-      arrayops::copy( out.slice_colptr(slice,col), in.slice_colptr(slice,col), n_rows );
+      arrayops::copy( out.slice_colptr(s,0), in.slice_colptr(s,0), n_elem_slice );
       }
+    
+    return;
+    }
+  
+  for(uword s=0; s < n_slices; ++s)
+  for(uword c=0; c < n_cols;   ++c)
+    {
+    arrayops::copy( out.slice_colptr(s,c), in.slice_colptr(s,c), n_rows );
     }
   }
 

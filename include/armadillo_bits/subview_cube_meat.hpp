@@ -158,14 +158,26 @@ subview_cube<eT>::inplace_op(const BaseCube<eT,T1>& in, const char* identifier)
     const unwrap_cube_check<typename ProxyCube<T1>::stored_type> tmp(P.Q, has_overlap);
     const Cube<eT>& B = tmp.M;
     
-    for(uword s=0; s < t_n_slices; ++s)
-    for(uword c=0; c < t_n_cols;   ++c)
+    if( (is_same_type<op_type, op_internal_equ>::yes) && (t.aux_row1 == 0) && (t.aux_col1 == 0) && (t_n_rows == t.m.n_rows) && (t_n_cols == t.m.n_cols) )
       {
-      if(is_same_type<op_type, op_internal_equ  >::yes)  { arrayops::copy         ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
-      if(is_same_type<op_type, op_internal_plus >::yes)  { arrayops::inplace_plus ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
-      if(is_same_type<op_type, op_internal_minus>::yes)  { arrayops::inplace_minus( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
-      if(is_same_type<op_type, op_internal_schur>::yes)  { arrayops::inplace_mul  ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
-      if(is_same_type<op_type, op_internal_div  >::yes)  { arrayops::inplace_div  ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+      const uword t_n_elem_slice = t.n_elem_slice;
+      
+      for(uword s=0; s < t_n_slices; ++s)
+        {
+        arrayops::copy( t.slice_colptr(s,0), B.slice_colptr(s,0), t_n_elem_slice );
+        }
+      }
+    else
+      {
+      for(uword s=0; s < t_n_slices; ++s)
+      for(uword c=0; c < t_n_cols;   ++c)
+        {
+        if(is_same_type<op_type, op_internal_equ  >::yes)  { arrayops::copy         ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_plus >::yes)  { arrayops::inplace_plus ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_minus>::yes)  { arrayops::inplace_minus( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_schur>::yes)  { arrayops::inplace_mul  ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        if(is_same_type<op_type, op_internal_div  >::yes)  { arrayops::inplace_div  ( t.slice_colptr(s,c), B.slice_colptr(s,c), t_n_rows ); }
+        }
       }
     }
   else  // use the Proxy

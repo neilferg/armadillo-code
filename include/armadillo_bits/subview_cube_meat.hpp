@@ -158,13 +158,11 @@ subview_cube<eT>::inplace_op(const BaseCube<eT,T1>& in, const char* identifier)
     const unwrap_cube_check<typename ProxyCube<T1>::stored_type> tmp(P.Q, has_overlap);
     const Cube<eT>& B = tmp.M;
     
-    if( (is_same_type<op_type, op_internal_equ>::yes) && (t.aux_row1 == 0) && (t.aux_col1 == 0) && (t_n_rows == t.m.n_rows) && (t_n_cols == t.m.n_cols) )
+    if( (is_same_type<op_type, op_internal_equ>::yes) && (t.aux_row1 == 0) && (t_n_rows == t.m.n_rows) )
       {
-      const uword t_n_elem_slice = t.n_elem_slice;
-      
       for(uword s=0; s < t_n_slices; ++s)
         {
-        arrayops::copy( t.slice_colptr(s,0), B.slice_colptr(s,0), t_n_elem_slice );
+        arrayops::copy( t.slice_colptr(s,0), B.slice_colptr(s,0), t.n_elem_slice );
         }
       }
     else
@@ -1654,13 +1652,11 @@ subview_cube<eT>::extract(Cube<eT>& out, const subview_cube<eT>& in)
   
   arma_extra_debug_print(arma_str::format("out.n_rows = %d   out.n_cols = %d    out.n_slices = %d    in.m.n_rows = %d   in.m.n_cols = %d   in.m.n_slices = %d") % out.n_rows % out.n_cols % out.n_slices % in.m.n_rows % in.m.n_cols % in.m.n_slices);
   
-  if( (in.aux_row1 == 0) && (in.aux_col1 == 0) && (in.n_rows == in.m.n_rows) && (in.n_cols == in.m.n_cols) )
+  if( (in.aux_row1 == 0) && (in.n_rows == in.m.n_rows) )
     {
-    const uword n_elem_slice = in.n_elem_slice;
-    
     for(uword s=0; s < n_slices; ++s)
       {
-      arrayops::copy( out.slice_colptr(s,0), in.slice_colptr(s,0), n_elem_slice );
+      arrayops::copy( out.slice_colptr(s,0), in.slice_colptr(s,0), in.n_elem_slice );
       }
     
     return;

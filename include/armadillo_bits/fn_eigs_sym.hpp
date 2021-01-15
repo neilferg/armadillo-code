@@ -78,7 +78,7 @@ eigs_sym
 
 
 
-template<typename T1>
+template<typename T1, typename eT_real>
 arma_warn_unused
 inline
 Col<typename T1::pod_type>
@@ -86,18 +86,22 @@ eigs_sym
   (
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const typename T1::pod_type              sigma,
+  const eT_real                            sigma,
   const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_only<typename T1::elem_type>::result* junk1 = nullptr,
+  const typename arma_real_only<         eT_real      >::result* junk2 = nullptr
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   Mat<typename T1::elem_type> eigvec;
   Col<typename T1::pod_type > eigval;
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, sigma, opts);
+  typedef typename T1::pod_type T;
+  
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, T(sigma), opts);
   
   if(status == false)
     {
@@ -195,7 +199,7 @@ eigs_sym
 
 
 
-template<typename T1>
+template<typename T1, typename eT_real>
 inline
 bool
 eigs_sym
@@ -203,17 +207,21 @@ eigs_sym
            Col<typename T1::pod_type >&    eigval,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const typename T1::pod_type              sigma,
+  const eT_real                            sigma,
   const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_only<typename T1::elem_type>::result* junk1 = nullptr,
+  const typename arma_real_only<         eT_real      >::result* junk2 = nullptr
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  typedef typename T1::pod_type T;
   
   Mat<typename T1::elem_type> eigvec;
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, sigma, opts);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, T(sigma), opts);
   
   if(status == false)
     {
@@ -314,7 +322,7 @@ eigs_sym
 
 
 
-template<typename T1>
+template<typename T1, typename eT_real>
 inline
 bool
 eigs_sym
@@ -323,17 +331,21 @@ eigs_sym
            Mat<typename T1::elem_type>&    eigvec,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const typename T1::pod_type              sigma,
+  const eT_real                            sigma,
   const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_only<typename T1::elem_type>::result* junk1 = nullptr,
+  const typename arma_real_only<         eT_real      >::result* junk2 = nullptr
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
+  
+  typedef typename T1::pod_type T;
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_sym(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, sigma, opts);
+  const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, T(sigma), opts);
   
   if(status == false)
     {

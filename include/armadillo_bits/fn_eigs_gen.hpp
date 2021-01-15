@@ -29,7 +29,7 @@ eigs_gen
   const uword                               n_eigvals,
   const char*                               form = "lm",
   const eigs_opts                           opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -66,7 +66,7 @@ eigs_gen
   const uword                               n_eigvals,
   const char*                               form,
   const typename T1::pod_type               tol,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -90,7 +90,7 @@ eigs_gen
   const uword                               n_eigvals,
   const std::complex<typename T1::pod_type> sigma,
   const eigs_opts                           opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -125,7 +125,7 @@ eigs_gen
 
 
 
-template<typename T1>
+template<typename T1, typename eT_real>
 arma_warn_unused
 inline
 Col< std::complex<typename T1::pod_type> >
@@ -133,20 +133,22 @@ eigs_gen
   (
   const SpBase<typename T1::elem_type, T1>& X,
   const uword                               n_eigvals,
-  const typename T1::pod_type               sigma,
+  const eT_real                             sigma,
   const eigs_opts                           opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk1 = nullptr,
+  const typename arma_real_only<               eT_real      >::result* junk2 = nullptr
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::pod_type T;
   
   Mat< std::complex<T> > eigvec;
   Col< std::complex<T> > eigval;
   
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(sigma), opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(T(sigma)), opts);
   
   if(status == false)
     {
@@ -169,7 +171,7 @@ eigs_gen
   const uword                               n_eigvals,
   const int                                 sigma,
   const eigs_opts                           opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -195,7 +197,7 @@ eigs_gen
   const uword                                          n_eigvals,
   const char*                                          form = "lm",
   const eigs_opts                                      opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -232,7 +234,7 @@ eigs_gen
   const uword                                          n_eigvals,
   const char*                                          form,
   const typename T1::pod_type                          tol,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -256,7 +258,7 @@ eigs_gen
   const uword                                          n_eigvals,
   const std::complex<typename T1::pod_type>            sigma,
   const eigs_opts                                      opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -290,7 +292,7 @@ eigs_gen
 
 
 
-template<typename T1>
+template<typename T1, typename eT_real>
 inline
 bool
 eigs_gen
@@ -298,19 +300,21 @@ eigs_gen
            Col< std::complex<typename T1::pod_type> >& eigval,
   const SpBase<typename T1::elem_type, T1>&            X,
   const uword                                          n_eigvals,
-  const typename T1::pod_type                          sigma,
+  const eT_real                                        sigma,
   const eigs_opts                                      opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk1 = nullptr,
+  const typename arma_real_only<               eT_real      >::result* junk2 = nullptr
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::pod_type T;
   
   Mat< std::complex<T> > eigvec;
   
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(sigma), opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(T(sigma)), opts);
   
   if(status == false)
     {
@@ -333,7 +337,7 @@ eigs_gen
   const uword                                          n_eigvals,
   const int                                            sigma,
   const eigs_opts                                      opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -360,7 +364,7 @@ eigs_gen
   const uword                                        n_eigvals,
   const char*                                        form = "lm",
   const eigs_opts                                    opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -399,7 +403,7 @@ eigs_gen
   const uword                                        n_eigvals,
   const char*                                        form,
   const typename T1::pod_type                        tol,
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -424,7 +428,7 @@ eigs_gen
   const uword                                        n_eigvals,
   const std::complex<typename T1::pod_type>          sigma,
   const eigs_opts                                    opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();
@@ -459,7 +463,7 @@ eigs_gen
 
 
 
-template<typename T1>
+template<typename T1, typename eT_real>
 inline
 bool
 eigs_gen
@@ -468,19 +472,21 @@ eigs_gen
          Mat< std::complex<typename T1::pod_type> >& eigvec,
   const SpBase<typename T1::elem_type, T1>&          X,
   const uword                                        n_eigvals,
-  const typename T1::pod_type                        sigma,
+  const eT_real                                      sigma,
   const eigs_opts                                    opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk1 = nullptr,
+  const typename arma_real_only<               eT_real      >::result* junk2 = nullptr
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::pod_type T;
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
-  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(sigma), opts);
+  const bool status = sp_auxlib::eigs_gen(eigval, eigvec, X, n_eigvals, std::complex<T>(T(sigma)), opts);
   
   if(status == false)
     {
@@ -505,7 +511,7 @@ eigs_gen
   const uword                                        n_eigvals,
   const int                                          sigma,
   const eigs_opts                                    opts = eigs_opts(),
-  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr
+  const typename arma_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr
   )
   {
   arma_extra_debug_sigprint();

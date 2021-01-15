@@ -19,21 +19,19 @@
 
 
 //! eigenvalues of symmetric real sparse matrix X
-template<typename T1>
+template<typename T1, typename T2>
 arma_warn_unused
 inline
-Col<typename T1::pod_type>
+typename enable_if2< is_real<typename T1::elem_type>::value && is_same_type<T2, char>::value, Col<typename T1::pod_type> >::result
 eigs_sym
   (
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const char*                              form = "lm",
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const T2*                                form = "lm",
+  const eigs_opts                          opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   Mat<typename T1::elem_type> eigvec;
   Col<typename T1::pod_type > eigval;
@@ -54,21 +52,19 @@ eigs_sym
 
 
 //! this form is deprecated; use eigs_sym(X, n_eigvals, form, opts) instead
-template<typename T1>
+template<typename T1, typename T2>
 arma_deprecated
 inline
-Col<typename T1::pod_type>
+typename enable_if2< is_real<typename T1::elem_type>::value && is_same_type<T2, char>::value, Col<typename T1::pod_type> >::result
 eigs_sym
   (
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const char*                              form,
-  const typename T1::elem_type             tol,
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const T2*                                form,
+  const typename T1::elem_type             tol
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   eigs_opts opts;
   opts.tol = tol;
@@ -78,28 +74,24 @@ eigs_sym
 
 
 
-template<typename T1, typename eT_real>
+template<typename T1>
 arma_warn_unused
 inline
-Col<typename T1::pod_type>
+typename enable_if2< is_real<typename T1::elem_type>::value, Col<typename T1::pod_type> >::result
 eigs_sym
   (
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const eT_real                            sigma,
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk1 = nullptr,
-  const typename arma_real_only<         eT_real      >::result* junk2 = nullptr
+  const double                             sigma,
+  const eigs_opts                          opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
+  
+  typedef typename T1::pod_type T;
   
   Mat<typename T1::elem_type> eigvec;
   Col<typename T1::pod_type > eigval;
-  
-  typedef typename T1::pod_type T;
   
   const bool status = sp_auxlib::eigs_sym(eigval, eigvec, X, n_eigvals, T(sigma), opts);
   
@@ -114,47 +106,20 @@ eigs_sym
 
 
 
-template<typename T1>
-arma_warn_unused
-inline
-Col<typename T1::pod_type>
-eigs_sym
-  (
-  const SpBase<typename T1::elem_type,T1>& X,
-  const uword                              n_eigvals,
-  const int                                sigma,
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  arma_extra_debug_print("eigs_sym(): detected integer sigma");
-  
-  typedef typename T1::pod_type T;
-  
-  return eigs_sym(X, n_eigvals, T(sigma), opts);
-  }
-
-
-
 //! eigenvalues of symmetric real sparse matrix X
-template<typename T1>
+template<typename T1, typename T2>
 inline
-bool
+typename enable_if2< is_real<typename T1::elem_type>::value && is_same_type<T2, char>::value, bool >::result
 eigs_sym
   (
            Col<typename T1::pod_type >&    eigval,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const char*                              form = "lm",
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const T2*                                form = "lm",
+  const eigs_opts                          opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   Mat<typename T1::elem_type> eigvec;
   
@@ -174,22 +139,20 @@ eigs_sym
 
 
 //! this form is deprecated; use eigs_sym(eigval, X, n_eigvals, form, opts) instead
-template<typename T1>
+template<typename T1, typename T2>
 arma_deprecated
 inline
-bool
+typename enable_if2< is_real<typename T1::elem_type>::value && is_same_type<T2, char>::value, bool >::result
 eigs_sym
   (
            Col<typename T1::pod_type >&    eigval,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const char*                              form,
-  const typename T1::elem_type             tol,
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const T2*                                form,
+  const typename T1::elem_type             tol
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   eigs_opts opts;
   opts.tol = tol;
@@ -199,23 +162,19 @@ eigs_sym
 
 
 
-template<typename T1, typename eT_real>
+template<typename T1>
 inline
-bool
+typename enable_if2< is_real<typename T1::elem_type>::value, bool >::result
 eigs_sym
   (
            Col<typename T1::pod_type >&    eigval,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const eT_real                            sigma,
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk1 = nullptr,
-  const typename arma_real_only<         eT_real      >::result* junk2 = nullptr
+  const double                             sigma,
+  const eigs_opts                          opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
   
   typedef typename T1::pod_type T;
   
@@ -234,48 +193,21 @@ eigs_sym
 
 
 
-template<typename T1>
-inline
-bool
-eigs_sym
-  (
-           Col<typename T1::pod_type >&    eigval,
-  const SpBase<typename T1::elem_type,T1>& X,
-  const uword                              n_eigvals,
-  const int                                sigma,
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  arma_extra_debug_print("eigs_sym(): detected integer sigma");
-  
-  typedef typename T1::pod_type T;
-  
-  return eigs_sym(eigval, X, n_eigvals, T(sigma), opts);
-  }
-
-
-
 //! eigenvalues and eigenvectors of symmetric real sparse matrix X
-template<typename T1>
+template<typename T1, typename T2>
 inline
-bool
+typename enable_if2< is_real<typename T1::elem_type>::value && is_same_type<T2, char>::value, bool >::result
 eigs_sym
   (
            Col<typename T1::pod_type >&    eigval,
            Mat<typename T1::elem_type>&    eigvec,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const char*                              form = "lm",
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const T2*                                form = "lm",
+  const eigs_opts                          opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   arma_debug_check( void_ptr(&eigval) == void_ptr(&eigvec), "eigs_sym(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
@@ -296,23 +228,21 @@ eigs_sym
 
 
 //! this form is deprecated; use eigs_sym(eigval, eigvec, X, n_eigvals, form, opts) instead
-template<typename T1>
+template<typename T1, typename T2>
 arma_deprecated
 inline
-bool
+typename enable_if2< is_real<typename T1::elem_type>::value && is_same_type<T2, char>::value, bool >::result
 eigs_sym
   (
            Col<typename T1::pod_type >&    eigval,
            Mat<typename T1::elem_type>&    eigvec,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const char*                              form,
-  const typename T1::elem_type             tol,
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
+  const T2*                                form,
+  const typename T1::elem_type             tol
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk);
   
   eigs_opts opts;
   opts.tol = tol;
@@ -322,24 +252,20 @@ eigs_sym
 
 
 
-template<typename T1, typename eT_real>
+template<typename T1>
 inline
-bool
+typename enable_if2< is_real<typename T1::elem_type>::value, bool >::result
 eigs_sym
   (
            Col<typename T1::pod_type >&    eigval,
            Mat<typename T1::elem_type>&    eigvec,
   const SpBase<typename T1::elem_type,T1>& X,
   const uword                              n_eigvals,
-  const eT_real                            sigma,
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk1 = nullptr,
-  const typename arma_real_only<         eT_real      >::result* junk2 = nullptr
+  const double                             sigma,
+  const eigs_opts                          opts = eigs_opts()
   )
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
   
   typedef typename T1::pod_type T;
   
@@ -355,32 +281,6 @@ eigs_sym
     }
   
   return status;
-  }
-
-
-
-template<typename T1>
-inline
-bool
-eigs_sym
-  (
-           Col<typename T1::pod_type >&    eigval,
-           Mat<typename T1::elem_type>&    eigvec,
-  const SpBase<typename T1::elem_type,T1>& X,
-  const uword                              n_eigvals,
-  const int                                sigma,
-  const eigs_opts                          opts = eigs_opts(),
-  const typename arma_real_only<typename T1::elem_type>::result* junk = nullptr
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  arma_extra_debug_print("eigs_sym(): detected integer sigma");
-  
-  typedef typename T1::pod_type T;
-  
-  return eigs_sym(eigval, eigvec, X, n_eigvals, T(sigma), opts);
   }
 
 

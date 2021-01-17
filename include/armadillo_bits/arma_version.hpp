@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 1
-#define ARMA_VERSION_PATCH 94
-#define ARMA_VERSION_NAME  "10.2 RC4"
+#define ARMA_VERSION_MINOR 2
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Cicada Swarm"
 
 
 

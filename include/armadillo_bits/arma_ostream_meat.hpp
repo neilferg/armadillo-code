@@ -956,21 +956,24 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
         arma_ostream::print_elem(o, X.at(row,col), true);
         }
       
-      o.width(cell_width);
+      o.width(6);
       o << "...";
       
       o.width(cell_width);
       o << X.at(row,3) << '\n';
       }
     
-    for(uword col=0; col <= 4; ++col)
+    for(uword col=0; col <= 2; ++col)
       {
       o.width(cell_width);
       o << ':';
       }
     
+    o.width(6);
+    o << "...";
+    
     o.width(cell_width);
-    o << '\n';
+    o << ':' << '\n';
     
     const uword row = 3;
       {
@@ -980,7 +983,7 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
         arma_ostream::print_elem(o, X.at(row,col), true);
         }
       
-      o.width(cell_width);
+      o.width(6);
       o << "...";
       
       o.width(cell_width);
@@ -1048,7 +1051,7 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
         arma_ostream::print_elem(o, X.at(row,col), true);
         }
       
-      o.width(cell_width);
+      o.width(6);
       o << "...";
       
       o.width(cell_width);
@@ -1229,14 +1232,14 @@ arma_ostream::brief_print(std::ostream& o, const SpMat<eT>& m)
     else if(col < 100000)   { o << "  ";     }
     else if(col < 1000000)  { o << ' ';      }
     
-    if(cell_width > 0) { o.width(cell_width); }
-      
+    if(cell_width > 0)  { o.width(cell_width); }
+    
     arma_ostream::print_elem(o, storage_val(i), true);
     o << '\n';
     }
   
   o << "      (:, :)     ";
-  if(cell_width > 0) { o.width(cell_width); }
+  if(cell_width > 0)  { o.width(cell_width); }
   o << "...\n";
   
   

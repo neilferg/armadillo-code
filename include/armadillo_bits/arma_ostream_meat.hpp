@@ -259,10 +259,10 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
 
 
 //! "better than nothing" settings for complex numbers
-template<typename T>
+template<typename eT>
 inline
 std::streamsize
-arma_ostream::modify_stream(std::ostream& o, typename SpMat<T>::const_iterator begin, const uword n_elem, const typename arma_cx_only<T>::result* junk)
+arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator begin, const uword n_elem, const typename arma_cx_only<eT>::result* junk)
   {
   arma_ignore(begin);
   arma_ignore(n_elem);
@@ -1206,7 +1206,7 @@ arma_ostream::brief_print(std::ostream& o, const SpMat<eT>& m)
   storage_col(count) = it.col();
   storage_val(count) = (*it);
   
-  const std::streamsize cell_width = arma_ostream::modify_stream<eT>(o, storage_val.memptr(), 10);
+  const std::streamsize cell_width = arma_ostream::modify_stream(o, storage_val.memptr(), 10);
   
   for(uword i=0; i < 9; ++i)
     {

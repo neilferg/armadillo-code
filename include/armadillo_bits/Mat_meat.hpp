@@ -26,7 +26,7 @@ Mat<eT>::~Mat()
   
   if(n_alloc > arma_config::mat_prealloc)
     {
-    arma_extra_debug_print("Mat::destructor: releasing memory" );
+    arma_extra_debug_print("Mat::destructor: releasing memory");
     memory::release( access::rw(mem) );
     }
   

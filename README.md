@@ -458,3 +458,7 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 * RcppArmadillo: integration of Armadillo with the R system and environment  
   http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
+
+* PyArmadillo: linear algebra library for Python  
+  https://pyarma.sourceforge.io
+

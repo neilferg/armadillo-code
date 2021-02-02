@@ -67,8 +67,6 @@ op_hist::apply_noalias(Mat<uword>& out, const Mat<eT>& A, const uword n_bins, co
   if(arma_isfinite(min_val) == false) { min_val = priv::most_neg<eT>(); }
   if(arma_isfinite(max_val) == false) { max_val = priv::most_pos<eT>(); }
   
-  // TODO: should c be simply generated via linspace() ?
-  
   Col<eT> c(n_bins);
   eT* c_mem = c.memptr();
   

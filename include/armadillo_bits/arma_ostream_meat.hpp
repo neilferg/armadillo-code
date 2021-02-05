@@ -510,7 +510,8 @@ arma_ostream::print(std::ostream& o, const Cube<eT>& x, const bool modify)
       
       o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::print(o, tmp, modify);
-      o << '\n';
+      
+      if((slice+1) < x.n_slices)  { o << '\n'; }
       }
     }
   else
@@ -1093,7 +1094,8 @@ arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x)
       
       o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::brief_print(o, tmp, false);
-      o << '\n';
+      
+      if((slice+1) < x.n_slices)  { o << '\n'; }
       }
     }
   else
@@ -1115,7 +1117,6 @@ arma_ostream::brief_print(std::ostream& o, const Cube<eT>& x)
       
       o << "[cube slice: " << slice << ']' << '\n';
       arma_ostream::brief_print(o, tmp, false);
-      o << '\n';
       }
     }
   

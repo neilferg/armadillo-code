@@ -62,6 +62,21 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
   
+  #if defined(ARMA_OPTIMISE_SYMPD)
+    {
+    if( (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && sympd_helper::guess_sympd_anysize(A) )
+      {
+      out = A;
+      
+      const T rcond_threshold = T(100) * std::numeric_limits<T>::epsilon();
+      
+      const bool status = auxlib::inv_sympd_rcond(out, rcond_threshold);
+      
+      if(status)  { return true; }
+      }
+    }
+  #endif
+  
   // economical SVD decomposition 
   Mat<eT> U;
   Col< T> s;

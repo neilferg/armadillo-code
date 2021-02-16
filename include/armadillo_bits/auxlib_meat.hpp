@@ -382,6 +382,81 @@ auxlib::inv_sympd_tiny(Mat<eT>& out, const Mat<eT>& X)
 
 template<typename eT>
 inline
+bool
+auxlib::inv_sympd_rcond(Mat<eT>& A, const eT rcond_threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(A.is_empty())  { return true; }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename get_pod_type<eT>::result T;
+    
+    arma_debug_assert_blas_size(A);
+    
+    char     norm_id  = '1';
+    char     uplo     = 'L';
+    blas_int n        = blas_int(A.n_rows);
+    blas_int info     = 0;
+    T        norm_val = T(0);
+    
+    podarray<T> work(A.n_rows);
+    
+    arma_extra_debug_print("lapack::lansy()");
+    norm_val = lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &n, work.memptr());
+    
+    arma_extra_debug_print("lapack::potrf()");
+    lapack::potrf(&uplo, &n, A.memptr(), &n, &info);
+    
+    if(info != 0)  { return false; }
+    
+    const T rcond = auxlib::lu_rcond_sympd<T>(A, norm_val);
+    
+    // cout << "*** rcond: " << rcond << endl;
+    // cout << "*** rcond_threshold: " << rcond_threshold << endl;
+    
+    if(rcond < rcond_threshold)  { return false; }
+    
+    arma_extra_debug_print("lapack::potri()");
+    lapack::potri(&uplo, &n, A.memptr(), &n, &info);
+    
+    if(info != 0)  { return false; }
+    
+    A = symmatl(A);
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(out);
+    arma_ignore(out_rcond);
+    arma_stop_logic_error("inv_sympd_rcond(): use LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T>
+inline
+bool
+auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, const T rcond_threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  // TODO
+  
+  // NOTE: need to take into account ARMA_CRIPPLED_LAPACK
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
 eT
 auxlib::det(const Mat<eT>& A)
   {

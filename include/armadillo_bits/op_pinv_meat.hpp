@@ -55,17 +55,12 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   arma_debug_check((tol < T(0)), "pinv(): tolerance must be >= 0");
   
-  const Proxy<T1> P(expr.get_ref());
+  Mat<eT> A(expr.get_ref());
   
-  const uword n_rows = P.get_n_rows();
-  const uword n_cols = P.get_n_cols();
+  const uword n_rows = A.n_rows;
+  const uword n_cols = A.n_cols;
   
-  if( (n_rows*n_cols) == 0 )
-    {
-    out.set_size(n_cols,n_rows);
-    return true;
-    }
-  
+  if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
   
   // economical SVD decomposition 
   Mat<eT> U;
@@ -74,20 +69,11 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   bool status = false;
   
-  if(use_divide_and_conquer)
-    {
-    status = (n_cols > n_rows) ? auxlib::svd_dc_econ(U, s, V, trans(P.Q)) : auxlib::svd_dc_econ(U, s, V, P.Q);
-    }
-  else
-    {
-    status = (n_cols > n_rows) ? auxlib::svd_econ(U, s, V, trans(P.Q), 'b') : auxlib::svd_econ(U, s, V, P.Q, 'b');
-    }
+  if(n_cols > n_rows)  { A = trans(A); }
   
-  if(status == false)
-    {
-    out.soft_reset();
-    return false;
-    }
+  status = (use_divide_and_conquer) ? auxlib::svd_dc_econ(U, s, V, A) : auxlib::svd_econ(U, s, V, A, 'b');
+  
+  if(status == false)  { out.soft_reset(); return false; }
   
   const uword s_n_elem = s.n_elem;
   const T*    s_mem    = s.memptr();
@@ -101,10 +87,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   uword count = 0;
   
-  for(uword i = 0; i < s_n_elem; ++i)
-    {
-    count += (s_mem[i] >= tol) ? uword(1) : uword(0);
-    }
+  for(uword i = 0; i < s_n_elem; ++i)  { count += (s_mem[i] >= tol) ? uword(1) : uword(0); }
   
   
   if(count > 0)

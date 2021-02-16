@@ -134,6 +134,8 @@ svd_econ
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
+  typedef typename T1::elem_type eT;
+  
   arma_debug_check
     (
     ( ((void*)(&U) == (void*)(&S)) || (&U == &V) || ((void*)(&S) == (void*)(&V)) ),
@@ -150,7 +152,9 @@ svd_econ
   
   arma_debug_check( ((sig != 's') && (sig != 'd')), "svd_econ(): unknown method specified" );
   
-  const bool status = ((mode == 'b') && (sig == 'd')) ? auxlib::svd_dc_econ(U, S, V, X) : auxlib::svd_econ(U, S, V, X, mode);
+  Mat<eT> A(X.get_ref());
+  
+  const bool status = ((mode == 'b') && (sig == 'd')) ? auxlib::svd_dc_econ(U, S, V, A) : auxlib::svd_econ(U, S, V, A, mode);
   
   if(status == false)
     {

@@ -21,8 +21,8 @@
 
 #define ARMA_VERSION_MAJOR 10
 #define ARMA_VERSION_MINOR 2
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Cicada Swarm"
+#define ARMA_VERSION_PATCH 900
+#define ARMA_VERSION_NAME  "unstable - not for production use"
 
 
 

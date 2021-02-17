@@ -429,7 +429,7 @@ auxlib::inv_sympd_rcond(Mat<eT>& A, const eT rcond_threshold)
     }
   #else
     {
-    arma_ignore(out);
+    arma_ignore(A);
     arma_ignore(rcond_threshold);
     arma_stop_logic_error("inv_sympd_rcond(): use LAPACK must be enabled");
     return false;
@@ -446,11 +446,15 @@ auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, const T rcond_threshold)
   {
   arma_extra_debug_sigprint();
   
-  // TODO: need to take into account ARMA_CRIPPLED_LAPACK
-  
   if(A.is_empty())  { return true; }
   
-  #if defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_ignore(A);
+    arma_ignore(rcond_threshold);
+    return false;
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     arma_debug_assert_blas_size(A);
     
@@ -488,7 +492,7 @@ auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, const T rcond_threshold)
     }
   #else
     {
-    arma_ignore(out);
+    arma_ignore(A);
     arma_ignore(rcond_threshold);
     arma_stop_logic_error("inv_sympd_rcond(): use LAPACK must be enabled");
     return false;

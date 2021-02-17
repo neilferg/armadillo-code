@@ -146,6 +146,25 @@ arma_stop_logic_error(const T1& x)
 
 
 
+//! print a message to get_cerr_stream() and throw logic_error exception
+template<typename T1>
+arma_cold
+arma_noinline
+static
+void
+arma_stop_bounds_error(const T1& x)
+  {
+  #if defined(ARMA_PRINT_ERRORS)
+    {
+    get_cerr_stream() << "\nerror: " << x << std::endl;
+    }
+  #endif
+  
+  throw std::out_of_range( std::string(x) );
+  }
+
+
+
 //! print a message to get_cerr_stream() and throw bad_alloc exception
 template<typename T1>
 arma_cold
@@ -390,6 +409,16 @@ void
 arma_check(const bool state, const T1& x, const T2& y)
   {
   if(state)  { arma_stop_logic_error( std::string(x) + std::string(y) ); }
+  }
+
+
+template<typename T1>
+arma_hot
+inline
+void
+arma_check_bounds(const bool state, const T1& x)
+  {
+  if(state)  { arma_stop_bounds_error(arma_str::str_wrapper(x)); }
   }
 
 
@@ -1263,6 +1292,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_debug_print                   true ? (void)0 : arma_print
   #define arma_debug_warn                    true ? (void)0 : arma_warn
   #define arma_debug_check                   true ? (void)0 : arma_check
+  #define arma_debug_check_bounds            true ? (void)0 : arma_check_bounds
   #define arma_debug_set_error               true ? (void)0 : arma_set_error
   #define arma_debug_assert_same_size        true ? (void)0 : arma_assert_same_size
   #define arma_debug_assert_mul_size         true ? (void)0 : arma_assert_mul_size
@@ -1276,6 +1306,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_debug_print                 arma_print
   #define arma_debug_warn                  arma_warn
   #define arma_debug_check                 arma_check
+  #define arma_debug_check_bounds          arma_check_bounds
   #define arma_debug_set_error             arma_set_error
   #define arma_debug_assert_same_size      arma_assert_same_size
   #define arma_debug_assert_mul_size       arma_assert_mul_size

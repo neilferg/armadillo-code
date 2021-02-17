@@ -68,7 +68,7 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
   arma_debug_check
     (
     ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object is not a vector"
+    "Mat::elem(): given object must be a vector"
     );
   
   const uword* aa_mem    = aa.memptr();
@@ -141,7 +141,7 @@ subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
     arma_debug_check
       (
       ( ((s_aa.is_vec() == false) && (s_aa.is_empty() == false)) || ((x_aa.is_vec() == false) && (x_aa.is_empty() == false)) ),
-      "Mat::elem(): given object is not a vector"
+      "Mat::elem(): given object must be a vector"
       );
     
     const uword* s_aa_mem = s_aa.memptr();
@@ -221,7 +221,7 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   arma_debug_check
     (
     ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object is not a vector"
+    "Mat::elem(): given object must be a vector"
     );
   
   const uword* aa_mem    = aa.memptr();
@@ -359,7 +359,7 @@ subview_elem1<eT,T1>::replace(const eT old_val, const eT new_val)
   arma_debug_check
     (
     ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object is not a vector"
+    "Mat::elem(): given object must be a vector"
     );
   
   const uword* aa_mem    = aa.memptr();
@@ -449,7 +449,7 @@ subview_elem1<eT,T1>::randu()
   arma_debug_check
     (
     ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object is not a vector"
+    "Mat::elem(): given object must be a vector"
     );
   
   const uword* aa_mem    = aa.memptr();
@@ -500,7 +500,7 @@ subview_elem1<eT,T1>::randn()
   arma_debug_check
     (
     ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object is not a vector"
+    "Mat::elem(): given object must be a vector"
     );
   
   const uword* aa_mem    = aa.memptr();
@@ -757,7 +757,7 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   arma_debug_check
     (
     ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object is not a vector"
+    "Mat::elem(): given object must be a vector"
     );
   
   const uword* aa_mem    = aa.memptr();
@@ -823,7 +823,7 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
   arma_debug_check
     (
     ( (aa.is_vec() == false) && (aa.is_empty() == false) ),
-    "Mat::elem(): given object is not a vector"
+    "Mat::elem(): given object must be a vector"
     );
   
   const uword* aa_mem    = aa.memptr();

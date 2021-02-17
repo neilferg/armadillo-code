@@ -1107,7 +1107,7 @@ class Proxy< subview_elem1<eT,T1> >
     const bool R_is_vec   = ((R.get_n_rows() == 1) || (R.get_n_cols() == 1));
     const bool R_is_empty = (R.get_n_elem() == 0);
     
-    arma_debug_check( ((R_is_vec == false) && (R_is_empty == false)), "Mat::elem(): given object is not a vector" );
+    arma_debug_check( ((R_is_vec == false) && (R_is_empty == false)), "Mat::elem(): given object must be a vector" );
     }
   
   arma_inline uword get_n_rows() const { return R.get_n_elem(); }

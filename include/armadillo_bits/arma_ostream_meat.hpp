@@ -961,7 +961,8 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
       o << "...";
       
       o.width(cell_width);
-      o << X.at(row,3) << '\n';
+      arma_ostream::print_elem(o, X.at(row,3), true);
+      o << '\n';
       }
     
     for(uword col=0; col <= 2; ++col)
@@ -988,7 +989,8 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
       o << "...";
       
       o.width(cell_width);
-      o << X.at(row,3) << '\n';
+      arma_ostream::print_elem(o, X.at(row,3), true);
+      o << '\n';
       }
     }
   
@@ -1056,7 +1058,8 @@ arma_ostream::brief_print(std::ostream& o, const Mat<eT>& m, const bool print_si
       o << "...";
       
       o.width(cell_width);
-      o << X.at(row,3) << '\n';
+      arma_ostream::print_elem(o, X.at(row,3), true);
+      o << '\n';
       }
     }
   

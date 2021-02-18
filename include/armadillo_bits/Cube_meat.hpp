@@ -294,7 +294,7 @@ Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in
     return;
     }
   
-  arma_debug_check( (t_mem_state == 2), "Cube::init(): requested size is not compatible with the size of auxiliary memory" );
+  arma_debug_check( (t_mem_state == 2), "Cube::init(): mismatch between size of auxiliary memory and requested size" );
   
   delete_mat();
   

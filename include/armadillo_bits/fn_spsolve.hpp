@@ -54,7 +54,7 @@ spsolve_helper
   
   const superlu_opts& opts = (settings.id == 1) ? static_cast<const superlu_opts&>(settings) : superlu_opts_default;
   
-  arma_debug_check( ( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) ), "spsolve(): pivot_thresh out of bounds" );
+  arma_debug_check_bounds( ( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) ), "spsolve(): pivot_thresh out of bounds" );
   
   if(sig == 's')  // SuperLU solver
     {

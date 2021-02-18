@@ -54,7 +54,7 @@ SpSubview_col_list<eT,T1>::SpSubview_col_list
     {
     const uword i = ci_mem[ci_count];
     
-    arma_debug_check( (i >= in_m.n_cols), "SpMat::cols(): index out of bounds" );
+    arma_debug_check_bounds( (i >= in_m.n_cols), "SpMat::cols(): index out of bounds" );
     }
   }
 

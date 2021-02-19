@@ -34,7 +34,7 @@ qr
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  arma_debug_check( (&Q == &R), "qr(): Q and R are the same object" );
+  arma_debug_check_arg( (&Q == &R), "qr(): Q and R are the same object" );
   
   const bool status = auxlib::qr(Q, R, X);
   
@@ -96,11 +96,11 @@ qr
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (&Q == &R), "qr(): Q and R are the same object" );
+  arma_debug_check_arg( (&Q == &R), "qr(): Q and R are the same object" );
   
   const char sig = (P_mode != nullptr) ? P_mode[0] : char(0);
   
-  arma_debug_check( ((sig != 'm') && (sig != 'v')), "qr(): argument 'P_mode' must be \"vector\" or \"matrix\"" );
+  arma_debug_check_arg( ((sig != 'm') && (sig != 'v')), "qr(): argument 'P_mode' must be \"vector\" or \"matrix\"" );
   
   bool status = false;
   

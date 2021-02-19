@@ -39,13 +39,13 @@ svds_helper
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  arma_debug_check
+  arma_debug_check_arg
     (
     ( ((void*)(&U) == (void*)(&S)) || (&U == &V) || ((void*)(&S) == (void*)(&V)) ),
     "svds(): two or more output objects are the same object"
     );
   
-  arma_debug_check( (tol < T(0)), "svds(): tol must be >= 0" );
+  arma_debug_check_arg( (tol < T(0)), "svds(): tol must be >= 0" );
   
   const unwrap_spmat<T1> tmp(X.get_ref());
   const SpMat<eT>& A =   tmp.M;
@@ -163,13 +163,13 @@ svds_helper
     return false;
     }
   
-  arma_debug_check
+  arma_debug_check_arg
     (
     ( ((void*)(&U) == (void*)(&S)) || (&U == &V) || ((void*)(&S) == (void*)(&V)) ),
     "svds(): two or more output objects are the same object"
     );
   
-  arma_debug_check( (tol < T(0)), "svds(): tol must be >= 0" );
+  arma_debug_check_arg( (tol < T(0)), "svds(): tol must be >= 0" );
   
   const unwrap_spmat<T1> tmp(X.get_ref());
   const SpMat<eT>& A =   tmp.M;

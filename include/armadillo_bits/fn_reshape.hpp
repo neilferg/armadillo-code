@@ -56,7 +56,7 @@ reshape(const Base<typename T1::elem_type,T1>& X, const uword in_n_rows, const u
   
   // arma_debug_warn("this form of reshape() is deprecated and will be removed");
   
-  arma_debug_check( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
+  arma_debug_check_arg( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
   
   return Op<T1, op_reshape_old>(X.get_ref(), in_n_rows, in_n_cols, dim, 'j');
   }

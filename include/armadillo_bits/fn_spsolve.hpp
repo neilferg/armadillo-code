@@ -41,7 +41,7 @@ spsolve_helper
   
   const char sig = (solver != nullptr) ? solver[0] : char(0);
   
-  arma_debug_check( ((sig != 'l') && (sig != 's')), "spsolve(): unknown solver" );
+  arma_debug_check_arg( ((sig != 'l') && (sig != 's')), "spsolve(): unknown solver" );
   
   T rcond = T(0);
   
@@ -54,7 +54,7 @@ spsolve_helper
   
   const superlu_opts& opts = (settings.id == 1) ? static_cast<const superlu_opts&>(settings) : superlu_opts_default;
   
-  arma_debug_check_bounds( ( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) ), "spsolve(): pivot_thresh out of bounds" );
+  arma_debug_check_arg( ( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) ), "spsolve(): pivot_thresh out of bounds" );
   
   if(sig == 's')  // SuperLU solver
     {
@@ -94,7 +94,7 @@ spsolve_helper
     
     if(conversion_ok)
       {
-      arma_debug_check( (AA.n_rows != AA.n_cols), "spsolve(): matrix A must be square sized" );
+      arma_debug_check_arg( (AA.n_rows != AA.n_cols), "spsolve(): matrix A must be square sized" );
       
       uword flags = solve_opts::flag_none;
       

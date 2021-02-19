@@ -33,7 +33,7 @@ chol
   
   const char sig = (layout != nullptr) ? layout[0] : char(0);
   
-  arma_debug_check( ((sig != 'u') && (sig != 'l')), "chol(): layout must be \"upper\" or \"lower\"" );
+  arma_debug_check_arg( ((sig != 'u') && (sig != 'l')), "chol(): layout must be \"upper\" or \"lower\"" );
   
   return Op<T1, op_chol>(X.get_ref(), ((sig == 'u') ? 0 : 1), 0 );
   }
@@ -54,7 +54,7 @@ chol
   
   const char sig = (layout != nullptr) ? layout[0] : char(0);
   
-  arma_debug_check( ((sig != 'u') && (sig != 'l')), "chol(): layout must be \"upper\" or \"lower\"" );
+  arma_debug_check_arg( ((sig != 'u') && (sig != 'l')), "chol(): layout must be \"upper\" or \"lower\"" );
   
   const bool status = op_chol::apply_direct(out, X.get_ref(), ((sig == 'u') ? 0 : 1));
   

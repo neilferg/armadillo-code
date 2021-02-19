@@ -69,7 +69,7 @@ log_det
   
   const diagmat_proxy<T1> A(X.m);
   
-  arma_debug_check( (A.n_rows != A.n_cols), "log_det(): given matrix must be square sized" );
+  arma_debug_check_arg( (A.n_rows != A.n_cols), "log_det(): given matrix must be square sized" );
   
   const uword N = (std::min)(A.n_rows, A.n_cols);
   

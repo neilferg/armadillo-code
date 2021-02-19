@@ -32,12 +32,12 @@ randi(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
   
   if(is_Col<obj_type>::value)
     {
-    arma_debug_check( (n_cols != 1), "randi(): incompatible size" );
+    arma_debug_check_arg( (n_cols != 1), "randi(): incompatible size" );
     }
   else
   if(is_Row<obj_type>::value)
     {
-    arma_debug_check( (n_rows != 1), "randi(): incompatible size" );
+    arma_debug_check_arg( (n_rows != 1), "randi(): incompatible size" );
     }
   
   obj_type out(n_rows, n_cols);
@@ -62,7 +62,7 @@ randi(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     b = int(param.b_double);
     }
   
-  arma_debug_check( (a > b), "randi(): incorrect distribution parameters: a must be less than b" );
+  arma_debug_check_arg( (a > b), "randi(): incorrect distribution parameters: a must be less than b" );
   
   arma_rng::randi<eT>::fill(out.memptr(), out.n_elem, a, b);
   
@@ -218,7 +218,7 @@ randi(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     b = int(param.b_double);
     }
   
-  arma_debug_check( (a > b), "randi(): incorrect distribution parameters: a must be less than b" );
+  arma_debug_check_arg( (a > b), "randi(): incorrect distribution parameters: a must be less than b" );
   
   arma_rng::randi<eT>::fill(out.memptr(), out.n_elem, a, b);
   

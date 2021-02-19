@@ -234,7 +234,7 @@ auxlib::inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
     {
     out = X.get_ref();
     
-    arma_debug_check( (out.is_square() == false), "inv(): given matrix must be square sized" );
+    arma_debug_check_arg( (out.is_square() == false), "inv(): given matrix must be square sized" );
     
     if(out.is_empty())  { return true; }
   
@@ -283,7 +283,7 @@ auxlib::inv_sympd(Mat<eT>& out, const Base<eT,T1>& X)
   
   out = X.get_ref();
   
-  arma_debug_check( (out.is_square() == false), "inv_sympd(): given matrix must be square sized" );
+  arma_debug_check_arg( (out.is_square() == false), "inv_sympd(): given matrix must be square sized" );
   
   if(out.is_empty())  { return true; }
   
@@ -708,7 +708,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
   #if defined(ARMA_USE_ATLAS)
     {
     Mat<eT> tmp(X.get_ref());
-    arma_debug_check( (tmp.is_square() == false), "log_det(): given matrix must be square sized" );
+    arma_debug_check_arg( (tmp.is_square() == false), "log_det(): given matrix must be square sized" );
     
     if(tmp.is_empty())
       {
@@ -755,7 +755,7 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
   #elif defined(ARMA_USE_LAPACK)
     {
     Mat<eT> tmp(X.get_ref());
-    arma_debug_check( (tmp.is_square() == false), "log_det(): given matrix must be square sized" );
+    arma_debug_check_arg( (tmp.is_square() == false), "log_det(): given matrix must be square sized" );
     
     if(tmp.is_empty())
       {
@@ -1048,7 +1048,7 @@ auxlib::eig_gen
     
     Mat<T> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1161,7 +1161,7 @@ auxlib::eig_gen
     
     Mat<eT> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1233,7 +1233,7 @@ auxlib::eig_gen_balance
     
     Mat<T> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1362,7 +1362,7 @@ auxlib::eig_gen_balance
     
     Mat<eT> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1443,7 +1443,7 @@ auxlib::eig_gen_twosided
     
     Mat<T> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1550,7 +1550,7 @@ auxlib::eig_gen_twosided
     
     Mat<eT> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1620,7 +1620,7 @@ auxlib::eig_gen_twosided_balance
     
     Mat<T> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1743,7 +1743,7 @@ auxlib::eig_gen_twosided_balance
     
     Mat<eT> X = expr.get_ref();
     
-    arma_debug_check( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
+    arma_debug_check_arg( (X.is_square() == false), "eig_gen(): given matrix must be square sized" );
     
     arma_debug_assert_blas_size(X);
     
@@ -1825,7 +1825,7 @@ auxlib::eig_pair
     Mat<T> A(A_expr.get_ref());
     Mat<T> B(B_expr.get_ref());
     
-    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
+    arma_debug_check_arg( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
     
     arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
     
@@ -1968,7 +1968,7 @@ auxlib::eig_pair
     Mat<eT> A(A_expr.get_ref());
     Mat<eT> B(B_expr.get_ref());
     
-    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
+    arma_debug_check_arg( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
     
     arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
     
@@ -2070,7 +2070,7 @@ auxlib::eig_pair_twosided
     Mat<T> A(A_expr.get_ref());
     Mat<T> B(B_expr.get_ref());
     
-    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
+    arma_debug_check_arg( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
     
     arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
     
@@ -2207,7 +2207,7 @@ auxlib::eig_pair_twosided
     Mat<eT> A(A_expr.get_ref());
     Mat<eT> B(B_expr.get_ref());
     
-    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
+    arma_debug_check_arg( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
     
     arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
     
@@ -2296,7 +2296,7 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
     {
     Mat<eT> A(X.get_ref());
     
-    arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    arma_debug_check_arg( (A.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
     if(A.is_empty())
       {
@@ -2359,7 +2359,7 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
     
     Mat<eT> A(X.get_ref());
     
-    arma_debug_check( (A.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    arma_debug_check_arg( (A.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
     if(A.is_empty())
       {
@@ -2421,7 +2421,7 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
     {
     eigvec = X;
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    arma_debug_check_arg( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
     if(eigvec.is_empty())
       {
@@ -2475,7 +2475,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
     
     eigvec = X;
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    arma_debug_check_arg( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
     if(eigvec.is_empty())
       {
@@ -2528,7 +2528,7 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
     {
     eigvec = X;
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    arma_debug_check_arg( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
     if(eigvec.is_empty())
       {
@@ -2607,7 +2607,7 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< st
     
     eigvec = X;
     
-    arma_debug_check( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
+    arma_debug_check_arg( (eigvec.is_square() == false), "eig_sym(): given matrix must be square sized" );
     
     if(eigvec.is_empty())
       {
@@ -2870,7 +2870,7 @@ auxlib::hess(Mat<eT>& H, const Base<eT,T1>& X, Col<eT>& tao)
     {
     H = X.get_ref();
     
-    arma_debug_check( (H.is_square() == false), "hess(): given matrix must be square sized" );
+    arma_debug_check_arg( (H.is_square() == false), "hess(): given matrix must be square sized" );
     
     if(H.is_empty())
       {
@@ -4429,7 +4429,7 @@ auxlib::solve_square_tiny(Mat<typename T1::elem_type>& out, const Mat<typename T
   const uword B_n_rows = B.n_rows;
   const uword B_n_cols = B.n_cols;
   
-  arma_debug_check( (A_n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+  arma_debug_check_arg( (A_n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
   
   if(A.is_empty() || B.is_empty())
     {
@@ -4481,7 +4481,7 @@ auxlib::solve_square_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
   const uword B_n_rows = out.n_rows;
   const uword B_n_cols = out.n_cols;
     
-  arma_debug_check( (A_n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+  arma_debug_check_arg( (A_n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
   if(A.is_empty() || out.is_empty())
     {
@@ -4547,7 +4547,7 @@ auxlib::solve_square_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_ty
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
       
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
       
     if(A.is_empty() || out.is_empty())
       {
@@ -4627,7 +4627,7 @@ auxlib::solve_square_refine(Mat<typename T1::pod_type>& out, typename T1::pod_ty
     
     const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
     if(A.is_empty() || B.is_empty())
       {
@@ -4729,7 +4729,7 @@ auxlib::solve_square_refine(Mat< std::complex<typename T1::pod_type> >& out, typ
     
     const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
     if(A.is_empty() || B.is_empty())
       {
@@ -4849,7 +4849,7 @@ auxlib::solve_sympd_fast_common(Mat<typename T1::elem_type>& out, Mat<typename T
   const uword B_n_rows = out.n_rows;
   const uword B_n_cols = out.n_cols;
   
-  arma_debug_check( (A_n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+  arma_debug_check_arg( (A_n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
   
   if(A.is_empty() || out.is_empty())
     {
@@ -4921,7 +4921,7 @@ auxlib::solve_sympd_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
     
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || out.is_empty())
       {
@@ -5000,7 +5000,7 @@ auxlib::solve_sympd_rcond(Mat< std::complex<typename T1::pod_type> >& out, typen
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
     
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || out.is_empty())
       {
@@ -5077,7 +5077,7 @@ auxlib::solve_sympd_refine(Mat<typename T1::pod_type>& out, typename T1::pod_typ
     
     const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || B.is_empty())
       {
@@ -5166,7 +5166,7 @@ auxlib::solve_sympd_refine(Mat< std::complex<typename T1::pod_type> >& out, type
     
     const Mat<eT>& B = (use_copy) ? B_tmp : UB_M_as_Mat;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
     if(A.is_empty() || B.is_empty())
       {
@@ -5239,7 +5239,7 @@ auxlib::solve_rect_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_
     const unwrap<T1>   U(B_expr.get_ref());
     const Mat<eT>& B = U.M;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || B.is_empty())
       {
@@ -5337,7 +5337,7 @@ auxlib::solve_rect_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type
     const unwrap<T1>   U(B_expr.get_ref());
     const Mat<eT>& B = U.M;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || B.is_empty())
       {
@@ -5481,7 +5481,7 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     const unwrap<T1>   U(B_expr.get_ref());
     const Mat<eT>& B = U.M;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || B.is_empty())
       {
@@ -5602,7 +5602,7 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     const unwrap<T1>   U(B_expr.get_ref());
     const Mat<eT>& B = U.M;
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || B.is_empty())
       {
@@ -5723,7 +5723,7 @@ auxlib::solve_trimat_fast(Mat<typename T1::elem_type>& out, const Mat<typename T
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
     
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || out.is_empty())
       {
@@ -5777,7 +5777,7 @@ auxlib::solve_trimat_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_ty
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
     
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || out.is_empty())
       {
@@ -5878,7 +5878,7 @@ auxlib::solve_band_fast_common(Mat<typename T1::elem_type>& out, const Mat<typen
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
     
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || out.is_empty())
       {
@@ -5986,7 +5986,7 @@ auxlib::solve_band_rcond_common(Mat<typename T1::elem_type>& out, typename T1::p
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
     
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || out.is_empty())
       {
@@ -6067,7 +6067,7 @@ auxlib::solve_band_refine(Mat<typename T1::pod_type>& out, typename T1::pod_type
     
     Mat<eT> B = B_expr.get_ref();  // B is overwritten
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
     if(A.is_empty() || B.is_empty())
       {
@@ -6176,7 +6176,7 @@ auxlib::solve_band_refine(Mat< std::complex<typename T1::pod_type> >& out, typen
     
     Mat<eT> B = B_expr.get_ref();  // B is overwritten
     
-    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
       
     if(A.is_empty() || B.is_empty())
       {
@@ -6314,7 +6314,7 @@ auxlib::solve_tridiag_fast_common(Mat<typename T1::elem_type>& out, const Mat<ty
     const uword B_n_rows = out.n_rows;
     const uword B_n_cols = out.n_cols;
     
-    arma_debug_check( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
+    arma_debug_check_arg( (A.n_rows != B_n_rows), "solve(): number of rows in the given matrices must be the same" );
     
     if(A.is_empty() || out.is_empty())
       {
@@ -6364,7 +6364,7 @@ auxlib::schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U)
     {
     S = X.get_ref();
     
-    arma_debug_check( (S.is_square() == false), "schur(): given matrix must be square sized" );
+    arma_debug_check_arg( (S.is_square() == false), "schur(): given matrix must be square sized" );
     
     if(S.is_empty())
       {
@@ -6422,7 +6422,7 @@ auxlib::schur(Mat< std::complex<T> >& U, Mat< std::complex<T> >& S, const Base<s
   
   S = X.get_ref();
   
-  arma_debug_check( (S.is_square() == false), "schur(): given matrix must be square sized" );
+  arma_debug_check_arg( (S.is_square() == false), "schur(): given matrix must be square sized" );
   
   return auxlib::schur(U,S,calc_U);
   }
@@ -6497,7 +6497,7 @@ auxlib::syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C)
   
   #if defined(ARMA_USE_LAPACK)
     {
-    arma_debug_check( (A.is_square() == false) || (B.is_square() == false), "syl(): given matrices must be square sized" );
+    arma_debug_check_arg( (A.is_square() == false) || (B.is_square() == false), "syl(): given matrices must be square sized" );
       
     arma_debug_check( (C.n_rows != A.n_rows) || (C.n_cols != B.n_cols), "syl(): matrices are not conformant" );
     
@@ -6569,7 +6569,7 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_e
     A = X_expr.get_ref();
     B = Y_expr.get_ref();
     
-    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "qz(): given matrices must be square sized" );
+    arma_debug_check_arg( ((A.is_square() == false) || (B.is_square() == false)), "qz(): given matrices must be square sized" );
     
     arma_debug_check( (A.n_rows != B.n_rows), "qz(): given matrices must have the same size" );
     
@@ -6660,7 +6660,7 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     A = X_expr.get_ref();
     B = Y_expr.get_ref();
     
-    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "qz(): given matrices must be square sized" );
+    arma_debug_check_arg( ((A.is_square() == false) || (B.is_square() == false)), "qz(): given matrices must be square sized" );
     
     arma_debug_check( (A.n_rows != B.n_rows), "qz(): given matrices must have the same size" );
     

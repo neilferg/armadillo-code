@@ -293,7 +293,7 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
     return;
     }
   
-  arma_debug_check_bounds( (t_mem_state == 2), "Mat::init(): mismatch between size of auxiliary memory and requested size" );
+  arma_debug_check( (t_mem_state == 2), "Mat::init(): mismatch between size of auxiliary memory and requested size" );
   
   if(new_n_elem <= arma_config::mat_prealloc)
     {
@@ -847,7 +847,7 @@ Mat<eT>::init(const std::initializer_list< std::initializer_list<eT> >& list)
   
   if(t.mem_state == 3)
     {
-    arma_debug_check_bounds( ((x_n_rows != t.n_rows) || (x_n_cols != t.n_cols)), "Mat::init(): size mismatch between fixed size matrix and initialiser list" );
+    arma_debug_check( ((x_n_rows != t.n_rows) || (x_n_cols != t.n_cols)), "Mat::init(): size mismatch between fixed size matrix and initialiser list" );
     }
   else
     {
@@ -9103,7 +9103,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const std::initializer_lis
   
   const uword N = uword(list.size());
   
-  arma_debug_check_bounds( (N > fixed_n_elem), "Mat::fixed: initialiser list is too long" );
+  arma_debug_check( (N > fixed_n_elem), "Mat::fixed: initialiser list is too long" );
   
   eT* this_mem = (*this).memptr();
   

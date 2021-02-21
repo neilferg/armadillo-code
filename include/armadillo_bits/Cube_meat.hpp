@@ -2076,7 +2076,7 @@ Cube<eT>::shed_slices(const Base<uword, T1>& indices)
   const quasi_unwrap<T1>   U(indices.get_ref());
   const Mat<uword>& tmp1 = U.M;
   
-  arma_debug_check_arg( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Cube::shed_slices(): list of indices must be a vector" );
+  arma_debug_check( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Cube::shed_slices(): list of indices must be a vector" );
   
   if(tmp1.is_empty()) { return; }
   

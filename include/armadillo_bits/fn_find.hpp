@@ -47,7 +47,7 @@ find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direct
   
   const char sig = (direction != nullptr) ? direction[0] : char(0);
   
-  arma_debug_check_arg
+  arma_debug_check
     (
     ( (sig != 'f') && (sig != 'F') && (sig != 'l') && (sig != 'L') ),
     "find(): direction must be \"first\" or \"last\""

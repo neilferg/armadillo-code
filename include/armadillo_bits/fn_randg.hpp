@@ -30,12 +30,12 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
   
   if(is_Col<obj_type>::value)
     {
-    arma_debug_check_arg( (n_cols != 1), "randg(): incompatible size" );
+    arma_debug_check( (n_cols != 1), "randg(): incompatible size" );
     }
   else
   if(is_Row<obj_type>::value)
     {
-    arma_debug_check_arg( (n_rows != 1), "randg(): incompatible size" );
+    arma_debug_check( (n_rows != 1), "randg(): incompatible size" );
     }
   
   obj_type out(n_rows, n_cols);
@@ -60,7 +60,7 @@ randg(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     b = param.b_double;
     }
   
-  arma_debug_check_arg( ((a <= double(0)) || (b <= double(0))), "randg(): a and b must be greater than zero" );
+  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): a and b must be greater than zero" );
   
   #if defined(ARMA_USE_EXTERN_RNG)
     {
@@ -209,7 +209,7 @@ randg(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     b = param.b_double;
     }
   
-  arma_debug_check_arg( ((a <= double(0)) || (b <= double(0))), "randg(): a and b must be greater than zero" );
+  arma_debug_check( ((a <= double(0)) || (b <= double(0))), "randg(): a and b must be greater than zero" );
   
   #if defined(ARMA_USE_EXTERN_RNG)
     {

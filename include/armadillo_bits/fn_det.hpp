@@ -29,7 +29,7 @@ det(const Base<typename T1::elem_type,T1>& X)
   
   const quasi_unwrap<T1> U(X.get_ref());
   
-  arma_debug_check_arg( (U.M.is_square() == false), "det(): given matrix must be square sized" );
+  arma_debug_check( (U.M.is_square() == false), "det(): given matrix must be square sized" );
   
   if( (U.M.n_rows > 4) && (U.M.is_diagmat()) )
     {
@@ -53,7 +53,7 @@ det(const Op<T1, op_diagmat>& X)
   
   const diagmat_proxy<T1> A(X.m);
   
-  arma_debug_check_arg( (A.n_rows != A.n_cols), "det(): given matrix must be square sized" );
+  arma_debug_check( (A.n_rows != A.n_cols), "det(): given matrix must be square sized" );
   
   const uword N = (std::min)(A.n_rows, A.n_cols);
   
@@ -92,7 +92,7 @@ det(const Op<T1, op_trimat>& X)
   
   const uword N = P.get_n_rows();
   
-  arma_debug_check_arg( (N != P.get_n_cols()), "det(): given matrix must be square sized" );
+  arma_debug_check( (N != P.get_n_cols()), "det(): given matrix must be square sized" );
   
   eT val1 = eT(1);
   eT val2 = eT(1);

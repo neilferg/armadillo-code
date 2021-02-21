@@ -195,7 +195,7 @@ interp2
   
   const char sig = (method != nullptr) ? method[0] : char(0);
   
-  arma_debug_check_arg( ((sig != 'n') && (sig != 'l')), "interp2(): unsupported interpolation type" ); 
+  arma_debug_check( ((sig != 'n') && (sig != 'l')), "interp2(): unsupported interpolation type" ); 
   
   const quasi_unwrap<T1> UXG(  X.get_ref() );
   const quasi_unwrap<T2> UYG(  Y.get_ref() );
@@ -203,23 +203,23 @@ interp2
   const quasi_unwrap<T4> UXI( XI.get_ref() );
   const quasi_unwrap<T5> UYI( YI.get_ref() );
   
-  arma_debug_check_arg( (UXG.M.is_vec() == false), "interp2(): X must resolve to a vector" );
-  arma_debug_check_arg( (UYG.M.is_vec() == false), "interp2(): Y must resolve to a vector" );
+  arma_debug_check( (UXG.M.is_vec() == false), "interp2(): X must resolve to a vector" );
+  arma_debug_check( (UYG.M.is_vec() == false), "interp2(): Y must resolve to a vector" );
   
-  arma_debug_check_arg( (UXI.M.is_vec() == false), "interp2(): XI must resolve to a vector" );
-  arma_debug_check_arg( (UYI.M.is_vec() == false), "interp2(): YI must resolve to a vector" );
+  arma_debug_check( (UXI.M.is_vec() == false), "interp2(): XI must resolve to a vector" );
+  arma_debug_check( (UYI.M.is_vec() == false), "interp2(): YI must resolve to a vector" );
   
-  arma_debug_check_arg( (UXG.M.n_elem < 2), "interp2(): X must have at least two unique elements" );
-  arma_debug_check_arg( (UYG.M.n_elem < 2), "interp2(): Y must have at least two unique elements" );
+  arma_debug_check( (UXG.M.n_elem < 2), "interp2(): X must have at least two unique elements" );
+  arma_debug_check( (UYG.M.n_elem < 2), "interp2(): Y must have at least two unique elements" );
   
-  arma_debug_check_arg( (UXG.M.n_elem != UZG.M.n_cols), "interp2(): number of elements in X must equal the number of columns in Z" );
-  arma_debug_check_arg( (UYG.M.n_elem != UZG.M.n_rows), "interp2(): number of elements in Y must equal the number of rows in Z"    );
+  arma_debug_check( (UXG.M.n_elem != UZG.M.n_cols), "interp2(): number of elements in X must equal the number of columns in Z" );
+  arma_debug_check( (UYG.M.n_elem != UZG.M.n_rows), "interp2(): number of elements in Y must equal the number of rows in Z"    );
   
-  arma_debug_check_arg( (UXG.M.is_sorted("strictascend") == false), "interp2(): X must be monotonically increasing" );
-  arma_debug_check_arg( (UYG.M.is_sorted("strictascend") == false), "interp2(): Y must be monotonically increasing" );
+  arma_debug_check( (UXG.M.is_sorted("strictascend") == false), "interp2(): X must be monotonically increasing" );
+  arma_debug_check( (UYG.M.is_sorted("strictascend") == false), "interp2(): Y must be monotonically increasing" );
   
-  arma_debug_check_arg( (UXI.M.is_sorted("strictascend") == false), "interp2(): XI must be monotonically increasing" );
-  arma_debug_check_arg( (UYI.M.is_sorted("strictascend") == false), "interp2(): YI must be monotonically increasing" );
+  arma_debug_check( (UXI.M.is_sorted("strictascend") == false), "interp2(): XI must be monotonically increasing" );
+  arma_debug_check( (UYI.M.is_sorted("strictascend") == false), "interp2(): YI must be monotonically increasing" );
   
   Mat<eT> tmp;
   

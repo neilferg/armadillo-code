@@ -7319,6 +7319,10 @@ Mat<eT>::save(const std::string name, const file_type type, const bool print_sta
       return (*this).save(csv_name(name), type, print_status);
       break;
     
+    case coord_ascii:
+      save_okay = diskio::save_coord_ascii(*this, name);
+      break;
+    
     case raw_binary:
       save_okay = diskio::save_raw_binary(*this, name);
       break;
@@ -7513,6 +7517,10 @@ Mat<eT>::save(std::ostream& os, const file_type type, const bool print_status) c
       save_okay = diskio::save_csv_ascii(*this, os);
       break;
     
+    case coord_ascii:
+      save_okay = diskio::save_coord_ascii(*this, os);
+      break;
+    
     case raw_binary:
       save_okay = diskio::save_raw_binary(*this, os);
       break;
@@ -7565,6 +7573,10 @@ Mat<eT>::load(const std::string name, const file_type type, const bool print_sta
     
     case csv_ascii:
       return (*this).load(csv_name(name), type, print_status);
+      break;
+    
+    case coord_ascii:
+      load_okay = diskio::load_coord_ascii(*this, name, err_msg);
       break;
     
     case raw_binary:
@@ -7779,6 +7791,10 @@ Mat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     
     case csv_ascii:
       load_okay = diskio::load_csv_ascii(*this, is, err_msg);
+      break;
+    
+    case coord_ascii:
+      load_okay = diskio::load_coord_ascii(*this, is, err_msg);
       break;
     
     case raw_binary:

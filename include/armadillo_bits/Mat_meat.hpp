@@ -4277,7 +4277,7 @@ Mat<eT>::shed_rows(const Base<uword, T1>& indices)
   const unwrap_check_mixed<T1> U(indices.get_ref(), *this);
   const Mat<uword>& tmp1 = U.M;
   
-  arma_debug_check_arg( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_rows(): list of indices must be a vector" );
+  arma_debug_check( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_rows(): list of indices must be a vector" );
   
   if(tmp1.is_empty())  { return; }
   
@@ -4347,7 +4347,7 @@ Mat<eT>::shed_cols(const Base<uword, T1>& indices)
   const unwrap_check_mixed<T1> U(indices.get_ref(), *this);
   const Mat<uword>& tmp1 = U.M;
   
-  arma_debug_check_arg( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_cols(): list of indices must be a vector" );
+  arma_debug_check( ((tmp1.is_vec() == false) && (tmp1.is_empty() == false)), "Mat::shed_cols(): list of indices must be a vector" );
   
   if(tmp1.is_empty())  { return; }
   
@@ -6149,7 +6149,7 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
   // "strictascend" 
   // "strictdescend"
   
-  arma_debug_check_arg( ((sig1 != 'a') && (sig1 != 'd') && (sig1 != 's')), "Mat::is_sorted(): unknown sort direction" );
+  arma_debug_check( ((sig1 != 'a') && (sig1 != 'd') && (sig1 != 's')), "Mat::is_sorted(): unknown sort direction" );
   
   // "strictascend" 
   // "strictdescend"
@@ -6157,9 +6157,9 @@ Mat<eT>::is_sorted(const char* direction, const uword dim) const
   
   const char sig2 = (sig1 == 's') ? direction[6] : char(0);  
   
-  if(sig1 == 's')  { arma_debug_check_arg( ((sig2 != 'a') && (sig2 != 'd')), "Mat::is_sorted(): unknown sort direction" ); }
+  if(sig1 == 's')  { arma_debug_check( ((sig2 != 'a') && (sig2 != 'd')), "Mat::is_sorted(): unknown sort direction" ); }
   
-  arma_debug_check_arg( (dim > 1), "Mat::is_sorted(): parameter 'dim' must be 0 or 1" );
+  arma_debug_check( (dim > 1), "Mat::is_sorted(): parameter 'dim' must be 0 or 1" );
   
   if(sig1 == 'a')
     {
@@ -6603,7 +6603,7 @@ Mat<eT>::reshape(const uword in_rows, const uword in_cols, const uword dim)
   
   // arma_debug_warn("this form of reshape() is deprecated and will be removed");
   
-  arma_debug_check_arg( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
+  arma_debug_check( (dim > 1), "reshape(): parameter 'dim' must be 0 or 1" );
   
   if(dim == 0)
     {

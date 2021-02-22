@@ -6907,11 +6907,11 @@ Applicable to <i>Mat</i> and <i>SpMat</i>.
                         <td style="vertical-align: top;">
 Numerical data stored as a text file in coordinate list format, without a header.
 Only non-zero values are stored.
-Applicable only to sparse matrices (<a href="#SpMat">SpMat</a>).
 <br>
 For real matrices, each line contains information in the following format:&nbsp; <code>row column value</code>
 <br>For complex matrices, each line contains information in the following format:&nbsp; <code>row column real_value imag_value</code>
 <br>The rows and columns start at zero. 
+<br>Armadillo &geq; 10.3: applicable to <i>Mat</i> and <i>SpMat</i>; Armadillo &leq; 10.2: applicable to <i>SpMat</i> only.
 <br>
 <br>
                         </td>
@@ -18986,7 +18986,7 @@ List of additions and changes for each version:
 <li>Version 10.3:
 <ul>
 <li>faster handling of symmetric positive definite matrices by <a href="#pinv">pinv()</a></li>
-<li>...</li>
+<li>expanded <a href="#save_load_mat">.save() / .load()</a> for dense matrices to handle <i>coord_ascii</i> format</li>
 </ul>
 </li>
 <br>

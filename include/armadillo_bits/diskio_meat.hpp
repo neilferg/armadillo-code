@@ -1228,7 +1228,7 @@ diskio::save_hdf5_binary(const Mat<eT>& x, const hdf5_name& spec, std::string& e
       {
       save_okay = false;
       
-      err_msg = "couldn't create dataset in ";
+      err_msg = "couldn't create dataset";
       }
     else
       {
@@ -1339,7 +1339,7 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
       if(line_n_cols != f_n_cols)
         {
         load_okay = false;
-        err_msg = "inconsistent number of columns in ";
+        err_msg = "inconsistent number of columns";
         }
       }
     
@@ -1362,7 +1362,7 @@ diskio::load_raw_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
       if(diskio::convert_token(x.at(row,col), token) == false)
         {
         load_okay = false;
-        err_msg = "couldn't interpret data in ";
+        err_msg = "couldn't interpret data";
         }
       }
     }
@@ -1499,7 +1499,7 @@ diskio::load_arma_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -2009,7 +2009,7 @@ diskio::load_coord_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
     
     Mat<eT> tmp;
     
-    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory for data in "; return false; }
+    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
     
     while(f.good())
       {
@@ -2107,7 +2107,7 @@ diskio::load_coord_ascii(Mat< std::complex<T> >& x, std::istream& f, std::string
     
     Mat< std::complex<T> > tmp;
     
-    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory for data in "; return false; }
+    try { tmp.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
     
     while(f.good())
       {
@@ -2213,7 +2213,7 @@ diskio::load_arma_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -2366,7 +2366,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     else
       {
       load_okay = false;
-      err_msg = "functionality unimplemented to handle loading ";
+      err_msg = "functionality unimplemented";
       }
     
     if(f.good() == false)  { load_okay = false; }
@@ -2374,7 +2374,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     }
   
   return load_okay;
@@ -2470,7 +2470,7 @@ diskio::load_hdf5_binary(Mat<eT>& x, const hdf5_name& spec, std::string& err_msg
         // arma_check(query_status < 0, "Mat::load(): cannot get size of HDF5 dataset");
         if(query_status < 0)
           {
-          err_msg = "cannot get size of HDF5 dataset in ";
+          err_msg = "cannot get size of HDF5 dataset";
           
           arma_H5Sclose(filespace);
           arma_H5Dclose(dataset);
@@ -2515,12 +2515,12 @@ diskio::load_hdf5_binary(Mat<eT>& x, const hdf5_name& spec, std::string& err_msg
       
       if(load_okay == false)
         {
-        err_msg = "unsupported or missing HDF5 data in ";
+        err_msg = "unsupported or missing HDF5 data";
         }
       }
     else
       {
-      err_msg = "cannot open file ";
+      err_msg = "cannot open";
       }
     
     return load_okay;
@@ -2630,7 +2630,7 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
         break;
       
       default:
-        err_msg = "unknown data in ";
+        err_msg = "unknown data";
         return false;
       }
     }
@@ -3423,7 +3423,7 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
     if((check1 == false) || (check2 == false) || (check3 == false))
       {
       load_okay = false;
-      err_msg = "inconsistent data in ";
+      err_msg = "inconsistent data";
       }
     else
       {
@@ -3433,7 +3433,7 @@ diskio::load_arma_binary(SpMat<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   return load_okay;
@@ -3758,7 +3758,7 @@ diskio::save_hdf5_binary(const Cube<eT>& x, const hdf5_name& spec, std::string& 
       {
       save_okay = false;
       
-      err_msg = "couldn't create dataset in ";
+      err_msg = "couldn't create dataset";
       }
     else
       {
@@ -3974,7 +3974,7 @@ diskio::load_arma_ascii(Cube<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -4073,7 +4073,7 @@ diskio::load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "incorrect header in ";
+    err_msg = "incorrect header";
     }
   
   
@@ -4165,7 +4165,7 @@ diskio::load_hdf5_binary(Cube<eT>& x, const hdf5_name& spec, std::string& err_ms
         // arma_check(query_status < 0, "Cube::load(): cannot get size of HDF5 dataset");
         if(query_status < 0)
           {
-          err_msg = "cannot get size of HDF5 dataset in ";
+          err_msg = "cannot get size of HDF5 dataset";
           
           arma_H5Sclose(filespace);
           arma_H5Dclose(dataset);
@@ -4211,12 +4211,12 @@ diskio::load_hdf5_binary(Cube<eT>& x, const hdf5_name& spec, std::string& err_ms
       
       if(load_okay == false)
         {
-        err_msg = "unsupported or missing HDF5 data in ";
+        err_msg = "unsupported or missing HDF5 data";
         }
       }
     else
       {
-      err_msg = "cannot open file ";
+      err_msg = "cannot open";
       }
     
     return load_okay;
@@ -4326,7 +4326,7 @@ diskio::load_auto_detect(Cube<eT>& x, std::istream& f, std::string& err_msg)
         break;
         
       default:
-        err_msg = "unknown data in ";
+        err_msg = "unknown data";
         return false;
       }
     }
@@ -4487,7 +4487,7 @@ diskio::load_arma_binary(field<T1>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported field type in ";
+    err_msg = "unsupported field type";
     }
   
   return load_okay;
@@ -4610,7 +4610,7 @@ diskio::load_std_string(field<std::string>& x, std::istream& f, std::string& err
       if(line_n_cols != f_n_cols)
         {
         load_okay = false;
-        err_msg = "inconsistent number of columns in ";
+        err_msg = "inconsistent number of columns";
         }
       }
     
@@ -4706,7 +4706,7 @@ diskio::load_auto_detect(field<T1>& x, std::istream& f, std::string& err_msg)
     }
   else
     {
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     return false;
     }
   }
@@ -4817,7 +4817,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
     else
       {
       load_okay = false;
-      err_msg = "currently no code available to handle loading ";
+      err_msg = "functionality unimplemented";
       }
     
     if(f.good() == false)  { load_okay = false; }
@@ -4825,7 +4825,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     }
   
   return load_okay;
@@ -5017,7 +5017,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
     else
       {
       load_okay = false;
-      err_msg = "currently no code available to handle loading ";
+      err_msg = "functionality unimplemented";
       }
     
     if(f.good() == false)  { load_okay = false; }
@@ -5025,7 +5025,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
   else
     {
     load_okay = false;
-    err_msg = "unsupported header in ";
+    err_msg = "unsupported header";
     }
   
   return load_okay;

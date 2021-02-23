@@ -4704,7 +4704,9 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("SpMat::load(): ", err_msg, name);
+      std::ostringstream tmp;
+      tmp << "SpMat::load(): " << err_msg << "; file: " << name;
+      arma_debug_warn(tmp.str());
       }
     else
       {
@@ -4776,7 +4778,9 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
       {
       if(err_msg.length() > 0)
         {
-        arma_debug_warn("SpMat::load(): ", err_msg, spec.filename);
+        std::ostringstream tmp;
+        tmp << "SpMat::load(): " << err_msg << "; file: " << spec.filename;
+        arma_debug_warn(tmp.str());
         }
       else
         {
@@ -4847,7 +4851,9 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("SpMat::load(): ", err_msg, "the given stream");
+      std::ostringstream tmp;
+      tmp << "SpMat::load(): " << err_msg;
+      arma_debug_warn(tmp.str());
       }
     else
       {

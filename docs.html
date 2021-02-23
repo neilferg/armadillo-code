@@ -3302,15 +3302,15 @@ See also:
   </tbody>
 </table>
 <ul>
-<li>Change the size of an object, without explicitly preserving data and without initialising the elements</li>
+<li>Change the size of an object, without explicitly preserving data and without initialising the elements (ie. elements may contain garbage values, including NaN)</li>
 <br>
 <li>
-If you need to initialise the elements to zero while changing the size, use <a href="#zeros_member">.zeros()</a> instead
+To initialise the elements to zero while changing the size, use <a href="#zeros_member">.zeros()</a> instead
 </li>
 <br>
 <li>
-If you need to explicitly preserve data while changing the size, use <a href="#reshape_member">.reshape()</a> or <a href="#resize_member">.resize()</a> instead;
-<br><b>caveat</b>: <i>.reshape()</i> and <i>.resize()</i> are considerably slower than <i>.set_size()</i>
+To explicitly preserve data while changing the size, use <a href="#reshape_member">.reshape()</a> or <a href="#resize_member">.resize()</a> instead;
+<br><b>NOTE</b>: <i>.reshape()</i> and <i>.resize()</i> are considerably slower than <i>.set_size()</i>
 </li>
 <br>
 <li>
@@ -3394,7 +3394,7 @@ only a subset of the elements is taken
 <b>Caveats:</b>
 <ul>
 <li>
-do not use <i>.reshape()</i> if you simply want to change the size without preserving data;
+do not use <i>.reshape()</i> to change the size without preserving data;
 use <a href="#set_size">.set_size()</a> instead, which is much faster
 </li>
 <li>
@@ -3483,7 +3483,7 @@ Can be used for growing or shrinking an object (ie. adding/removing rows, and/or
 <br>
 <li>
 <b>Caveat:</b>
-do not use <i>.resize()</i> if you simply want to change the size without preserving data;
+do not use <i>.resize()</i> to change the size without preserving data;
 use <a href="#set_size">.set_size()</a> instead, which is much faster
 </li>
 <br>
@@ -10049,7 +10049,7 @@ Return a column vector containing the non-zero values of <i>X</i>
 </li>
 <br>
 <li>
-<b>Caveat:</b> do not use <i>nonzeros()</i> if you only want to obtain the number of non-zero elements in a sparse matrix;
+<b>Caveat:</b> do not use <i>nonzeros()</i> to obtain the number of non-zero elements in a sparse matrix;
 use the <i>.n_nonzero</i> <a href="#attributes">attribute</a> instead, eg.&nbsp;<i>X.n_nonzero</i>
 </li>
 <br>
@@ -10500,7 +10500,7 @@ only a subset of elements is taken from the given object
 <b>Caveats:</b>
 <ul>
 <li>
-do not use <i>reshape()</i> if you simply want to change the size without preserving data;
+do not use <i>reshape()</i> to change the size without preserving data;
 use <a href="#set_size">.set_size()</a> instead, which is much faster
 </li>
 <li>
@@ -10558,7 +10558,7 @@ whose elements as well as the layout of the elements are taken from the given ob
 <br>
 <li>
 <b>Caveat:</b>
-do not use <i>resize()</i> if you simply want to change the size without preserving data;
+do not use <i>resize()</i> to change the size without preserving data;
 use <a href="#set_size">.set_size()</a> instead, which is much faster
 </li>
 <br>
@@ -13504,7 +13504,7 @@ For <code>"lapack"</code>, sparse matrix <i>A</i> is converted to a dense matrix
 <b>Notes</b>:
 <ul>
 <li>The SuperLU solver is mainly useful for very large and/or very sparse matrices</li>
-<li>If you have sufficient amount of memory to store a dense version of matrix <i>A</i>, the LAPACK solver can be faster</li>
+<li>If there is sufficient amount of memory to store a dense version of matrix <i>A</i>, the LAPACK solver can be faster</li>
 </ul>
 </li>
 <br>
@@ -15084,7 +15084,7 @@ Generate a random matrix sampled from the Wishart distribution with parameters <
 <br>
 <li>
 <i>D</i> is an optional argument; it specifies the Cholesky decomposition of <i>S</i>; if <i>D</i> is provided, <i>S</i> is ignored;
-<br>using <i>D</i> is more efficient if you need to use <i>wishrnd()</i> many times for the same <i>S</i> matrix
+<br>using <i>D</i> is more efficient if <i>wishrnd()</i> needs to be used many times for the same <i>S</i> matrix
 </li>
 <br>
 <li>If generating the random matrix fails:
@@ -15144,7 +15144,7 @@ Generate a random matrix sampled from the inverse Wishart distribution with para
 <br>
 <li>
 <i>Dinv</i> is an optional argument; it specifies the Cholesky decomposition of the inverse of <i>T</i>; if <i>Dinv</i> is provided, <i>T</i> is ignored
-<br>using <i>Dinv</i> is more efficient if you need to use <i>iwishrnd()</i> many times for the same <i>T</i> matrix
+<br>using <i>Dinv</i> is more efficient if <i>iwishrnd()</i> needs to be used many times for the same <i>T</i> matrix
 </li>
 <br>
 <li>If generating the random matrix fails:
@@ -17964,7 +17964,7 @@ int main()
   }
 </pre>
 <li>
-If you save the above program as <i>example.cpp</i>,
+If the above program is stored as <i>example.cpp</i>,
 under Linux and macOS it can be compiled using:
 <br>
 <ul><code>g++ example.cpp -o example -std=c++11 -O2 -larmadillo</code></ul>
@@ -18669,7 +18669,7 @@ You may also need to enable one or more of the following options:
     </td>
     <td style="vertical-align: top;">
 Use 64 bit integers. Automatically enabled when using a 64-bit platform, except when using Armadillo in the R environment (via RcppArmadillo).
-Useful if you require matrices/vectors capable of holding more than 4 billion elements.
+Useful if matrices/vectors capable of holding more than 4 billion elements are required.
 <!-- Your machine and compiler must have support for 64 bit integers (eg. via "long" or "long&nbsp;long"). -->
 This can also be enabled by adding <i>#define&nbsp;ARMA_64BIT_WORD</i> before each instance of <i>#include&nbsp;&lt;armadillo&gt;</i>
     </td>

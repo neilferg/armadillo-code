@@ -104,75 +104,69 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   for(uword i = 0; i < s_n_elem; ++i)  { count += (s_mem[i] >= tol) ? uword(1) : uword(0); }
   
+  if(count == 0)  { out.zeros(n_cols, n_rows); return true; }
   
-  if(count > 0)
+  Col<T> s2(count);
+  
+  T* s2_mem = s2.memptr();
+  
+  uword count2 = 0;
+  
+  for(uword i=0; i < s_n_elem; ++i)
     {
-    Col<T> s2(count);
+    const T val = s_mem[i];
     
-    T* s2_mem = s2.memptr();
+    if(val >= tol)  {  s2_mem[count2] = T(1) / val;  ++count2; }
+    }
+  
+  
+  if(n_rows >= n_cols)
+    {
+    // out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
     
-    uword count2 = 0;
+    Mat<eT> tmp;
     
-    for(uword i=0; i < s_n_elem; ++i)
+    if(count < V.n_cols)
       {
-      const T val = s_mem[i];
-      
-      if(val >= tol)  {  s2_mem[count2] = T(1) / val;  ++count2; }
-      }
-    
-    
-    if(n_rows >= n_cols)
-      {
-      // out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
-      
-      Mat<eT> tmp;
-      
-      if(count < V.n_cols)
-        {
-        tmp = V.cols(0,count-1) * diagmat(s2);
-        }
-      else
-        {
-        tmp = V * diagmat(s2);
-        }
-      
-      if(count < U.n_cols)
-        {
-        out = tmp * trans(U.cols(0,count-1));
-        }
-      else
-        {
-        out = tmp * trans(U);
-        }
+      tmp = V.cols(0,count-1) * diagmat(s2);
       }
     else
       {
-      // out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
-      
-      Mat<eT> tmp;
-      
-      if(count < U.n_cols)
-        {
-        tmp = U.cols(0,count-1) * diagmat(s2);
-        }
-      else
-        {
-        tmp = U * diagmat(s2);
-        }
-      
-      if(count < V.n_cols)
-        {
-        out = tmp * trans(V.cols(0,count-1));
-        }
-      else
-        {
-        out = tmp * trans(V);
-        }
+      tmp = V * diagmat(s2);
+      }
+    
+    if(count < U.n_cols)
+      {
+      out = tmp * trans(U.cols(0,count-1));
+      }
+    else
+      {
+      out = tmp * trans(U);
       }
     }
   else
     {
-    out.zeros(n_cols, n_rows);
+    // out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
+    
+    Mat<eT> tmp;
+    
+    if(count < U.n_cols)
+      {
+      tmp = U.cols(0,count-1) * diagmat(s2);
+      }
+    else
+      {
+      tmp = U * diagmat(s2);
+      }
+    
+    if(count < V.n_cols)
+      {
+      out = tmp * trans(V.cols(0,count-1));
+      }
+    else
+      {
+      out = tmp * trans(V);
+      }
     }
   
   return true;

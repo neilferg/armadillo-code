@@ -4540,7 +4540,7 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("SpMat::save(): couldn't write to ", name); }
+  if(print_status && (save_okay == false))  { arma_debug_warn("SpMat::save(): couldn't write; file: ", name); }
   
   return save_okay;
   }
@@ -4616,7 +4616,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
   
   if(print_status && (save_okay == false))
     {
-    arma_debug_warn("SpMat::save(): couldn't write to ", spec.filename);
+    arma_debug_warn("SpMat::save(): couldn't write; file: ", spec.filename);
     }
   
   return save_okay;
@@ -4704,13 +4704,11 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "SpMat::load(): " << err_msg << "; file: " << name;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("SpMat::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("SpMat::load(): couldn't read ", name);
+      arma_debug_warn("SpMat::load(): couldn't read; file: ", name);
       }
     }
   
@@ -4778,13 +4776,11 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
       {
       if(err_msg.length() > 0)
         {
-        std::ostringstream tmp;
-        tmp << "SpMat::load(): " << err_msg << "; file: " << spec.filename;
-        arma_debug_warn(tmp.str());
+        arma_debug_warn("SpMat::load(): ", err_msg, "; file: ", spec.filename);
         }
       else
         {
-        arma_debug_warn("SpMat::load(): couldn't read ", spec.filename);
+        arma_debug_warn("SpMat::load(): couldn't read; file: ", spec.filename);
         }
       }
     else
@@ -4851,9 +4847,7 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "SpMat::load(): " << err_msg;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("SpMat::load(): ", err_msg);
       }
     else
       {

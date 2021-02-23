@@ -332,15 +332,15 @@ arma_cold
 arma_noinline
 static
 void
-arma_warn(const T1& x)
+arma_warn(const T1& arg1)
   {
   #if defined(ARMA_PRINT_ERRORS)
     {
-    get_cerr_stream() << "\nwarning: " << x << '\n';
+    get_cerr_stream() << "\nwarning: " << arg1 << '\n';
     }
   #else
     {
-    arma_ignore(x);
+    arma_ignore(arg1);
     }
   #endif
   }
@@ -351,16 +351,16 @@ arma_cold
 arma_noinline
 static
 void
-arma_warn(const T1& x, const T2& y)
+arma_warn(const T1& arg1, const T2& arg2)
   {
   #if defined(ARMA_PRINT_ERRORS)
     {
-    get_cerr_stream() << "\nwarning: " << x << y << '\n';
+    get_cerr_stream() << "\nwarning: " << arg1 << arg2 << '\n';
     }
   #else
     {
-    arma_ignore(x);
-    arma_ignore(y);
+    arma_ignore(arg1);
+    arma_ignore(arg2);
     }
   #endif
   }
@@ -371,17 +371,39 @@ arma_cold
 arma_noinline
 static
 void
-arma_warn(const T1& x, const T2& y, const T3& z)
+arma_warn(const T1& arg1, const T2& arg2, const T3& arg3)
   {
   #if defined(ARMA_PRINT_ERRORS)
     {
-    get_cerr_stream() << "\nwarning: " << x << y << z << '\n';
+    get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << '\n';
     }
   #else
     {
-    arma_ignore(x);
-    arma_ignore(y);
-    arma_ignore(z);
+    arma_ignore(arg1);
+    arma_ignore(arg2);
+    arma_ignore(arg3);
+    }
+  #endif
+  }
+
+
+template<typename T1, typename T2, typename T3, typename T4>
+arma_cold
+arma_noinline
+static
+void
+arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
+  {
+  #if defined(ARMA_PRINT_ERRORS)
+    {
+    get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << arg4 << '\n';
+    }
+  #else
+    {
+    arma_ignore(arg1);
+    arma_ignore(arg2);
+    arma_ignore(arg3);
+    arma_ignore(arg4);
     }
   #endif
   }

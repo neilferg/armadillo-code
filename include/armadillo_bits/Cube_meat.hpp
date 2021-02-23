@@ -4304,7 +4304,7 @@ Cube<eT>::save(const std::string name, const file_type type, const bool print_st
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("Cube::save(): couldn't write to ", name); }
+  if(print_status && (save_okay == false))  { arma_debug_warn("Cube::save(): couldn't write; file: ", name); }
   
   return save_okay;
   }
@@ -4357,13 +4357,11 @@ Cube<eT>::save(const hdf5_name& spec, const file_type type, const bool print_sta
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "Cube::save(): " << err_msg << "; file: " << spec.filename;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("Cube::save(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_debug_warn("Cube::save(): couldn't write to ", spec.filename);
+      arma_debug_warn("Cube::save(): couldn't write; file: ", spec.filename);
       }
     }
   
@@ -4472,13 +4470,11 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "Cube::load(): " << err_msg << "file: " << name;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("Cube::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("Cube::load(): couldn't read ", name);
+      arma_debug_warn("Cube::load(): couldn't read; file: ", name);
       }
     }
   
@@ -4527,13 +4523,11 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type, const bool print_sta
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "Cube::load(): " << err_msg << "; file: " << spec.filename;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("Cube::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      arma_debug_warn("Cube::load(): couldn't read ", spec.filename);
+      arma_debug_warn("Cube::load(): couldn't read; file: ", spec.filename);
       }
     }
   
@@ -4591,9 +4585,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "Cube::load(): " << err_msg;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("Cube::load(): ", err_msg);
       }
     else
       {

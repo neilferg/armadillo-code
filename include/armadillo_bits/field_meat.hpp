@@ -1706,13 +1706,11 @@ field<oT>::save(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "field::save(): " << err_msg << "; file: " << name;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("field::save(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("field::save(): couldn't write to ", name);
+      arma_debug_warn("field::save(): couldn't write; file: ", name);
       }
     }
   
@@ -1737,9 +1735,7 @@ field<oT>::save(std::ostream& os, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "field::save(): " << err_msg;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("field::save(): ", err_msg);
       }
     else
       {
@@ -1768,13 +1764,11 @@ field<oT>::load(const std::string name, const file_type type, const bool print_s
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "field::load(): " << err_msg << "; file: " << name;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("field::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("field::load(): couldn't read from ", name);
+      arma_debug_warn("field::load(): couldn't read; file: ", name);
       }
     }
   
@@ -1800,9 +1794,7 @@ field<oT>::load(std::istream& is, const file_type type, const bool print_status)
     {
     if(err_msg.length() > 0)
       {
-      std::ostringstream tmp;
-      tmp << "field::load(): " << err_msg;
-      arma_debug_warn(tmp.str());
+      arma_debug_warn("field::load(): ", err_msg);
       }
     else
       {

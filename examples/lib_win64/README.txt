@@ -5,8 +5,8 @@ https://github.com/xianyi/OpenBLAS/releases/download/v0.3.10/OpenBLAS-0.3.10-x64
 
 The compilation was done by a third party.  USE AT YOUR OWN RISK.
 
-libopenblas.dll is a copy of OpenBLAS-0.3.10-x64/bin/libopenblas.dll
-libopenblas.lib is a copy of OpenBLAS-0.3.10-x64/lib/libopenblas.dll.a
+libopenblas.dll is a copy of OpenBLAS-0.3.13-x64/bin/libopenblas.dll
+libopenblas.lib is a copy of OpenBLAS-0.3.13-x64/lib/libopenblas.dll.a
 
 The original sources for OpenBLAS are at:
   https://github.com/xianyi/OpenBLAS/

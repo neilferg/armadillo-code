@@ -63,23 +63,26 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   if(A.is_empty())  { out.set_size(n_cols,n_rows); return true; }
   
   #if defined(ARMA_OPTIMISE_SYMPD)
-    {
-    if( (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && sympd_helper::guess_sympd_anysize(A) )
-      {
-      arma_extra_debug_print("op_pinv(): attempting sympd optimisation");
-      
-      out = A;
-      
-      const T rcond_threshold = T(1000) * std::numeric_limits<T>::epsilon();
-      
-      const bool status = auxlib::inv_sympd_rcond(out, rcond_threshold);
-      
-      if(status)  { return true; }
-      
-      arma_extra_debug_print("op_pinv(): sympd optimisation failed");
-      }
-    }
+    const bool try_sympd = (auxlib::crippled_lapack(A) == false) && (tol == T(0)) && sympd_helper::guess_sympd_anysize(A);
+  #else
+    const bool try_sympd = false;
   #endif
+  
+  if(try_sympd)
+    {
+    arma_extra_debug_print("op_pinv: attempting sympd optimisation");
+    
+    out = A;
+    
+    const T rcond_threshold = T(1000) * std::numeric_limits<T>::epsilon();
+    
+    const bool status = auxlib::inv_sympd_rcond(out, rcond_threshold);
+    
+    if(status)  { return true; }
+    
+    arma_extra_debug_print("op_pinv: sympd optimisation failed");
+    // auxlib::inv_sympd_rcond() will fail if A isn't really positive definite or its rcond is below rcond_threshold
+    }
   
   // economical SVD decomposition 
   Mat<eT> U;

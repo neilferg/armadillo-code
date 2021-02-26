@@ -124,11 +124,11 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     }
   
   
+  Mat<eT> tmp;
+    
   if(n_rows >= n_cols)
     {
     // out = ( (V.n_cols > count) ? V.cols(0,count-1) : V ) * diagmat(s2) * trans( (U.n_cols > count) ? U.cols(0,count-1) : U );
-    
-    Mat<eT> tmp;
     
     if(count < V.n_cols)
       {
@@ -151,8 +151,6 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   else
     {
     // out = ( (U.n_cols > count) ? U.cols(0,count-1) : U ) * diagmat(s2) * trans( (V.n_cols > count) ? V.cols(0,count-1) : V );
-    
-    Mat<eT> tmp;
     
     if(count < U.n_cols)
       {

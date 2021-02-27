@@ -233,7 +233,7 @@ struct arma_rng::randi
       {
       if(N == uword(1))  { arma_rng_cxx98::randi_fill(mem, uword(1), a, b); return; }
       
-      typedef std::mt19937_64::result_type seed_type;
+      typedef typename std::mt19937_64::result_type seed_type;
       
       std::mt19937_64                    local_engine;
       std::uniform_int_distribution<int> local_i_distr(a, b);
@@ -283,7 +283,7 @@ struct arma_rng::randu
       {
       if(N == uword(1))  { mem[0] = eT( arma_rng_cxx98::randu_val() ); return; }
       
-      typedef std::mt19937_64::result_type seed_type;
+      typedef typename std::mt19937_64::result_type seed_type;
       
       std::mt19937_64                        local_engine;
       std::uniform_real_distribution<double> local_u_distr;
@@ -338,7 +338,7 @@ struct arma_rng::randu< std::complex<T> >
         return;
         }
       
-      typedef std::mt19937_64::result_type seed_type;
+      typedef typename std::mt19937_64::result_type seed_type;
       
       std::mt19937_64                        local_engine;
       std::uniform_real_distribution<double> local_u_distr;
@@ -425,7 +425,7 @@ struct arma_rng::randn
       {
       if(N == uword(1))  { mem[0] = eT( arma_rng_cxx98::randn_val() ); return; }
       
-      typedef std::mt19937_64::result_type seed_type;
+      typedef typename std::mt19937_64::result_type seed_type;
       
       std::mt19937_64                  local_engine;
       std::normal_distribution<double> local_n_distr;
@@ -447,7 +447,7 @@ struct arma_rng::randn
       {
       if((N < 1024) || omp_in_parallel())  { arma_rng::randn<eT>::fill_simple(mem, N); return; }
       
-      typedef std::mt19937_64::result_type seed_type;
+      typedef typename std::mt19937_64::result_type seed_type;
       
       const uword n_threads = uword( mp_thread_limit::get() );
       
@@ -557,7 +557,7 @@ struct arma_rng::randn< std::complex<T> >
         return;
         }
       
-      typedef std::mt19937_64::result_type seed_type;
+      typedef typename std::mt19937_64::result_type seed_type;
       
       std::mt19937_64                  local_engine;
       std::normal_distribution<double> local_n_distr;
@@ -585,7 +585,7 @@ struct arma_rng::randn< std::complex<T> >
       {
       if((N < 512) || omp_in_parallel())  { arma_rng::randn< std::complex<T> >::fill_simple(mem, N); return; }
       
-      typedef std::mt19937_64::result_type seed_type;
+      typedef typename std::mt19937_64::result_type seed_type;
       
       const uword n_threads = uword( mp_thread_limit::get() );
       

@@ -219,10 +219,23 @@ template<typename eT> const eT Datum<eT>::R_k       = eT(25812.80745);
 template<typename eT> const eT Datum<eT>::b         = eT(2.897771955e-3);
 
 
+#if defined(ARMA_CLX_CUSTOM)
+
+// datum is either float or double depending on ARMA_32BIT_FLOAT
+// To avoid confusion, we don't define fdatum
+
+#if defined(ARMA_32BIT_FLOAT)
+  typedef Datum<float> datum;
+#else
+  typedef Datum<double> datum;
+#endif
+
+#else // stock behaviour
 
 typedef Datum<float>  fdatum;
 typedef Datum<double> datum;
 
+#endif
 
 
 

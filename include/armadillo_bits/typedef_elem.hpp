@@ -97,6 +97,29 @@ typedef          long slng_t;
 #endif
 
 
+#if defined(ARMA_CLX_CUSTOM)
+
+// arma_flt is the underlying floating-point type for
+// mat, vec, rowvec, cube, cx_mat...
+
+#if defined(ARMA_32BIT_FLOAT)
+  typedef float arma_flt;
+#else
+  typedef double arma_flt;
+#endif
+
+typedef std::complex<arma_flt> arma_cx;
+
+#else // stock behaviour
+
+// To keep compatibility with SigPack, we define arma_flt to
+// be a double and also define arma_cx
+
+typedef double arma_flt;
+typedef std::complex<double> arma_cx;
+
+#endif // [ARMA_CLX_CUSTOM]
+
 typedef std::complex<float>  cx_float;
 typedef std::complex<double> cx_double;
 

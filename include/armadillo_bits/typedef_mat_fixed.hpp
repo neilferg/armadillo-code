@@ -37,6 +37,8 @@ typedef imat::fixed<7,7> imat77;
 typedef imat::fixed<8,8> imat88;
 typedef imat::fixed<9,9> imat99;
 
+#if !defined(ARMA_CLX_CUSTOM)
+
 typedef fmat::fixed<2,2> fmat22;
 typedef fmat::fixed<3,3> fmat33;
 typedef fmat::fixed<4,4> fmat44;
@@ -55,6 +57,8 @@ typedef dmat::fixed<7,7> dmat77;
 typedef dmat::fixed<8,8> dmat88;
 typedef dmat::fixed<9,9> dmat99;
 
+#endif
+
 typedef mat::fixed<2,2> mat22;
 typedef mat::fixed<3,3> mat33;
 typedef mat::fixed<4,4> mat44;
@@ -63,6 +67,8 @@ typedef mat::fixed<6,6> mat66;
 typedef mat::fixed<7,7> mat77;
 typedef mat::fixed<8,8> mat88;
 typedef mat::fixed<9,9> mat99;
+
+#if !defined(ARMA_CLX_CUSTOM)
 
 typedef cx_fmat::fixed<2,2> cx_fmat22;
 typedef cx_fmat::fixed<3,3> cx_fmat33;
@@ -81,6 +87,8 @@ typedef cx_dmat::fixed<6,6> cx_dmat66;
 typedef cx_dmat::fixed<7,7> cx_dmat77;
 typedef cx_dmat::fixed<8,8> cx_dmat88;
 typedef cx_dmat::fixed<9,9> cx_dmat99;
+
+#endif
 
 typedef cx_mat::fixed<2,2> cx_mat22;
 typedef cx_mat::fixed<3,3> cx_mat33;
@@ -113,6 +121,8 @@ typedef ivec::fixed<7> ivec7;
 typedef ivec::fixed<8> ivec8;
 typedef ivec::fixed<9> ivec9;
 
+#if !defined(ARMA_CLX_CUSTOM)
+
 typedef fvec::fixed<2> fvec2;
 typedef fvec::fixed<3> fvec3;
 typedef fvec::fixed<4> fvec4;
@@ -131,6 +141,8 @@ typedef dvec::fixed<7> dvec7;
 typedef dvec::fixed<8> dvec8;
 typedef dvec::fixed<9> dvec9;
 
+#endif
+
 typedef vec::fixed<2> vec2;
 typedef vec::fixed<3> vec3;
 typedef vec::fixed<4> vec4;
@@ -139,6 +151,8 @@ typedef vec::fixed<6> vec6;
 typedef vec::fixed<7> vec7;
 typedef vec::fixed<8> vec8;
 typedef vec::fixed<9> vec9;
+
+#if !defined(ARMA_CLX_CUSTOM)
 
 typedef cx_fvec::fixed<2> cx_fvec2;
 typedef cx_fvec::fixed<3> cx_fvec3;
@@ -157,6 +171,8 @@ typedef cx_dvec::fixed<6> cx_dvec6;
 typedef cx_dvec::fixed<7> cx_dvec7;
 typedef cx_dvec::fixed<8> cx_dvec8;
 typedef cx_dvec::fixed<9> cx_dvec9;
+
+#endif
 
 typedef cx_vec::fixed<2> cx_vec2;
 typedef cx_vec::fixed<3> cx_vec3;
@@ -189,6 +205,8 @@ typedef icolvec::fixed<7> icolvec7;
 typedef icolvec::fixed<8> icolvec8;
 typedef icolvec::fixed<9> icolvec9;
 
+#if !defined(ARMA_CLX_CUSTOM)
+
 typedef fcolvec::fixed<2> fcolvec2;
 typedef fcolvec::fixed<3> fcolvec3;
 typedef fcolvec::fixed<4> fcolvec4;
@@ -207,6 +225,8 @@ typedef dcolvec::fixed<7> dcolvec7;
 typedef dcolvec::fixed<8> dcolvec8;
 typedef dcolvec::fixed<9> dcolvec9;
 
+#endif
+
 typedef colvec::fixed<2> colvec2;
 typedef colvec::fixed<3> colvec3;
 typedef colvec::fixed<4> colvec4;
@@ -215,6 +235,8 @@ typedef colvec::fixed<6> colvec6;
 typedef colvec::fixed<7> colvec7;
 typedef colvec::fixed<8> colvec8;
 typedef colvec::fixed<9> colvec9;
+
+#if !defined(ARMA_CLX_CUSTOM)
 
 typedef cx_fcolvec::fixed<2> cx_fcolvec2;
 typedef cx_fcolvec::fixed<3> cx_fcolvec3;
@@ -233,6 +255,8 @@ typedef cx_dcolvec::fixed<6> cx_dcolvec6;
 typedef cx_dcolvec::fixed<7> cx_dcolvec7;
 typedef cx_dcolvec::fixed<8> cx_dcolvec8;
 typedef cx_dcolvec::fixed<9> cx_dcolvec9;
+
+#endif
 
 typedef cx_colvec::fixed<2> cx_colvec2;
 typedef cx_colvec::fixed<3> cx_colvec3;
@@ -265,6 +289,8 @@ typedef irowvec::fixed<7> irowvec7;
 typedef irowvec::fixed<8> irowvec8;
 typedef irowvec::fixed<9> irowvec9;
 
+#if !defined(ARMA_CLX_CUSTOM)
+
 typedef frowvec::fixed<2> frowvec2;
 typedef frowvec::fixed<3> frowvec3;
 typedef frowvec::fixed<4> frowvec4;
@@ -283,6 +309,8 @@ typedef drowvec::fixed<7> drowvec7;
 typedef drowvec::fixed<8> drowvec8;
 typedef drowvec::fixed<9> drowvec9;
 
+#endif
+
 typedef rowvec::fixed<2> rowvec2;
 typedef rowvec::fixed<3> rowvec3;
 typedef rowvec::fixed<4> rowvec4;
@@ -291,6 +319,8 @@ typedef rowvec::fixed<6> rowvec6;
 typedef rowvec::fixed<7> rowvec7;
 typedef rowvec::fixed<8> rowvec8;
 typedef rowvec::fixed<9> rowvec9;
+
+#if !defined(ARMA_CLX_CUSTOM)
 
 typedef cx_frowvec::fixed<2> cx_frowvec2;
 typedef cx_frowvec::fixed<3> cx_frowvec3;
@@ -309,6 +339,8 @@ typedef cx_drowvec::fixed<6> cx_drowvec6;
 typedef cx_drowvec::fixed<7> cx_drowvec7;
 typedef cx_drowvec::fixed<8> cx_drowvec8;
 typedef cx_drowvec::fixed<9> cx_drowvec9;
+
+#endif
 
 typedef cx_rowvec::fixed<2> cx_rowvec2;
 typedef cx_rowvec::fixed<3> cx_rowvec3;

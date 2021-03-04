@@ -60,6 +60,8 @@ typedef Col <sword> icolvec;
 typedef Row <sword> irowvec;
 typedef Cube<sword> icube;
 
+#if !defined(ARMA_CLX_CUSTOM)
+
 typedef Mat <float> fmat;
 typedef Col <float> fvec;
 typedef Col <float> fcolvec;
@@ -77,6 +79,18 @@ typedef Col <double> vec;
 typedef Col <double> colvec;
 typedef Row <double> rowvec;
 typedef Cube<double> cube;
+
+#else
+
+typedef Mat <arma_flt> mat;
+typedef Col <arma_flt> vec;
+typedef Col <arma_flt> colvec;
+typedef Row <arma_flt> rowvec;
+typedef Cube<arma_flt> cube;
+
+#endif
+
+#if !defined(ARMA_CLX_CUSTOM)
 
 typedef Mat <cx_float> cx_fmat;
 typedef Col <cx_float> cx_fvec;
@@ -96,6 +110,15 @@ typedef Col <cx_double> cx_colvec;
 typedef Row <cx_double> cx_rowvec;
 typedef Cube<cx_double> cx_cube;
 
+#else
+
+typedef Mat <arma_cx> cx_mat;
+typedef Col <arma_cx> cx_vec;
+typedef Col <arma_cx> cx_colvec;
+typedef Row <arma_cx> cx_rowvec;
+typedef Cube<arma_cx> cx_cube;
+
+#endif
 
 
 typedef SpMat <uword> sp_umat;
@@ -107,6 +130,8 @@ typedef SpMat <sword> sp_imat;
 typedef SpCol <sword> sp_ivec;
 typedef SpCol <sword> sp_icolvec;
 typedef SpRow <sword> sp_irowvec;
+
+#if !defined(ARMA_CLX_CUSTOM)
 
 typedef SpMat <float> sp_fmat;
 typedef SpCol <float> sp_fvec;
@@ -123,6 +148,17 @@ typedef SpCol <double> sp_vec;
 typedef SpCol <double> sp_colvec;
 typedef SpRow <double> sp_rowvec;
 
+#else
+
+typedef SpMat <arma_flt> sp_mat;
+typedef SpCol <arma_flt> sp_vec;
+typedef SpCol <arma_flt> sp_colvec;
+typedef SpRow <arma_flt> sp_rowvec;
+
+#endif
+
+#if !defined(ARMA_CLX_CUSTOM)
+
 typedef SpMat <cx_float> sp_cx_fmat;
 typedef SpCol <cx_float> sp_cx_fvec;
 typedef SpCol <cx_float> sp_cx_fcolvec;
@@ -138,5 +174,13 @@ typedef SpCol <cx_double> sp_cx_vec;
 typedef SpCol <cx_double> sp_cx_colvec;
 typedef SpRow <cx_double> sp_cx_rowvec;
 
+#else
+
+typedef SpMat <arma_cx> sp_cx_mat;
+typedef SpCol <arma_cx> sp_cx_vec;
+typedef SpCol <arma_cx> sp_cx_colvec;
+typedef SpRow <arma_cx> sp_cx_rowvec;
+
+#endif
 
 //! @}
